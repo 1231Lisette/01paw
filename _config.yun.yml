@@ -26,7 +26,7 @@ bg_image:
   enable: true
   url: /images/background.jpg
   # dark:
-  opacity: 0.5
+  opacity: 0.9
 
 search:
   modal: true
