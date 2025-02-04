@@ -1,4 +1,4 @@
-avatar:
+alien:
   enable: true
   url: /images/alien.jpg
   rounded: true
