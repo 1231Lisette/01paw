@@ -1,35 +1,35 @@
-name: GitHub Pages
+name: Hexo Deployment
 
 on:
   push:
     branches:
-      - hexo
-
-  pull_request:
-    branches:
-      - hexo
+      - hexo  # 当 hexo 分支有推送操作时触发工作流
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # 使用最新的 Ubuntu 系统作为运行环境
+
     steps:
-      - uses: actions/checkout@v3
-      - uses: pnpm/action-setup@v2
-      - uses: actions/setup-node@v3
+      - name: Checkout code
+        uses: actions/checkout@v3  # 检出代码到运行环境
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3  # 设置 Node.js 环境
         with:
-          node-version: 16.x
-          cache: pnpm
+          node-version: 16.x  # 使用 Node.js 16 版本
 
-      - name: Install
-        run: pnpm install
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2  # 安装 pnpm 包管理器
 
-      - name: Build
-        run: pnpm run build
+      - name: Install dependencies
+        run: pnpm install  # 安装项目依赖
 
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Build Hexo site
+        run: pnpm run build  # 构建 Hexo 静态网站
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3  # 使用该 Action 进行部署
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
-          publish_branch: master
-          force_orphan: true
+          github_token: ${{ secrets.GITHUB_TOKEN }}  # 使用 GitHub 提供的令牌
+          publish_dir: ./public  # 部署的目录为 public 文件夹
+          publish_branch: master  # 部署到 master 分支
