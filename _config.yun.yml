@@ -1,6 +1,97 @@
-alien:
-  url: /images/alien.jpg # 你的头像图片地址
+avatar:
+  enable: true
+  url: /images/alien.jpg
   rounded: true
   opacity: 1
+  mickey_mouse: false
+  status:
+    enable: true
+    emoji: 😭
+    message: 不想上学
+bg_image:
+  enable: true
+  url: /images/bg.jpg
+  # dark:
+  # blur: 30px # 设置背景模糊程度
+  opacity: 0.8
+search:
+  modal: true
+  bg_image: https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/bg/stars-timing-2.jpg
+  dark_bg_image: xxx
+  # placeholder:
 colors:
-  primary: '#000000'
+  primary: '#6200ee'
+  # bg: "#F5F5F5"
+  selection_bg: '#8e71c1' # 选取文字时的背景色
+  # 标签云中标签的起始色和结束色
+  # tag_start_color:
+  # tag_end_color:
+tags:
+  Vue: '#4fc08d'
+  Hexo: '#0E834D'
+  CSS: '#5298d1'
+  Node.js: '#026E00'
+  Git: '#F14E32'
+  React: '#61dafb'
+  Python: '#3776ab'
+  PHP: '#8892BF'
+  VS Code: '#0066B8'
+  JavaScript: '#F4DF4F'
+  TypeScript: '#317AC6'
+  Laravel: '#F4645F'
+categories:
+  笔记: dimgray
+head:
+  css:
+    example: //example.min.css
+  js:
+    base:
+      - xxx
+    async:
+    defer:
+social:
+  - name: E-Mail
+    link: mailto:2405848533@qq.com
+    icon: ri:mail-line
+    color: '#8E71C1'
+banner:
+  enable: true
+  title: 二进制爪印
+  border: true
+  cloud:
+    enable: true
+    color: white
+  go_down:
+    enable: true
+    icon: ri:arrow-down-s-line
+notice:
+  enable: true
+  content: 用爪印编译世界的浪漫——电子信息狗的成长型脑回路
+# 可选 light | dark | auto | time
+mode: auto
+font:
+  cdn:
+    enable: true
+    lib:
+      - https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&display=swap
+  serif:
+    family: '''Songti SC'', ''Noto Serif SC'', STZhongsong, STKaiti, KaiTi, Roboto, serif'
+    weight: 900
+  sans_serif:
+    family: '''PingFang SC'', ''Microsoft YaHei'', Roboto, Arial, sans-serif'
+    weight: 400
+  monospace:
+    family: '''Source Code Pro'', ''Courier New'', Courier, Consolas, Monaco, monospace'
+medium_zoom: true
+cursor:
+  enable: false
+  default: https://cdn.yunyoujun.cn/css/md-cursors/pointer.cur
+  pointer: https://cdn.yunyoujun.cn/css/md-cursors/link.cur
+  text: https://cdn.yunyoujun.cn/css/md-cursors/text.cur
+sidebar:
+  bg_image: https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/bg/stars-timing-1.jpg
+  bg_position: bottom 3rem center
+  tagcloud:
+    enable: false
+    amount: 20
+pages:
