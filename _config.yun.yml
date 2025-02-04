@@ -13,7 +13,7 @@ language: zh-CN
 
 alien:
   enable: true
-  url: source\_posts\images\alien.jpg
+  url: source/_posts/images/alien.jpg
   rounded: true
   opacity: 1
   mickey_mouse: false
@@ -24,15 +24,15 @@ alien:
 
 bg_image:
   enable: true
-  url: source\_posts\images\bg.jpg
+  url: source/_posts/images/bg.jpg
   # dark:
   # blur: 30px # 设置背景模糊程度
   opacity: 0.8
 
 search:
   modal: true
-  bg_image: source\_posts\images\bg.jpg
-  dark_bg_image: xxx
+  bg_image: source/_posts/images/bg.jpg
+  dark_bg_image: source/_posts/images/bg.jpg
   # placeholder:
 
 colors:
@@ -84,7 +84,6 @@ notice:
 
 mode: auto
 
-font:
 
 medium_zoom: true
 
@@ -95,7 +94,7 @@ cursor:
   text: https://cdn.yunyoujun.cn/css/md-cursors/text.cur
 
 sidebar:
-  bg_image: source\_posts\images\bg.jpg
+  bg_image: source/_posts/images/bg.jpg
   bg_position: bottom 3rem center
   tagcloud:
     enable: false
