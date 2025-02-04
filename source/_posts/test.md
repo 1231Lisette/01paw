@@ -7,3 +7,7 @@ tags:
     - growth
 categories: 第一次博客尝试
 ---
+> 你好，这是我的学习博客
+```python
+print("hellow,world")
+```

@@ -13,7 +13,7 @@ language: zh-CN
 
 alien:
   enable: true
-  url: source/_posts/images/alien.jpg
+  url: /images/alien.jpg
   rounded: true
   opacity: 1
   mickey_mouse: false
@@ -31,8 +31,8 @@ bg_image:
 
 search:
   modal: true
-  bg_image: source/_posts/images/bg.jpg
-  dark_bg_image: source/_posts/images/bg.jpg
+  bg_image: /images/bg.jpg
+  dark_bg_image: /images/bg.jpg
   # placeholder:
 
 colors:
@@ -94,7 +94,7 @@ cursor:
   text: https://cdn.yunyoujun.cn/css/md-cursors/text.cur
 
 sidebar:
-  bg_image: source/_posts/images/bg.jpg
+  bg_image: https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/bg/stars-timing-1.jpg
   bg_position: bottom 3rem center
   tagcloud:
     enable: false
@@ -123,3 +123,24 @@ menu:
     icon: ri:settings-line
 
 pages:
+
+footer:
+  since: 2025
+  live_time:
+    enable: false
+    prefix: 本博客已萌萌哒地运行
+    suffix: (●'◡'●)
+    start_time: '2025-02-03T00:00:00'
+
+say:
+  enable: true
+  api: https://cdn.jsdelivr.net/gh/ElpsyCN/say@gh-pages/sentences.json
+  # https://developer.hitokoto.cn/sentence/
+  hitokoto:
+    enable: true
+    api: https://v1.hitokoto.cn
+
+mourn:
+  enable: true
+  days:
+    - 4-4
