@@ -11,9 +11,9 @@ favicon: /favicon.ico
 
 language: zh-CN
 
-alien:
+avatar:
   enable: true
-  url: /images/alien.jpg
+  url: /images/avatar.jpg
   rounded: true
   opacity: 1
   mickey_mouse: false
@@ -24,14 +24,14 @@ alien:
 
 bg_image:
   enable: true
-  url: /images/bg.jpg
+  url: /images/background.jpg
   # dark:
   blur: 10px # 设置背景模糊程度
   opacity: 0.8
 
 search:
   modal: true
-  bg_image: /01paw/source/_posts/images/bg.jpg
+  bg_image: /images/backgroud.jpg
   dark_bg_image: /images/bg.jpg
   # placeholder:
 
