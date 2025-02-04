@@ -26,7 +26,7 @@ bg_image:
   enable: true
   url: /images/background.jpg
   # dark:
-  blur: 10px # 设置背景模糊程度
+
   opacity: 0.8
 
 search:
@@ -190,7 +190,7 @@ mourn:
 
 pages:
   - name: 我的猪猪
-    url: /links/
+    url: source/links/index.md
     icon: ri:genderless-line
     color: dodgerblue
 
