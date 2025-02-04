@@ -11,7 +11,7 @@ favicon: /favicon.ico
 
 language: zh-CN
 
-alien:
+avator:
   enable: true
   url: /images/alien.jpg
   rounded: true
@@ -20,11 +20,11 @@ alien:
   status:
     enable: true
     emoji: 😭
-    message: 不想上学
+    message: 不想上学！！
 
 bg_image:
   enable: true
-  url: source/_posts/images/bg.jpg
+  url: /images/bg.jpg
   # dark:
   # blur: 30px # 设置背景模糊程度
   opacity: 0.8
@@ -44,21 +44,20 @@ colors:
   # tag_end_color:
   
 tags:
-  Vue: '#4fc08d'
-  Hexo: '#0E834D'
-  CSS: '#5298d1'
-  Node.js: '#026E00'
+  C: '#4fc08d'
+  C++: '#5298d1'
+  stm32: '#026E00'
   Git: '#F14E32'
-  React: '#61dafb'
   Python: '#3776ab'
-  PHP: '#8892BF'
   VS Code: '#0066B8'
-  JavaScript: '#F4DF4F'
-  TypeScript: '#317AC6'
-  Laravel: '#F4645F'
+  Hexo: '#0E834D'
+
 
 categories:
   笔记: dimgray
+  学习: saddlebrown
+  教程: royalblue
+  Linux: '#2577b1'
 
 social:
   - name: E-Mail
@@ -122,15 +121,59 @@ menu:
     path: https://yun.yunyoujun.cn
     icon: ri:settings-line
 
-pages:
+post_meta:
+  item_text: false
+  created_at: true
+  updated_at: true
+  categories: true
+  tags: true
+
+toc:
+  list_number: true
+  max_depth: 6
+  min_depth: 1
+  placeholder: 很遗憾，咱没写啥目录
+  collapse: false
+
+post_edit:
+  enable: true
+  url: https://github.com/1231Lisette/01paw/tree/hexo/source/_posts
+
+# 关闭 highlight
+highlight:
+  enable: false
+# 启用 prism
+prismjs:
+  enable: true
+  preprocess: true
+  line_number: false
+  tab_replace: ''
+
+codeblock:
+  copy_btn: true
+
+creative_commons:
+  license: by-nc-sa
+  post: true
+  language: deed.zh
+  clipboard: true
+
+lazyload:
+  enable: true
 
 footer:
   since: 2025
+  icon:
+    name: ri:cloud-line
+    animated: true
+    color: '#93D89F'
+  powered:
+    enable: true
   live_time:
-    enable: false
+    enable: true
     prefix: 本博客已萌萌哒地运行
     suffix: (●'◡'●)
-    start_time: '2025-02-03T00:00:00'
+    start_time: '2025-02-04T22:15:00'
 
 say:
   enable: true
@@ -144,3 +187,12 @@ mourn:
   enable: true
   days:
     - 4-4
+
+pages:
+  - name: 我的猪猪
+    url: /links/
+    icon: ri:genderless-line
+    color: dodgerblue
+
+wordcloud:
+  enable: true
