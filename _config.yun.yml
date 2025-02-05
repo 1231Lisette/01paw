@@ -6,6 +6,32 @@ head:
       - xxx
     async:
     defer:
+  cdn:
+    pre: ''
+    css:
+    js:
+      base:
+        - xxx
+      async:
+        # 默认引入的图标资源，使用 iconfont
+        iconfont: //at.alicdn.com/t/font_1140697_dxory92pb0h.js
+      defer:
+  preload:
+  style:
+    - /css/hexo-theme-yun.css
+  script:
+    - /js/hexo-theme-yun.js
+
+  prefetch:
+    script:
+      - /js/sidebar.js
+
+  dns_prefetch:
+    - https://cos.yunyoujun.cn
+
+  # do more(TCP handshake...) than dns-fetch
+  preconnect:
+    - https://cdn.jsdelivr.net
 
 favicon: /favicon.ico
 
