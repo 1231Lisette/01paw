@@ -26,7 +26,7 @@ tags:
 - 封装:LQFP48
 
 ### 片上资源/外设
-![alt text](image.png)
+![外设](/images/image.png)
 (英文是peripheral)
 
 - NVIC：用于内核里面管理中断，配置中断优先级
