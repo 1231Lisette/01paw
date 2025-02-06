@@ -36,10 +36,10 @@ tags:
 （c8t6没有后四个外设，详情去看datasheet）
 
 ### 命名规则
-![alt text](image-1.png)
+![alt text](/images/image-1.png)
 
 ### 启动配置
-![alt text](image-2.png) 
+![alt text](/images/image-2.png) 
 
 
 ---
@@ -47,8 +47,8 @@ tags:
 ---
 ## 新建工程模板 
 ### 关于启动文件
-![alt text](image-3.png)
-![alt text](image-4.png)
+![alt text](/images/image-3.png)
+![alt text](/images/image-4.png)
 ### 用配置寄存器和库函数的方法点亮一颗灯
 ```c
 #include "stm32f10x.h"                  // Device header
@@ -81,12 +81,12 @@ int main()
   2. 工程文件夹里建立Start、Library、User等文件夹，复制固件库里面的文件到工程文件夹
   3. 工程里对应建立Start、Library、User等同名称的分组，然后将文件夹内的文件添加到工程分组里
   4. 工程选项，C/C++，Include Paths内声明所有包含头文件的文件夹
-   ![alt text](image-6.png)
+   ![alt text](/images/image-6.png)
   5. 工程选项，C/C++，Define内定义USE STDPERIPH DRIVER
   6. 工程选项，Debug，下拉列表选择对应调试器，Settings，FlashDownload里勾选Reset and Run
 
 ### 工程架构
-![alt text](image-7.png)
+![alt text](/images/image-7.png)
 
 结束，2025/2/6 0:00;好难。
 

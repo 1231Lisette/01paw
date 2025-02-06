@@ -29,3 +29,13 @@ hexo new page xxx # 默认不显示目录
   - icon: 页面标题前的图标
 
 cdn 里找到 css 替换掉主题默认的 yun-markdown-css。
+
+- 使用全局资源文件夹
+
+这种方法将所有文章的图片资源统一存放在一个全局资源文件夹中，便于多篇文章引用同一资源。
+
+在Hexo文件夹下的source目录中，新建一个文件夹，例如images。
+
+将要插入的图片放在该文件夹中。
+
+在Markdown文档中使用以下语法引用图片： `![图片描述](/images/图片名.jpg "图片标题")` 例如：` ![甘雨](/images/20.jpeg "甘雨")` 将20.jpeg图片文件放在hexo文件夹/source/images下，即可在博客中显示图片。
