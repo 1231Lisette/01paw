@@ -672,3 +672,100 @@ void EXTI15_10_IRQHandler(void)
 ### 定时中断和内外时钟源选择
 - 计数器溢出频率: `CK_CNT_OV=CK_CNT/(ARR +1) =CK PSC/(PSC + 1)/(ARR + 1)`
 ### 输出比较
+- OC(Output Compare)输出比较
+- 输出比较可以通过比较CNT（counter）与CCR（CCR是Capture/Compare Register（捕获/比较寄存器）的缩写）寄存器值的关系，来对输出电平进行置1、置0或翻转的操作，用于输出一定频率和占空比的PWM波形
+- 每个高级定时器和通用定时器都拥有4个输出比较通道
+- 高级定时器的前3个通道额外拥有死区生成和互补输出的功能
+
+#### PWM简介
+- PWM(Pulse Width Modulation)脉冲宽度调制
+- 在**具有惯性的系统**中，可以通过对一系列脉冲的宽度进行调制，来等效地获得所需要的模拟参量，常应用于电机控速等领域
+- PWM参数:
+频率 = $\frac{1}{T_s}$   
+占空比 = $\frac{T_{on}}{T_s}$
+分辨率 = 占空比变化步距
+![alt text](/images/image-17.png)
+（一般LED只有完全灭和完全亮两个状态，但是如果我们让LED不断点亮、熄灭、点亮、熄灭，当这个点亮熄灭的频率足够大时，LED就不会闪烁了，而是呈现出一个中等亮度）
+
+- PWM的频率越快，那它等效模拟的信号就越平稳
+- pwm可以看成是通信协议，通信协议就双方约定好一个规律去识别信号，符合这个规律的信号就能被接收方接受并分析
+
+##### pwm的结构
+![alt text](/images/image-18.png)
+(蓝色线是CNT的值，黄色线是ARR的值，红色线是CCR，绿色线是输出)
+
+##### pwm的参数计算
+- pwm频率： $Freq = \frac{CK_{PSC}}{(PSC + 1)(ARR + 1)}$
+- pwm占空比：$Duty = \frac{CCR}{ARR+1}$
+- pwm分辨率：$Reso=\frac{1}{ARR+1}$ (占空比变化的越细腻越好)
+
+#### 舵机简介
+- 舵机是一种根据输入PWM信号占空比来控制输出角度的装置
+- 输入PWM信号要求:周期为20ms，高电平宽度为0.5ms~2.5ms
+
+#### 直流电机及驱动简介
+- 直流电机是一种将电能转换为机械能的装置，有两个电极，当电极正接时，电机正转，当电极反接时
+- 直流电机反转直流电机属于大功率器件，GPIO口无法直接驱动，需要配合电机驱动电路来操作
+- TB6612是一款双路H桥型的直流电机驱动芯片，可以驱动两个直流电机并且控制其转速和方向
+
+#### pwm驱动LED呼吸灯
+- **ocinit函数**，是用结构体来初始化输出比较单元的（很重要）
+``` c
+void TIM_OC1Init(TIM_TypeDef* TIMx, TIM_OCInitTypeDef* TIM_OCInitStruct);
+void TIM_OC2Init(TIM_TypeDef* TIMx, TIM_OCInitTypeDef* TIM_OCInitStruct);
+void TIM_OC3Init(TIM_TypeDef* TIMx, TIM_OCInitTypeDef* TIM_OCInitStruct);
+void TIM_OC4Init(TIM_TypeDef* TIMx, TIM_OCInitTypeDef* TIM_OCInitStruct);
+```
+
+- 若要使用高级定时器，在使用高级定时器输出PWM时需要调用这个函数使能主输出否则PWM将不能正常输出
+```c
+void TIM_CtrlPWMOutputs(TIM_TypeDef* TIMx, FunctionalState NewState);
+```
+- setcompare函数
+```c
+void TIM_SetCompare1(TIM_TypeDef* TIMx, uint16_t Compare1);
+void TIM_SetCompare2(TIM_TypeDef* TIMx, uint16_t Compare2);
+void TIM_SetCompare3(TIM_TypeDef* TIMx, uint16_t Compare3);
+void TIM_SetCompare4(TIM_TypeDef* TIMx, uint16_t Compare4);
+```
+
+**！！！！！**
+- GPIO_PinRemapConfig(GPIO_ParticialRemap_TIM2, ENABLE)函数
+作用：接触引脚复用
+`GPIO_Remap_SWJ`参数，不能用！！这个参数就是把SWD和JTAG的调试端口全部解除，也就是这个5个引脚全部变成普通的GPIO口，没有调试功能，Stlink就下载不了程序了
+- 解决方案：只能用串口下载，下载一个新的没有解除调试窗口的程序
+（我没学重映射和解除调试端口！I passed them）
+
+#### pwm驱动舵机
+- 关键：输出一个符合下方图片规定的pwm波形
+![alt text](/images/image-19.png)
+
+#### pwm驱动直流电机
+
+### 输入捕获
+#### 理论部分
+##### 简介
+- IC(Input Capture)输入辅获
+- 输入捕获模式下，当通道输入引脚出现指定电平跳变时（检测电平跳变，然后执行动作（控制后续电路）），当前CNT的值将被锁存到CCR中，可用于测量PWM波形的频率、占空比、脉冲间隔、电平持续时间等参数（简要版示波器、测速）
+- 每个高级定时器和通用定时器都拥有4个输入捕获通道
+- 可配置为PWMI模式，同时测量频率和占空比
+- 可配合主从触发模式，实现硬件全自动测量
+- 对于同一个引脚，只能使用一种功能（输出比较or输入捕获）
+
+##### 频率测量
+![alt text](/images/image-20.png)
+- 测频法适合测量高频信号，测周法适合测量低频信号
+
+##### 输入捕获结构
+![alt text](/images/image-21.png)
+- 先转运CCR的值，再触发从模式给CNT清零
+
+##### PWMI基本结构
+![alt text](/images/image-22.png)
+- 使用两个通道来捕获频率和占空比的思路：占空比 = $\frac{CCR2}{CCR1}$
+
+#### 输入捕获捕获模式测频率
+- Q：首先，为了测量外部信号频率，我们先得有一个信号源，产生一个频率和占空比可调的波形，但是我们没有信号发生器，该怎么办？
+- A：先用pwm模块，在PA0端口输出一个频率和占空比可调的波形，然后选择一个端口如（PA6）来测量波形的输入口，最后再拿一根线把他们连起来就ok
+
+#### PWMI模式测频率占空比
