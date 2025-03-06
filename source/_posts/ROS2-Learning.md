@@ -8,6 +8,8 @@ categories: 我的笔记
 ---
 # ROS2中的命令行操作
 
+ros的本质是通信框架，具体做什么得按照你的需求来
+
 ``` linux
 ros2 run turtlesim turtlesim_node //启动小海龟
 ros2 run turtlesim turtle_teleop_key //开启电脑方向键控制小海龟运动
@@ -18,7 +20,7 @@ ros2 topic echo /turtle/pose 订阅并在终端打印信息
 ros2 topic pub //publish a message to a topic
 ```
 
-### 控制海龟运动
+## 控制海龟运动
 `ros2 topic pub --rate 1 /turtle1/cmd_vel geometry_msgs/msg/Twist "{linear: {x: 2.0, y : 0.0, z : 0.0}, angular: {x : 0.0, y : 0.0, z : 1.8}}" `
 这个指令的作用是每秒向 /turtle1/cmd_vel 话题发布一条 geometry_msgs/msg/Twist 类型的消息，消息内容表示海龟在 X 轴上的线性速度为 2.0，绕 Z 轴的角速度为 1.8，从而控制海龟的运动。
 1. `ros2 topic pub`
@@ -34,17 +36,17 @@ ros2 topic pub //publish a message to a topic
 - `linear`：表示线性速度，包含三个分量 `x`、`y` 和 `z`，分别代表在 X、Y 和 Z 轴上的线性速度。在这个例子中，`x` 轴的线性速度为 2.0，`y` 轴和 `z` 轴的线性速度为 0.0。
 - `angular`：表示角速度，同样包含三个分量 `x`、`y` 和 `z`，分别代表绕 X、Y 和 Z 轴的角速度。在这个例子中，`x` 轴和 `y` 轴的角速度为 0.0，`z` 轴的角速度为 1.8。
 
-### 生成一支新海龟
+## 生成一支新海龟
 `ros2 service call/spawn turtlesim/srv/Spawn "{x: 2, y: 2, theta: 0.2, name: 'wr'}"`
 
 话题是对机器人控制的一个接口
 
-### 记录海龟的数据
+## 记录海龟的数据
 `ros2 bag record`
 `ros2 bag play`
 - eg:可以把无人机在户外飞的数据给记录下来，回到实验室可以复现数据来完成后续的算法处理与仿真
 - 小海龟复现的位置不一样？因为记录的是键盘信息，不是位置信息
-### 今日总结：
+## 今日总结：
 1. 一键安装了ros2，感谢鱼香肉丝
 2. 学了一些基本指令
 3. 开小海龟的时候：一个终端开节点，一个终端进行按键控制，一个终端进行话题发布与
@@ -59,14 +61,14 @@ ros2 topic pub //publish a message to a topic
 ![alt text](image-47.png)
 
 - 功能包
-    ![alt text](image-48.png)
+![alt text](/images/image-48.png)
 比如说，创建一个c++的功能包，里面的package.xml描述的是基本信息和一些依赖项
 cmakelists写的是编译规则，c++需要编译成可执行文件，但是Python语言是解析型的，不需要对代码去编译
 
 > 突然忘记了视频好像有说到如果你对机器人不同的功能写了一套代码，要怎么给别人，但是我忘记了，好像没做笔记
 
 # 节点：机器人的工作细胞
-![alt text](image-49.png)
+![alt text](/images/image-49.png)
 （如果是相同的语言，那不就相当于FPGA的不同模块）
 
 ## 第一个节点（面向过程编程）
@@ -189,3 +191,189 @@ A3:helloworldNode类是继承自Node节点类，在创建这个类的时候调�
 `cd ~/ros2/dev_ws  # 进入工作空间根目录
 rm -rf build install log
 colcon build`
+
+节点不是孤立的哈
+![alt text](/images/image-50.png)
+
+# 话题：节点间传递数据的桥梁
+- 发布/订阅模型
+- 订阅者或发布者可以不唯一
+- 异步通信机制
+- .msg文件定义通信的消息结构
+![alt text](/images/image-51.png)
+## 发布者
+- 编程接口初始化
+- 创建节点初始化
+- 创建发布者对象
+- 创建并填充话题消息
+- 发布话题消息
+- 销毁节点并关闭接口
+
+```python 
+import rclpy                                     # ROS2 Python接口库
+from rclpy.node import Node                      # ROS2 节点类
+from std_msgs.msg import String                  # 字符串消息类型
+
+"""
+创建一个发布者节点
+"""
+class PublisherNode(Node):
+    
+    def __init__(self, name):
+        super().__init__(name)                                    # ROS2节点父类初始化
+        self.pub = self.create_publisher(String, "chatter", 10)   # 创建发布者对象（消息类型、话题名、队列长度）
+        self.timer = self.create_timer(0.5, self.timer_callback)  # 创建一个定时器（单位为秒的周期，定时执行的回调函数）
+        
+    def timer_callback(self):                                     # 创建定时器周期执行的回调函数
+        msg = String()                                            # 创建一个String类型的消息对象
+        msg.data = 'Hello World'                                  # 填充消息对象中的消息数据
+        self.pub.publish(msg)                                     # 发布话题消息
+        self.get_logger().info('Publishing: "%s"' % msg.data)     # 输出日志信息，提示已经完成话题发布
+        
+def main(args=None):                                 # ROS2节点主入口main函数
+    rclpy.init(args=args)                            # ROS2 Python接口初始化
+    node = PublisherNode("topic_helloworld_pub")     # 创建ROS2节点对象并进行初始化
+    rclpy.spin(node)                                 # 循环等待ROS2退出
+    node.destroy_node()                              # 销毁节点对象
+    rclpy.shutdown()                                 # 关闭ROS2 Python接口
+```
+别忘记setup.py!
+## 订阅者
+- 编程接口初始化
+- 创建节点并初始化
+- 创建订阅者对象
+- 回调函数处理话题数据
+- 销毁节点并关闭接口
+
+```python
+import rclpy                                     # ROS2 Python接口库
+from rclpy.node   import Node                    # ROS2 节点类
+from std_msgs.msg import String                  # ROS2标准定义的String消息
+
+"""
+创建一个订阅者节点
+"""
+class SubscriberNode(Node):
+    
+    def __init__(self, name):
+        super().__init__(name)                                    # ROS2节点父类初始化
+        self.sub = self.create_subscription(\
+            String, "chatter", self.listener_callback, 10)        # 创建订阅者对象（消息类型、话题名、订阅者回调函数、队列长度）
+
+    def listener_callback(self, msg):                             # 创建回调函数，执行收到话题消息后对数据的处理
+        self.get_logger().info('I heard: "%s"' % msg.data)        # 输出日志信息，提示订阅收到的话题消息
+        
+def main(args=None):                                 # ROS2节点主入口main函数
+    rclpy.init(args=args)                            # ROS2 Python接口初始化
+    node = SubscriberNode("topic_helloworld_sub")    # 创建ROS2节点对象并进行初始化
+    rclpy.spin(node)                                 # 循环等待ROS2退出
+    node.destroy_node()                              # 销毁节点对象
+    rclpy.shutdown()                                 # 关闭ROS2 Python接口
+```
+## 完成一个更复杂的节点通信
+![alt text](/images/image-52.png)
+
+
+`rqt_graph` 可以绘制节点的图片
+![alt text](/images/image-53.png)
+
+# 服务：节点间的你问我答
+![alt text](/images/image-54.png)
+- 客户端/服务器（c/s）模型
+- 同步通信机制
+- 服务器唯一，客户端可以不唯一
+- .srv文件定义请求和应答数据结构
+
+## 创建服务客户端的程序流程
+- 编程接口初始化
+- 创建节点并初始化
+- 创建客户端对象
+- 创建并发送请求数据
+- 等待服务器端应答数据
+- 销毁节点并关闭接口
+
+## 创建服务服务端
+- 编程接口初始化
+- 创建节点并初始化
+- 创建服务器对象
+- 通过回调函数处进行服务
+- 向客户端反馈应答结果
+- 销毁节点并关闭接口
+
+## 实现一个更为复杂的服务通信
+![alt text](/images/image-55.png)
+1. 相机驱动节点：发布图像数据
+2. 视觉识别节点：订阅图像数据，并且集成了一个服务器端的对象，随时准备提供目标的位置
+3. 机器人目标跟踪节点（客户端的节点）：当需要根据目标运动时，就发送一次请求，拿到一个当前的目标位置
+
+# 通信接口：数据传递的标准接口
+![alt text](/images/image-56.png)
+![alt text](/images/image-57.png)
+
+- 服务通信
+![alt text](/images/image-58.png)
+
+- 话题通信
+![alt text](/images/image-59.png)
+> 原理其实讲的很清楚了，ROS2的使用本来就是运行在应用层上的，所以作者没有讲具体的实现代码。这里一个节点启动摄像头，然后一个节点处理图像得到坐标并推送话题，最后一个节点订阅话题得到坐标。
+
+- 服务：请求一次，反馈一次结果
+- 话题：周期上地反馈结果
+
+# 动作：完整行为地流程管理
+![alt text](/images/image-60.png)
+- 客户端/服务器（c/s）模型
+- 服务器唯一，客户端可以不唯一
+- 同步通信机制
+- .action文件定义通信接口地数据结构
+
+![alt text](/images/image-61.png)
+- 里面三个通信模块有两个服务和一个话题
+  - 当客户端发送运动目标请求时，使用的是服务的请求调用
+  - 服务器端也会去反馈一个应答，表示收到命令
+  - 动作的反馈过程就是一个话题的周期发布，服务器端是发布者，客户端是订阅者
+- 动作就是一种应用层的通信机制，底层就是基于话题和服务实现的
+
+![alt text](/images/image-62.png)
+
+- 实现一个机器人画圆的动作
+![alt text](/images/image-63.png)
+    - 使用MoveCircle.action来进行定义，且有3个部分
+      - 动作的目标
+      - 动作的执行结果
+      - 动作的周期反馈
+    - 通讯模型
+      - 客户端发送一个动作的目标服务器来控制机器人开始运动，并且进行周期反馈，反馈整体的一个信息
+
+相比话题和服务的通讯，动作通讯的历程相对较长
+
+> 请后续复盘回调函数部分
+> 有非常多的callback 
+![alt text](/images/image-64.png)
+# 参数：机器人系统的全局字典(类似c中的全局变量)
+
+- 全局共享字典
+- 由键与值组成
+- 可实现动态监控
+
+## 参数在机器人中的应用
+![alt text](/images/image-65.png)
+
+# 分布式通信：多计算平台的任务分配
+![alt text](/images/image-65.png)
+![alt text](/images/image-66.png)
+![alt text](/images/image-67.png)
+![alt text](/images/image-68.png)
+![alt text](/images/image-69.png)
+![alt text](/images/image-70.png)
+
+# DDS:机器人的神经网络
+![alt text](/images/image-71.png)
+DDS，Data Distribution Service，即数据分发服务
+- 2004年由对象管理组织0MG(0bjectManagementGroup)发布
+- 专门为实时系统设计的数据分发/订阅标准
+- 最早应用于美国海军，解决舰船复杂网络环境中大量软件升级的兼容性问题，目前已经成为美国国防部的强制标准，同时广泛应用于国防民航、工业控制等领域，成为分布式实时系统中数据发布/订阅的标准解决方案。
+- DDS强调以数据为中心，提供丰富的服务质量策略(QoS)，以保障数据进行实时、高效、灵活地分发，可满足各种分布式实时通信应用需求。
+
+![alt text](/images/image-72.png)
+![alt text](/images/image-73.png)
