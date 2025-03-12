@@ -377,3 +377,164 @@ DDS，Data Distribution Service，即数据分发服务
 
 ![alt text](/images/image-72.png)
 ![alt text](/images/image-73.png)
+
+# Launch: 多节点启动与配置脚本
+
+-  rviz.launch.py
+`ros2 run rviz2 rviz2 -d /home/lisettepeng/ros2/dev_ws/src/ros2_21_tutorials/learning_launch/rviz/turtle_rviz.rviz` 该命令行是如何实现的？
+``` python
+import os
+from ament_index_python.packages import get_package_share_directory # 查询功能包路径的方法
+
+from launch import LaunchDescription    # launch文件的描述类
+from launch_ros.actions import Node     # 节点启动的描述类
+
+
+def generate_launch_description():      # 自动生成launch文件的函数
+   rviz_config = os.path.join(          # 找到配置文件的完整路径
+      get_package_share_directory('learning_launch'),
+      'rviz',
+      'turtle_rviz.rviz'
+      )
+
+   return LaunchDescription([           # 返回launch文件的描述信息
+      Node(                             # 配置一个节点的启动
+         package='rviz2',               # 节点所在的功能包
+         executable='rviz2',            # 节点的可执行文件名
+         name='rviz2',                  # 对节点重新命名!!!!
+         arguments=['-d', rviz_config]  # 加载命令行参数
+      )
+   ])
+```
+
+> 当我开发a机器人写了一堆资源用了一个名字，但你代码不想换，但你想换个名字，用B
+> 这个时候不用改你源码，只用重新配置一个launch文件
+
+- remapping.launch.py
+ ```python
+ from launch import LaunchDescription      # launch文件的描述类
+from launch_ros.actions import Node       # 节点启动的描述类
+
+def generate_launch_description():        # 自动生成launch文件的函数
+    return LaunchDescription([            # 返回launch文件的描述信息
+        Node(                             # 配置一个节点的启动
+            package='turtlesim',          # 节点所在的功能包
+            namespace='turtlesim1',       # 节点所在的命名空间
+            executable='turtlesim_node',  # 节点的可执行文件名
+            name='sim'                    # 对节点重新命名
+        ),
+        Node(                             # 配置一个节点的启动
+            package='turtlesim',          # 节点所在的功能包
+            namespace='turtlesim2',       # 节点所在的命名空间
+            executable='turtlesim_node',  # 节点的可执行文件名
+            name='sim'                    # 对节点重新命名
+        ),
+        Node(                             # 配置一个节点的启动
+            package='turtlesim',          # 节点所在的功能包
+            executable='mimic',           # 节点的可执行文件名
+            name='mimic',                 # 对节点重新命名
+            remappings=[                  # 资源重映射列表
+                ('/input/pose', '/turtlesim1/turtle1/pose'),         # 将/input/pose话题名修改为/turtlesim1/turtle1/pose
+                ('/output/cmd_vel', '/turtlesim2/turtle1/cmd_vel'),  # 将/output/cmd_vel话题名修改为/turtlesim2/turtle1/cmd_vel
+                # 重映射
+            ]
+        )
+    ])
+```
+ - parameters.launch.py
+ - 这是对参数的一个launch
+```python
+from launch import LaunchDescription                   # launch文件的描述类
+from launch.actions import DeclareLaunchArgument       # 声明launch文件内使用的Argument类
+from launch.substitutions import LaunchConfiguration, TextSubstitution
+
+from launch_ros.actions import Node                    # 节点启动的描述类
+
+
+def generate_launch_description():                     # 自动生成launch文件的函数
+   background_r_launch_arg = DeclareLaunchArgument(
+      'background_r', default_value=TextSubstitution(text='0')     # 创建一个Launch文件内参数（arg）background_r
+   )
+   background_g_launch_arg = DeclareLaunchArgument(
+      'background_g', default_value=TextSubstitution(text='84')    # 创建一个Launch文件内参数（arg）background_g
+   )
+   background_b_launch_arg = DeclareLaunchArgument(
+      'background_b', default_value=TextSubstitution(text='122')   # 创建一个Launch文件内参数（arg）background_b
+   )
+
+   return LaunchDescription([                                      # 返回launch文件的描述信息
+      background_r_launch_arg,                                     # 调用以上创建的参数（arg）
+      background_g_launch_arg,
+      background_b_launch_arg,
+      Node(                                                        # 配置一个节点的启动
+         package='turtlesim',
+         executable='turtlesim_node',                              # 节点所在的功能包
+         name='sim',                                               # 对节点重新命名
+         parameters=[{                                             # ROS参数列表
+            'background_r': LaunchConfiguration('background_r'),   # 创建参数background_r
+            'background_g': LaunchConfiguration('background_g'),   # 创建参数background_g
+            'background_b': LaunchConfiguration('background_b'),   # 创建参数background_b
+         }]
+      ),
+   ])
+```
+
+- parameters_yaml.launch.py
+``` python
+import os
+
+from ament_index_python.packages import get_package_share_directory  # 查询功能包路径的方法
+
+from launch import LaunchDescription   # launch文件的描述类
+from launch_ros.actions import Node    # 节点启动的描述类
+
+
+def generate_launch_description():     # 自动生成launch文件的函数
+   config = os. n.join(              # 找到参数文件的完整路径
+      get_package_share_directory('learning_launch'),
+      'config',
+      'turtlesim.yaml'
+      )
+
+   return LaunchDescription([          # 返回launch文件的描述信息
+      Node(                            # 配置一个节点的启动
+         package='turtlesim',          # 节点所在的功能包
+         executable='turtlesim_node',  # 节点的可执行文件名
+         namespace='turtlesim2',       # 节点所在的命名空间
+         name='sim',                   # 对节点重新命名
+         parameters=[config]           # 加载参数文件
+      )
+   ])
+```
+
+- namespaces.launch.py
+- 一个launch文件包含一堆
+```python
+import os
+
+from ament_index_python.packages import get_package_share_directory  # 查询功能包路径的方法
+
+from launch import LaunchDescription                 # launch文件的描述类
+from launch.actions import IncludeLaunchDescription  # 节点启动的描述类
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.actions import GroupAction               # launch文件中的执行动作
+from launch_ros.actions import PushRosNamespace      # ROS命名空间配置
+
+def generate_launch_description():                   # 自动生成launch文件的函数
+   parameter_yaml = IncludeLaunchDescription(        # 包含指定路径下的另外一个launch文件
+      PythonLaunchDescriptionSource([os.path.join(
+         get_package_share_directory('learning_launch'), 'launch'),
+         '/parameters_nonamespace.launch.py'])
+      )
+  
+   parameter_yaml_with_namespace = GroupAction(      # 对指定launch文件中启动的功能加上命名空间
+      actions=[
+         PushRosNamespace('turtlesim2'),
+         parameter_yaml]
+      )
+
+   return LaunchDescription([                        # 返回launch文件的描述信息
+      parameter_yaml_with_namespace
+   ])
+```
+
