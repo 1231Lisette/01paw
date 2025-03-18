@@ -58,7 +58,7 @@ ros2 topic pub //publish a message to a topic
   - install：安装空间（install space）
   - build：编译空间（build space）
   - log：日志空间（log space）
-![alt text](image-47.png)
+![alt text](/images/image-47.png)
 
 - 功能包
 ![alt text](/images/image-48.png)
