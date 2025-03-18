@@ -538,3 +538,96 @@ def generate_launch_description():                   # 自动生成launch文件�
    ])
 ```
 
+# TF：机器人坐标系管理神器
+## 机器人中的坐标系
+![alt text](/images/image-74.png)
+
+## 底层原理
+![alt text](/images/image-75.png)
+关于坐标系变换关系的基本理论，在每一本机器人学的教材里面都会有详细的讲解，可以分解为**平移和旋转**两个部分，通过一个4*4的矩阵来进行描述，在空间中画出坐标系两者之间的关系变换其实就是这个向量的数学描述，ros2里面的tf就是对这些数学理论进行了详细的封装
+
+## tf
+- 作用：对坐标系进行管理
+
+1. 相对不变的位置——静态tf广播
+eg.雷达与机身地盘的位置
+`ros2 run learning_tf_static tf_broadcaster`
+
+2. 查询两个坐标的相对位置——tf监听
+`ros2 run learning_tf tf_listener`
+
+## 海龟跟随功能的实现
+- 全局参考系：world
+![alt text](/images/image-76.png)
+`ros2 launch learning_tf turtle_following_demo.launch.py`
+`ros2 run turtlesim turtle_teleop_key`
+这个是我们自己通过代码实现的，先前的是ros2里面的案例
+
+# URDF：机器人的建模方法
+## 什么是URDF
+- Unified Robot Description Format，统一机器人描述格式;
+- ROS中一个非常重要的机器人模型描述格式;
+- 可以解析URDF文件中使用XML格式描述的机器人模型;
+- 包含**link和joint自身及相关属性**的描述信息;
+![alt text](/images/image-77.png)
+![alt text](/images/image-78.png)
+
+## <link>
+- 描述机器人某个刚体部分的外观和物理属性;
+- 描述连杆尺寸(size)、颜色(color)，形状(shape)，惯性矩阵(inertial matrix)，碰撞参数(collision properties)等。
+- 每个Link会成为一个坐标系
+![alt text](/images/image-79.png)
+
+## <joint>
+- 描述两个link之间的关系，分为以下六种类型：
+|关节类型|描述|
+| :----: | :----: |
+|continuous|旋转关节，可以围绕单轴无限旋转|
+|revolute|旋转关节，类似于continuous，但是有旋转的角度极限|
+|prismatic|滑动关节，沿某一轴线移动的关节，带有位置极限|
+|fixed|固定关节，不允许运动的特殊关节|
+|floating|浮动关节，允许进行平移、旋转运动|
+|planar|平面关节，允许在平面正交方向上平移或者旋转| 
+
+- 包括关节运动的位置和速度限制
+- 描述机器人关节的运动学和动力属性
+![alt text](/images/image-80.png)
+r是回转角绕z轴旋转，p是俯仰角绕y轴，y是偏转角绕x轴
+
+## <robot>
+- 完整机器人模型的最顶层标签
+- <link>和<ioint>标签都必须包含在<robot>标签内
+- 一个完整的机器人模型，由一系列<link>和<joint>组成    
+![alt text](/images/image-81.png)
+![alt text](/images/image-82.png)      
+
+## 创建机器人urdf模型
+- urdf:存放机器人模型的URDF或xacro文件
+- meshes:放置URDF中引用的模型渲染文件
+- launch:保存相关启动文件
+- rviz:保存rviz的配置文件
+
+### 查看URDF模型结构
+![alt text](/images/image-83.png)    
+`urdf_to_graphviz mbot_base.urdf # 在模型文件夹下`
+
+# Gazebo：三维物理仿真平台
+Gazebo是一款功能强大的三维物理仿真平台具备强大的物理引擎
+- 高质量的图形渲染
+- 方便的编程与图形接口
+- 开源免费
+
+其典型应用场景包括
+- 测试机器人算法
+- 机器人的设计
+- 现实情景下的回溯测试
+
+## urdf模型的进化版本——XACRO模型文件
+- 精简模型代码
+  - 创建宏定义
+  - 文件包含
+- 提供可编程接口
+  - 常量
+  - 变量
+  - 数学计算
+  - 条件语句

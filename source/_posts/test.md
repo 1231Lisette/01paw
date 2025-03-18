@@ -39,3 +39,4 @@ cdn 里找到 css 替换掉主题默认的 yun-markdown-css。
 将要插入的图片放在该文件夹中。
 
 在Markdown文档中使用以下语法引用图片： `![图片描述](/images/图片名.jpg "图片标题")` 例如：` ![甘雨](/images/20.jpeg "甘雨")` 将20.jpeg图片文件放在hexo文件夹/source/images下，即可在博客中显示图片。
+
