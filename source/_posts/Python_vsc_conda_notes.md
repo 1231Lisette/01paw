@@ -23,5 +23,34 @@ categories: 我的笔记
 -`pip install package_name --timeout 6000`
 - pip 换清华源后缀:`-i https://mirrors.tuna.tsinghua.edu,cn/pypi/web /simple -trusted-host=https://mirrors.tunatsinghua.edu.cn/pypi/web/simple`
 
+# 调教记录：）
+
 > 2025.5.10 20:17 刚配了conda的环境变量哈哈哈，第一次用cmd直接输入conda env list就成功
+> 2025.7.4晚 帮lyx做人工智能作业时重新温习了一下如何新创建一个环境等等操作
+1. 生成配置文件`conda config --set show_channel_urls yes`
+2. 改镜像源之配置`.condarc`文件
+```txt
+  - defaults
+show_channel_urls: true
+default_channels:
+  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main
+  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/r
+  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/msys2
+custom_channels:
+  conda-forge: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+  msys2: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+  bioconda: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+  menpo: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+  pytorch: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+  simpleitk: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+```
+1. 清除索引缓存`conda clean -i`
+2. 验证是否成功`conda config --show-sources`
+> 上面的已经做完以后就可以直接根据上面的常用conda指令来创建
+> pip先升级后换源
+``` python
+python -m pip install --upgrade pip
+pip config set global.index-url https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple
+```
+
 
