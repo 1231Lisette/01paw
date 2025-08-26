@@ -39,4 +39,8 @@ cdn 里找到 css 替换掉主题默认的 yun-markdown-css。
 将要插入的图片放在该文件夹中。
 
 在Markdown文档中使用以下语法引用图片： `![图片描述](/images/图片名.jpg "图片标题")` 例如：` ![甘雨](/images/20.jpeg "甘雨")` 将20.jpeg图片文件放在hexo文件夹/source/images下，即可在博客中显示图片。
+---
 
+本地开发：运行 npm run dev，Hexo 使用本地资源，不会缓存。
+
+生产部署：运行 ./update.sh "更新内容"，Hexo 生成静态文件并通过 CDN 加速，同时提交代码到 GitHub。
