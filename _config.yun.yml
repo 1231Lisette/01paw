@@ -1,38 +1,96 @@
-head: # 自定义的资源就往自行加
+# --------------------------
+# 自定义 head 资源 + 百度统计
+# --------------------------
+head:
   css:
     example: //example.min.css
   js:
     base:
       - xxx
-    async:
-    defer:
   cdn:
-    pre: # 开发模式下为空，本地加载
+    pre:
       development: ''
       production: https://cdn.jsdelivr.net/gh/1231Lisette/01paw@latest
-    css:
     js:
-      base:
-        - xxx
       async:
         iconfont: //at.alicdn.com/t/font_1140697_dxory92pb0h.js
-      defer:
   style:
     - /css/hexo-theme-yun.css
   script:
     - /js/hexo-theme-yun.js
-
   prefetch:
     script:
       - /js/sidebar.js
-
   dns_prefetch:
     - https://cos.yunyoujun.cn
-
-  # do more(TCP handshake...) than dns-fetch
   preconnect:
     - https://cdn.jsdelivr.net
+  font:
+    cdn:
+      enable: false
+    serif:
+      family: "'Noto Serif SC','Songti SC','STZhongsong','STKaiti','KaiTi','serif'"
+      weight: 900
+    sans_serif:
+      family: "'Noto Sans SC','PingFang SC','Microsoft YaHei','Roboto','Arial','sans-serif'"
+      weight: 400
+    monospace:
+      family: "'Source Code Pro','Courier New','Courier','Consolas','Monaco','monospace'"
 
+inject:
+  head: |
+    <!-- 百度统计 -->
+    <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?你的百度统计ID";
+      var s = document.getElementsByTagName("script")[0]; 
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+
+# --------------------------
+# 修正 tips HTML
+# --------------------------
+tips:
+  - 如果您有任何关于博客内容的相关讨论，欢迎前往 <a href="https://github.com/1231Lisette/01paw/discussions" target="_blank">GitHub Discussions</a> 与我交流。
+
+# --------------------------
+# 搜索配置修正
+# --------------------------
+search:
+  modal: false
+  bg_image: /images/background.jpg
+  dark_bg_image: /images/bg.jpg
+
+# --------------------------
+# 菜单整理
+# --------------------------
+menu:
+  home:
+    path: /
+    icon: ri:home-4-line
+  list:
+    - type: archives
+      path: /archives/
+      icon: ri:archive-line
+    - type: categories
+      path: /categories/
+      icon: ri:folder-2-line
+    - type: tags
+      path: /tags/
+      icon: ri:price-tag-3-line
+  custom:
+    - title: 文档
+      path: https://yun.yunyoujun.cn
+      icon: ri:settings-line
+    - title: 留言板
+      path: /about/#comment
+      icon: ri:clipboard-line
+
+
+# --------------------------
 favicon: /favicon.svg # 这里要改
 
 language: zh-CN
@@ -43,23 +101,60 @@ avatar:
   rounded: true
   opacity: 1
   mickey_mouse: false
-  status:
+  status:                                                                                                   
     enable: true
     emoji: 😭
     message: 不想上学！！
-
+                                            
 bg_image:
   enable: true
   url: /images/background.jpg
-  # dark:
+  # dark:                                                                   
   opacity: 0.9
 
+comment:
+# 启用评论系统候选
+  candidates:
+    - giscus   # 使用 giscus（基于 GitHub Discussions）
+
+giscus:
+  repo: 1231Lisette/01paw               # 你的仓库
+  repo-id: R_kgDONzMlDQ                 # 仓库 ID（giscus.app 生成）
+  category: General                     # Discussions 分类名
+  category-id: DIC_kwDONzMlDc4CuuKh     # 分类 ID（giscus.app 生成）
+  mapping: pathname                     # 评论和页面映射方式（推荐 pathname）
+  strict: 0                             # 是否严格匹配（0=否，1=是）
+  reactions-enabled: 1                  # 启用表情回应
+  emit-metadata: 0                      # 是否注入元数据
+  input-position: bottom                # 输入框在底部（top=顶部，bottom=底部）
+  theme: preferred_color_scheme         # 主题：跟随系统（也可设 light / dark）
+  lang: zh-CN                           # 界面语言：中文
+
+tips:
+  - 如果您有任何关于博客内容的相关讨论，欢迎前往 <a https://github.com/1231Lisette/01paw/discussions" target="_blank">GitHub Discussions</a> 与我交流。
+
+
 search:
-  modal: true
+  modal: false
   bg_image: /images/backgroud.jpg
   dark_bg_image: /images/bg.jpg
   # placeholder:
 
+trianglify:
+  enable: false
+  cellSize: 75
+  width: 800
+  height: 600
+  palette: '["YlGnBu", "GnBu", "Purples", "Blues"]'
+  opacity: 0.5
+
+fireworks:
+  enable: true
+  colors:
+    - '102, 167, 221'
+    - '62, 131, 225'
+    - '33, 78, 194'
+                                                                                                    
 colors:
   primary: '#6200ee'
   # bg: "#F5F5F5"
@@ -67,6 +162,12 @@ colors:
   # 标签云中标签的起始色和结束色
   # tag_start_color:
   # tag_end_color:
+
+albums:
+  enable: true
+
+girls:
+  enable: true
   
 tags:
   C: '#4fc08d'
@@ -104,7 +205,7 @@ banner:
 
 notice:
   enable: true
-  content: 用爪印编译世界的浪漫——电子信息狗的成长型脑回路
+  content: Welcome to my blog!
 # 可选 light | dark | auto | time
 
 mode: auto
@@ -112,11 +213,23 @@ mode: auto
 
 medium_zoom: true
 
+scrollreveal:
+  enable: true
+  targets:
+    - .post-card
+    - .markdown-body img
+
+
+
 cursor:
-  enable: false
-  default: https://cdn.yunyoujun.cn/css/md-cursors/pointer.cur
-  pointer: https://cdn.yunyoujun.cn/css/md-cursors/link.cur
-  text: https://cdn.yunyoujun.cn/css/md-cursors/text.cur
+  enable: true
+
+baidu_push: true
+
+
+wordcount:
+  enable: true
+  
 
 sidebar:
   bg_image: https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/bg/stars-timing-1.jpg
@@ -139,13 +252,14 @@ menu:
     - type: tags
       path: /tags/
       icon: ri:price-tag-3-line
-    # - path: https://www.yunyoujun.cn
-    #   icon: ri:cloud-line
-    #   count: 你猜
   custom:
-    title: 文档
-    path: https://yun.yunyoujun.cn
-    icon: ri:settings-line
+    - title: 文档
+      path: https://yun.yunyoujun.cn
+      icon: ri:settings-line
+    - title: 留言板
+      path: /about/#comment
+      icon: ri:clipboard-line
+
 
 post_meta:
   item_text: false
