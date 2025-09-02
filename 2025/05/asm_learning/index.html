@@ -1,0 +1,456 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#6200ee"><meta name="author" content="Lisette Peng"><meta name="copyright" content="Lisette Peng"><meta name="generator" content="Hexo 7.3.0"><meta name="theme" content="hexo-theme-yun"><title>8086/8088学习 | 01paw</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/star-markdown-css@0.4.1/dist/yun/yun-markdown.min.css"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/prism-theme-vars/base.css"><script src="https://fastly.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
+  [".post-card",".markdown-body img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+}
+document.addEventListener("DOMContentLoaded", initScrollReveal);
+document.addEventListener("pjax:success", initScrollReveal);
+</script><link rel="icon" type="image/svg+xml" href="/01paw/favicon.svg"><link rel="mask-icon" href="/01paw/favicon.svg" color="#6200ee"><link rel="preload" href="/01paw/css/hexo-theme-yun.css" as="style"><link rel="prefetch" href="/01paw/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="preconnect" href="https://fastly.jsdelivr.net/npm/" crossorigin><script id="yun-config">
+    window.Yun = {}
+    window.CONFIG = {"hostname":"1231lisette.github.io","root":"/01paw/","title":"二进制爪印","version":"1.10.11","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"搜索...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.yunyoujun.cn/img/avatar/none.jpg","say":{"api":"https://v1.hitokoto.cn","hitokoto":true},"fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]},"vendors":{"host":"https://fastly.jsdelivr.net/npm/","darken":"https://fastly.jsdelivr.net/npm/darken@1.5.0"}};
+  </script><link rel="stylesheet" href="/01paw/css/hexo-theme-yun.css"><script src="/01paw/js/hexo-theme-yun.js" type="module"></script><link rel="alternate" href="/01paw/atom.xml" title="01paw" type="application/atom+xml"><script src="//at.alicdn.com/t/font_1140697_dxory92pb0h.js" async></script><script>(function(){
+  var bp = document.createElement('script');
+  var curProtocol = window.location.protocol.split(':')[0];
+  if (curProtocol === 'https') {
+    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else {
+    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(bp, s);
+})();</script><meta name="description" content="第一个程序 把helloworld存储到数据段里，然后在代码段里执行指令把内存里的数据显示出来  DSEG SEGMENT;datasegment,dataseg,data...    MESS DB &#x27;Hello,world&#x27;, 0DH, 0AH, &#x27;$&#x27;  ; 注意：24H 即 &#x27;$&#x27;    ;mess是变量的名字，DB是变量类型DS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="8086&#x2F;8088学习">
+<meta property="og:url" content="https://1231lisette.github.io/01paw/2025/05/asm_learning/index.html">
+<meta property="og:site_name" content="01paw">
+<meta property="og:description" content="第一个程序 把helloworld存储到数据段里，然后在代码段里执行指令把内存里的数据显示出来  DSEG SEGMENT;datasegment,dataseg,data...    MESS DB &#x27;Hello,world&#x27;, 0DH, 0AH, &#x27;$&#x27;  ; 注意：24H 即 &#x27;$&#x27;    ;mess是变量的名字，DB是变量类型DS">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-05-09T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-08-31T04:58:21.162Z">
+<meta property="article:author" content="Lisette Peng">
+<meta property="article:tag" content="assembly language">
+<meta name="twitter:card" content="summary"><script>(function() {
+  if (CONFIG.mode !== 'auto') return
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+  const setting = localStorage.getItem('darken-mode') || 'auto'
+  if (setting === 'dark' || (prefersDark && setting !== 'light'))
+    document.documentElement.classList.toggle('dark', true)
+})()</script></head><body><script src="https://code.iconify.design/2/2.1.1/iconify.min.js"></script><script>// Define global variable
+IconifyProviders = {
+  // Empty prefix: overwrite default API provider configuration
+  '': {
+    // Use custom API first, use Iconify public API as backup
+    resources: [
+        'https://api.iconify.design',
+    ],
+    // Wait for 1 second before switching API hosts
+    rotate: 1000,
+  },
+};</script><script defer src="https://fastly.jsdelivr.net/npm/animejs@latest"></script><script defer src="/01paw/js/ui/fireworks.js" type="module"></script><canvas class="fireworks"></canvas><canvas id="trianglifyContainer"></canvas><script defer src="https://fastly.jsdelivr.net/npm/trianglify@4/dist/trianglify.bundle.js"></script><script>document.addEventListener("DOMContentLoaded", () => {
+  const pattern = trianglify({
+    width: 800,
+    height: 600,
+    cellSize: 75,
+    palette: ["YlGnBu", "GnBu", "Purples", "Blues"],
+  });
+  const canvasOpts = {
+    applyCssScaling: false
+  }
+  document.body.appendChild(pattern.toCanvas(trianglifyContainer, canvasOpts));
+});</script><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/01paw/js/sidebar.js" type="module"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><svg class="icon ri:list-ordered" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><svg class="icon ri:passport-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info mickey-mouse"><a class="site-author-avatar" href="/01paw/about/" title="Lisette Peng"><img width="96" loading="lazy" src="/01paw/images/avatar.jpg" alt="Lisette Peng"><span class="site-author-status" title="不想上学！！">😭</span></a><div class="site-author-name"><a href="/01paw/about/">Lisette Peng</a></div><span class="site-name">01paw</span><sub class="site-subtitle">好久不见</sub><div class="site-description">玩得开心</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/01paw/" title="首页"><span class="site-state-item-icon"><svg class="icon icon-home-4-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/01paw/archives/" title="归档"><span class="site-state-item-icon"><svg class="icon icon-archive-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">10</span></a></div><div class="site-state-item"><a href="/01paw/categories/" title="分类"><span class="site-state-item-icon"><svg class="icon icon-folder-2-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">2</span></a></div><div class="site-state-item"><a href="/01paw/tags/" title="标签"><span class="site-state-item-icon"><svg class="icon icon-price-tag-3-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">14</span></a></div><a class="site-state-item hty-icon-button" target="_blank" rel="noopener" href="https://yun.yunyoujun.cn" title="文档"><span class="site-state-item-icon"><svg class="icon ri:settings-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:settings-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:2405848533@qq.com" title="E-Mail" target="_blank" style="color:#8E71C1"><svg class="icon icon-mail-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#icon-mail-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/1231Lisette" title="GitHub" target="_blank" style="color:undefined"><svg class="icon icon-github-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#icon-github-line"></use></svg></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" href="/01paw/links/" title="我的小伙伴们" style="color:dodgerblue"><svg class="icon icon-genderless-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#icon-genderless-line"></use></svg></a><a class="links-item hty-icon-button" href="/01paw/about/" title="关于" style="color:green"><svg class="icon icon-user-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#icon-user-line"></use></svg></a><a class="links-item hty-icon-button" href="/01paw/categories/" title="分类" style="color:orange"><svg class="icon icon-folder-2-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#icon-folder-2-line"></use></svg></a><a class="links-item hty-icon-button" href="/01paw/tags/" title="标签" style="color:purple"><svg class="icon icon-price-tag-3-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#icon-price-tag-3-line"></use></svg></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon ri:contrast-2-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:contrast-2-line"></use></svg></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%A8%8B%E5%BA%8F"><span class="toc-number">1.</span> <span class="toc-text">第一个程序</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%94%A8dosbox%E8%B0%83%E8%AF%95"><span class="toc-number">2.</span> <span class="toc-text">用dosbox调试</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8C%87%E4%BB%A4"><span class="toc-number">3.</span> <span class="toc-text">指令</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#SEGMENT%E6%8C%87%E4%BB%A4"><span class="toc-number">3.1.</span> <span class="toc-text">SEGMENT指令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%AA%E8%83%BD%E5%88%86%E9%85%8D4%E4%B8%AA%E6%AE%B5-%E6%95%B0%E6%8D%AE%E6%AE%B5data-%E5%A0%86%E6%A0%88%E6%AE%B5stack-%E4%BB%A3%E7%A0%81%E6%AE%B5code%EF%BC%88%E5%8F%AF%E4%BB%A5%E5%8F%AA%E6%9C%89code%EF%BC%89"><span class="toc-number">3.2.</span> <span class="toc-text">只能分配4个段- 数据段data- 堆栈段stack- 代码段code（可以只有code）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ASSUME"><span class="toc-number">3.3.</span> <span class="toc-text">ASSUME</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%AE%9A%E4%B9%89"><span class="toc-number">3.4.</span> <span class="toc-text">数据定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MOV"><span class="toc-number">3.5.</span> <span class="toc-text">MOV</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">3.6.</span> <span class="toc-text">+-</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A8%8B%E5%BA%8F%E7%9A%84%E7%BB%88%E6%AD%A2"><span class="toc-number">3.7.</span> <span class="toc-text">程序的终止</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LABEL%E5%92%8CJUMP"><span class="toc-number">3.8.</span> <span class="toc-text">LABEL和JUMP</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E6%94%AF%E5%92%8C%E5%BE%AA%E7%8E%AF"><span class="toc-number">3.9.</span> <span class="toc-text">分支和循环</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E6%94%AF-CMP-JGE-%E2%80%A6"><span class="toc-number">3.9.1.</span> <span class="toc-text">分支 CMP-JGE&#x2F;…</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BE%AA%E7%8E%AFLOOP"><span class="toc-number">3.9.2.</span> <span class="toc-text">循环LOOP</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AF%84%E5%AD%98%E5%99%A8%EF%BC%88%E9%83%BD%E6%98%AF16%E4%BD%8D%E5%AF%84%E5%AD%98%E5%99%A8%EF%BC%89"><span class="toc-number">4.</span> <span class="toc-text">寄存器（都是16位寄存器）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%9A%E7%94%A8%E5%AF%84%E5%AD%98%E5%99%A8%EF%BC%9AAX-BX-CX-DX"><span class="toc-number">4.1.</span> <span class="toc-text">通用寄存器：AX,BX,CX,DX</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#AX-Accumlator%E7%B4%AF%E5%8A%A0%E5%99%A8"><span class="toc-number">4.1.1.</span> <span class="toc-text">AX Accumlator累加器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BX-Base%E5%9F%BA%E5%9C%B0%E5%9D%80%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-number">4.1.2.</span> <span class="toc-text">BX Base基地址寄存器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CX-Count%E8%AE%A1%E6%95%B0%E5%99%A8"><span class="toc-number">4.1.3.</span> <span class="toc-text">CX Count计数器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DX-Data%E6%95%B0%E6%8D%AE%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-number">4.1.4.</span> <span class="toc-text">DX Data数据寄存器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%87%E9%92%88%E5%8F%98%E5%9D%80%E5%AF%84%E5%AD%98%E5%99%A8%EF%BC%9ASP-BP-SI-DI"><span class="toc-number">4.2.</span> <span class="toc-text">指针变址寄存器：SP,BP,SI,DI</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SP-Stack-Pointer"><span class="toc-number">4.2.1.</span> <span class="toc-text">SP:Stack Pointer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BP-Base-Pointer"><span class="toc-number">4.2.2.</span> <span class="toc-text">BP:Base Pointer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SI-Source-Index"><span class="toc-number">4.2.3.</span> <span class="toc-text">SI:Source Index</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DI-Destination-Index"><span class="toc-number">4.2.4.</span> <span class="toc-text">DI Destination Index</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AE%B5%E5%AF%84%E5%AD%98%E5%99%A8%EF%BC%9ACS-DS-SS-ES-IP"><span class="toc-number">4.3.</span> <span class="toc-text">段寄存器：CS,DS,SS,ES,IP</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%87%E5%BF%97%E5%AF%84%E5%AD%98%E5%99%A8%EF%BC%9AFLAG"><span class="toc-number">4.4.</span> <span class="toc-text">标志寄存器：FLAG</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BE%8B%E9%A2%981"><span class="toc-number">5.</span> <span class="toc-text">例题1</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%83%E4%B9%A02"><span class="toc-number">6.</span> <span class="toc-text">练习2</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A0%86%E6%A0%88%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-number">7.</span> <span class="toc-text">堆栈的使用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">7.1.</span> <span class="toc-text">初始化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#push%E5%92%8Cpop"><span class="toc-number">7.2.</span> <span class="toc-text">push和pop</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#PROC%E5%92%8CMACRO"><span class="toc-number">8.</span> <span class="toc-text">&lt;函数&gt;:PROC和MACRO</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#PROC"><span class="toc-number">8.1.</span> <span class="toc-text">PROC</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%EF%BC%9A%E6%B1%82%E4%B8%A4%E4%B8%AA%E6%A0%88%E9%A1%B6%E5%85%83%E7%B4%A0%E4%B9%8B%E5%92%8C%E5%B9%B6%E5%AD%98%E5%82%A8%E4%BA%8EAX%E4%B8%AD"><span class="toc-number">8.1.1.</span> <span class="toc-text">示例：求两个栈顶元素之和并存储于AX中</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MACRO%EF%BC%88%E5%AE%8F%E5%AE%9A%E4%B9%89%EF%BC%89"><span class="toc-number">8.2.</span> <span class="toc-text">MACRO（宏定义）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#INT-21H%E6%8C%87%E4%BB%A4%EF%BC%9A%E8%BE%93%E5%85%A5-%E8%BE%93%E5%87%BA"><span class="toc-number">9.</span> <span class="toc-text">INT 21H指令：输入&#x2F;输出</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%94%AE%E7%9B%98%E8%BE%93%E5%85%A5"><span class="toc-number">9.1.</span> <span class="toc-text">键盘输入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%95%E4%B8%AA%E5%AD%97%E7%AC%A6%E8%BE%93%E5%85%A5%EF%BC%881%E5%8F%B7%E6%8C%87%E4%BB%A4%EF%BC%89"><span class="toc-number">9.1.1.</span> <span class="toc-text">单个字符输入（1号指令）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%BE%93%E5%85%A5%EF%BC%8810%E5%8F%B7%E6%8C%87%E4%BB%A4%EF%BC%89"><span class="toc-number">9.1.2.</span> <span class="toc-text">字符串输入（10号指令）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%98%BE%E7%A4%BA%E5%99%A8%E8%BE%93%E5%87%BA"><span class="toc-number">9.2.</span> <span class="toc-text">显示器输出</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%95%E4%B8%AA%E5%AD%97%E7%AC%A6%E8%BE%93%E5%87%BA%EF%BC%882%E5%8F%B7%E8%B0%83%E7%94%A8%EF%BC%89"><span class="toc-number">9.2.1.</span> <span class="toc-text">单个字符输出（2号调用）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%BE%93%E5%87%BA%EF%BC%889%E5%8F%B7%E8%B0%83%E7%94%A8%EF%BC%89"><span class="toc-number">9.2.2.</span> <span class="toc-text">字符串输出（9号调用）</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%BC%E5%90%88%E7%BB%83%E4%B9%A0"><span class="toc-number">10.</span> <span class="toc-text">综合练习</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%83%E4%B9%A0d-%E5%A4%A7%E5%B0%8F%E5%86%99%E8%BD%AC%E6%8D%A2-%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA"><span class="toc-number">10.1.</span> <span class="toc-text">练习d: 大小写转换+输入输出</span></a></li></ol></li></ol></div></div></div><div class="tag-cloud"><div class="tag-cloud-tags"><a href="/01paw/tags/C/" style="font-size: 12px; color: #999">C</a> <a href="/01paw/tags/C/" style="font-size: 12px; color: #999">C++</a> <a href="/01paw/tags/Hexo/" style="font-size: 12px; color: #999">Hexo</a> <a href="/01paw/tags/Python/" style="font-size: 30px; color: #0078e7">Python</a> <a href="/01paw/tags/SSH/" style="font-size: 12px; color: #999">SSH</a> <a href="/01paw/tags/WiFi%E9%85%8D%E7%BD%AE/" style="font-size: 12px; color: #999">WiFi配置</a> <a href="/01paw/tags/assembly-language/" style="font-size: 12px; color: #999">assembly language</a> <a href="/01paw/tags/growth/" style="font-size: 12px; color: #999">growth</a> <a href="/01paw/tags/stm32/" style="font-size: 12px; color: #999">stm32</a> <a href="/01paw/tags/try/" style="font-size: 12px; color: #999">try</a> <a href="/01paw/tags/%E6%88%91%E7%9A%84%E7%AC%94%E8%AE%B0/" style="font-size: 12px; color: #999">我的笔记</a> <a href="/01paw/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" style="font-size: 12px; color: #999">树莓派,</a> <a href="/01paw/tags/%E7%BD%91%E7%BB%9C%E8%B0%83%E8%AF%95/" style="font-size: 12px; color: #999">网络调试</a> <a href="/01paw/tags/%E9%9D%99%E6%80%81IP/" style="font-size: 12px; color: #999">静态IP</a></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article" style="--smc-primary:#6200ee;"><link itemprop="mainEntityOfPage" href="https://1231Lisette.github.io/01paw/01paw/2025/05/asm_learning/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Lisette Peng"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="01paw"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">8086/8088学习<a class="post-edit-link" href="https://github.com/1231Lisette/01paw/hexo/source/_posts_posts/asm_learning.md" target="_blank" title="编辑" rel="noopener"><svg class="icon ri:edit-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:edit-line"></use></svg></a></h1><div class="post-meta"><div class="post-time" style="display:block"><span class="post-meta-item-icon"><svg class="icon ri:calendar-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:calendar-line"></use></svg></span> <time title="创建时间：2025-05-10 00:00:00" itemprop="dateCreated datePublished" datetime="2025-05-10T00:00:00+08:00">2025-05-10</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon ri:calendar-2-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:calendar-2-line"></use></svg></span> <time title="修改时间：2025-08-31 12:58:21" itemprop="dateModified" datetime="2025-08-31T12:58:21+08:00">2025-08-31</time></div><span class="post-count"><span class="post-symbolcount"><span class="post-meta-item-icon" title="本文字数"><svg class="icon ri:file-word-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:file-word-line"></use></svg></span> <span title="本文字数">2.9k</span><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读时长"><svg class="icon ri:timer-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:timer-line"></use></svg></span> <span title="阅读时长">12m</span></span></span><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><svg class="icon ri:folder-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:folder-line"></use></svg></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/01paw/categories/%E6%88%91%E7%9A%84%E7%AC%94%E8%AE%B0/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">我的笔记</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/01paw/tags/assembly-language/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon ri:price-tag-3-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:price-tag-3-line"></use></svg></span><span class="tag-name">assembly language</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body"><h1 id="第一个程序"><a href="#第一个程序" class="headerlink" title="第一个程序"></a>第一个程序</h1><blockquote>
+<p>把helloworld存储到数据段里，然后在代码段里执行指令把内存里的数据显示出来</p>
+</blockquote>
+<figure class="highlight armasm"><table><tr><td class="code"><pre><span class="line"><span class="symbol">DSEG</span> SEGMENT<span class="comment">;datasegment,dataseg,data...</span></span><br><span class="line">    MESS DB <span class="string">&#x27;Hello,world&#x27;</span>, <span class="number">0</span>DH, <span class="number">0</span>AH, <span class="string">&#x27;$&#x27;</span>  <span class="comment">; 注意：24H 即 &#x27;$&#x27;</span></span><br><span class="line">    <span class="comment">;mess是变量的名字，DB是变量类型</span></span><br><span class="line"><span class="symbol">DSEG</span> ENDS</span><br><span class="line"></span><br><span class="line"><span class="symbol">SSEG</span> SEGMENT PARA STACK</span><br><span class="line">    DW <span class="number">256</span> DUP(?)</span><br><span class="line"><span class="symbol">SSEG</span> ENDS</span><br><span class="line"></span><br><span class="line"><span class="symbol">CSEG</span> SEGMENT</span><br><span class="line">    ASSUME CS:CSEG, DS:DSEG, SS:SSEG</span><br><span class="line"><span class="symbol">BEGIN:</span></span><br><span class="line">    <span class="keyword">MOV</span> AX, DSEG <span class="comment">;INT MAIN()</span></span><br><span class="line">    <span class="keyword">MOV</span> DS, AX</span><br><span class="line"></span><br><span class="line">    <span class="keyword">MOV</span> DX, OFFSET MESS</span><br><span class="line">    <span class="keyword">MOV</span> AH, <span class="number">09</span>H      </span><br><span class="line">    INT <span class="number">21</span>H</span><br><span class="line"></span><br><span class="line">    <span class="keyword">MOV</span> AH, <span class="number">4</span>CH</span><br><span class="line">    INT <span class="number">21</span>H</span><br><span class="line"><span class="symbol">CSEG</span> ENDS</span><br><span class="line"><span class="symbol">END</span> BEGIN</span><br></pre></td></tr></table></figure>
+<h1 id="用dosbox调试"><a href="#用dosbox调试" class="headerlink" title="用dosbox调试"></a>用dosbox调试</h1><ul>
+<li>T 一步一步执行</li>
+<li>G 直接执行到终点</li>
+<li>R 输出所有寄存器的地址（）</li>
+<li>D XXXX:0000，查看内存</li>
+</ul>
+<h1 id="指令"><a href="#指令" class="headerlink" title="指令"></a>指令</h1><h2 id="SEGMENT指令"><a href="#SEGMENT指令" class="headerlink" title="SEGMENT指令"></a>SEGMENT指令</h2><ul>
+<li>在内存中分配一段内存存东西</li>
+<li><h2 id="只能分配4个段-数据段data-堆栈段stack-代码段code（可以只有code）"><a href="#只能分配4个段-数据段data-堆栈段stack-代码段code（可以只有code）" class="headerlink" title="只能分配4个段- 数据段data- 堆栈段stack- 代码段code（可以只有code）"></a>只能分配4个段<br>- 数据段data<br>- 堆栈段stack<br>- 代码段code（可以只有code）</h2></li>
+</ul>
+<h2 id="ASSUME"><a href="#ASSUME" class="headerlink" title="ASSUME"></a>ASSUME</h2><p>一般就这么用<code>ASSUME CS:CSEG, DS:DSEG, SS:SSEG</code></p>
+<h2 id="数据定义"><a href="#数据定义" class="headerlink" title="数据定义"></a>数据定义</h2><ul>
+<li>数据类型<ul>
+<li>DB define a byte</li>
+<li>DW define a word<figure class="highlight armasm"><table><tr><td class="code"><pre><span class="line"><span class="symbol">DB:</span><span class="number">12</span>H</span><br><span class="line"><span class="symbol">DW:</span><span class="number">1234</span>H</span><br><span class="line">X DB ? <span class="comment">;不知道定义什么就把它留空</span></span><br><span class="line"><span class="symbol">ARRAY</span> DB <span class="number">100</span>(<span class="number">12</span>H)<span class="comment">;分配100个字节，都放12H，不知道装什么就打问号</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<h2 id="MOV"><a href="#MOV" class="headerlink" title="MOV"></a>MOV</h2><p>常用的合法操作</p>
+<figure class="highlight armasm"><table><tr><td class="code"><pre><span class="line"><span class="keyword">MOV</span> AX,Y <span class="comment">;内存到寄存器</span></span><br><span class="line"><span class="keyword">MOV</span> Y,AX <span class="comment">;寄存器到内存</span></span><br><span class="line"><span class="keyword">MOV</span> AX,<span class="keyword">BX</span> <span class="comment">;寄存器到寄存器</span></span><br><span class="line"><span class="keyword">MOV</span> AX, <span class="number">5</span>    <span class="comment">; 立即数到寄存器</span></span><br><span class="line"><span class="keyword">MOV</span> [Y], <span class="number">10</span>  <span class="comment">; 立即数到内存（变量Y所指向的内存位置）</span></span><br><span class="line"></span><br><span class="line"><span class="comment">; 寄存器作为中介</span></span><br><span class="line"><span class="keyword">MOV</span> AX, Y2    <span class="comment">; 首先将Y2的值加载到寄存器AX</span></span><br><span class="line"><span class="keyword">MOV</span> Y1, AX    <span class="comment">; 然后将AX的值存储到Y1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">MOV</span> AX, DSEG <span class="comment">; 假设DSEG是一个数据段地址</span></span><br><span class="line"><span class="keyword">MOV</span> DS, AX   <span class="comment">; 将AX的内容传给段寄存器DS</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><strong>不能直接操作两个内存单元！！</strong></p>
+<h2 id=""><a href="#" class="headerlink" title="+-"></a>+-</h2><figure class="highlight armasm"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ADD</span> AX,X <span class="comment">;AX=AX+X</span></span><br><span class="line"><span class="keyword">SUB</span> AX,X </span><br><span class="line"><span class="symbol">INC</span> AX <span class="comment">;AX++</span></span><br><span class="line"><span class="symbol">DEC</span> AX <span class="comment">;AX--</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="程序的终止"><a href="#程序的终止" class="headerlink" title="程序的终止"></a>程序的终止</h2><p>直接把他记住！</p>
+<figure class="highlight armasm"><table><tr><td class="code"><pre><span class="line"><span class="keyword">MOV</span> AH,<span class="number">4</span>CH</span><br><span class="line"><span class="symbol">INT</span> <span class="number">21</span>H</span><br></pre></td></tr></table></figure>
+<h2 id="LABEL和JUMP"><a href="#LABEL和JUMP" class="headerlink" title="LABEL和JUMP"></a>LABEL和JUMP</h2><ul>
+<li>一段代码就有label</li>
+<li>jump NAME就可以跳转至label的位置<figure class="highlight armasm"><table><tr><td class="code"><pre><span class="line"><span class="symbol">MAIN:</span><span class="keyword">MOV</span> X,AX</span><br><span class="line"><span class="symbol">JUMP</span> DONE</span><br><span class="line"><span class="keyword">MOV</span> AX,Y</span><br><span class="line"></span><br><span class="line"><span class="symbol">...</span></span><br><span class="line"><span class="symbol">DONE:</span></span><br><span class="line">    <span class="keyword">MOV</span> AH,<span class="number">4</span>CH</span><br><span class="line">    INT21</span><br></pre></td></tr></table></figure>
+在这段程序中，<code>MOV AX,Y</code>就会直接跳过</li>
+</ul>
+<h2 id="分支和循环"><a href="#分支和循环" class="headerlink" title="分支和循环"></a>分支和循环</h2><h3 id="分支-CMP-JGE-…"><a href="#分支-CMP-JGE-…" class="headerlink" title="分支 CMP-JGE&#x2F;…"></a>分支 CMP-JGE&#x2F;…</h3><ul>
+<li>先CMP再JGE</li>
+<li>都是第一个怎么样第二个</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">Mnemonic</th>
+<th align="center">Condition Tested</th>
+<th align="center">“Jump IF …”</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">JA&#x2F;JNBE</td>
+<td align="center">(CF &#x3D; 0) and (ZF &#x3D; 0)</td>
+<td align="center">above&#x2F;not below nor zero</td>
+</tr>
+<tr>
+<td align="center">JAE&#x2F;JNB</td>
+<td align="center">CF &#x3D; 0</td>
+<td align="center">above or equal&#x2F;not below</td>
+</tr>
+<tr>
+<td align="center">JB&#x2F;JNAE</td>
+<td align="center">CF &#x3D; 1</td>
+<td align="center">below&#x2F;not above nor equal</td>
+</tr>
+<tr>
+<td align="center">JBE&#x2F;JNA</td>
+<td align="center">(CF or ZF) &#x3D; 1</td>
+<td align="center">below or equal&#x2F;not above</td>
+</tr>
+<tr>
+<td align="center">JC</td>
+<td align="center">CF &#x3D; 1</td>
+<td align="center">carry</td>
+</tr>
+<tr>
+<td align="center">JE&#x2F;JZ</td>
+<td align="center">ZF &#x3D; 1</td>
+<td align="center">equal&#x2F;zero</td>
+</tr>
+<tr>
+<td align="center"><strong>JG</strong>&#x2F;JNLE</td>
+<td align="center">((SF xor OF) or ZF) &#x3D; 0</td>
+<td align="center">greater&#x2F;not less nor equal</td>
+</tr>
+<tr>
+<td align="center"><strong>JGE</strong>&#x2F;JNL</td>
+<td align="center">(SF xor OF) &#x3D; 0</td>
+<td align="center">greater or equal&#x2F;not less</td>
+</tr>
+<tr>
+<td align="center"><strong>JL</strong>&#x2F;JNGE</td>
+<td align="center">(SF xor OF) &#x3D; 1</td>
+<td align="center">less&#x2F;not greater nor equal</td>
+</tr>
+<tr>
+<td align="center"><strong>JLE</strong>&#x2F;JNG</td>
+<td align="center">((SF xor OF) or ZF) &#x3D; 1</td>
+<td align="center">less or equal&#x2F;not greater</td>
+</tr>
+<tr>
+<td align="center">JNC</td>
+<td align="center">CF &#x3D; 0</td>
+<td align="center">not carry</td>
+</tr>
+<tr>
+<td align="center">JNE&#x2F;JNZ</td>
+<td align="center">ZF &#x3D; 0</td>
+<td align="center">not equal&#x2F;not zero</td>
+</tr>
+<tr>
+<td align="center">JNO</td>
+<td align="center">OF &#x3D; 0</td>
+<td align="center">not overflow</td>
+</tr>
+<tr>
+<td align="center">JNP&#x2F;JPO</td>
+<td align="center">PF &#x3D; 0</td>
+<td align="center">not parity&#x2F;parity odd</td>
+</tr>
+<tr>
+<td align="center">JNS</td>
+<td align="center">SF &#x3D; 0</td>
+<td align="center">not sign</td>
+</tr>
+<tr>
+<td align="center">JO</td>
+<td align="center">OF &#x3D; 1</td>
+<td align="center">overflow</td>
+</tr>
+<tr>
+<td align="center">JP&#x2F;JPE</td>
+<td align="center">PF &#x3D; 1</td>
+<td align="center">parity&#x2F;parity equal</td>
+</tr>
+<tr>
+<td align="center">JS</td>
+<td align="center">SF &#x3D; 1</td>
+<td align="center">sign</td>
+</tr>
+</tbody></table>
+<p>eg:求abs（AX）保存在AX中</p>
+<figure class="highlight armasm"><table><tr><td class="code"><pre><span class="line"><span class="symbol">MAIN:</span></span><br><span class="line"><span class="symbol">...</span></span><br><span class="line"><span class="keyword">CMP</span> AX,<span class="number">0</span></span><br><span class="line"><span class="symbol">JGE</span> DONE <span class="comment">;JUMP IF GREATER OR EQUAL</span></span><br><span class="line"><span class="symbol">NEG</span> AX <span class="comment">;将 AX 中的数值变为它的负数形式</span></span><br><span class="line"></span><br><span class="line"><span class="symbol">DONE:</span></span><br><span class="line"><span class="symbol">...</span></span><br><span class="line"></span><br><span class="line"><span class="symbol">END</span> MAIN</span><br></pre></td></tr></table></figure>
+
+<h3 id="循环LOOP"><a href="#循环LOOP" class="headerlink" title="循环LOOP"></a>循环LOOP</h3><ul>
+<li>一种简单的循环，类似于<code>for(cx;;cx--)</code>。(事实上，你可以用JUMP和分支结构来实现循环)<figure class="highlight armasm"><table><tr><td class="code"><pre><span class="line"><span class="comment">; 三段论</span></span><br><span class="line"><span class="keyword">MOV</span> CX,<span class="number">6</span></span><br><span class="line"><span class="symbol">NM:</span> ...</span><br><span class="line"><span class="symbol">LOOP</span> NM<span class="comment">;这样写一共执行CX次（声明NM时执行1次，LOOP中执行CX-1次）</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h1 id="寄存器（都是16位寄存器）"><a href="#寄存器（都是16位寄存器）" class="headerlink" title="寄存器（都是16位寄存器）"></a>寄存器（都是16位寄存器）</h1><h2 id="通用寄存器：AX-BX-CX-DX"><a href="#通用寄存器：AX-BX-CX-DX" class="headerlink" title="通用寄存器：AX,BX,CX,DX"></a>通用寄存器：AX,BX,CX,DX</h2><ul>
+<li>可以拆成高8位和低8位<code>AH</code>,<code>AL</code></li>
+<li>中转站</li>
+</ul>
+<h3 id="AX-Accumlator累加器"><a href="#AX-Accumlator累加器" class="headerlink" title="AX Accumlator累加器"></a>AX Accumlator累加器</h3><p>与MUL&#x2F;DIV有关</p>
+<h3 id="BX-Base基地址寄存器"><a href="#BX-Base基地址寄存器" class="headerlink" title="BX Base基地址寄存器"></a>BX Base基地址寄存器</h3><ul>
+<li>可以存储地址并访问<br>内存中的地址是这样的<code>204B:1001</code>，用两个16进制数来表示。<code>204B</code>是段地址(这个段就是指我们程序对应的段Segment)，<code>1001</code>是偏移地址，各需要一个word进行存储。可以用<code>SEG</code>指令获取<strong>段地址</strong>，用<code>OFFSET</code>指令获取<strong>偏移地址</strong></li>
+</ul>
+<figure class="highlight armasm"><table><tr><td class="code"><pre><span class="line"><span class="comment">;在“通过地址找内容”这件事情方面，一般用BX存储偏移地址</span></span><br><span class="line">X DW <span class="number">1234</span>H</span><br><span class="line">Y DW ?</span><br><span class="line"><span class="keyword">MOV</span> <span class="keyword">BX</span> OFFSET X <span class="comment">;BX中存储了X的偏移地址</span></span><br><span class="line"><span class="keyword">MOV</span> Y [BX] <span class="comment">;BX存储的偏移地址对应的内容被存放到y</span></span><br><span class="line">[] <span class="comment">;取内容</span></span><br></pre></td></tr></table></figure>
+<p>一般来说，<code>[BX]</code>就是指<code>DS:[BX]</code>，默认段地址为数据段，当然可以自己指定CS和SS</p>
+<h3 id="CX-Count计数器"><a href="#CX-Count计数器" class="headerlink" title="CX Count计数器"></a>CX Count计数器</h3><p>和循环指令<code>loop</code>有关</p>
+<h3 id="DX-Data数据寄存器"><a href="#DX-Data数据寄存器" class="headerlink" title="DX Data数据寄存器"></a>DX Data数据寄存器</h3><p>与MUL&#x2F;DIV有关</p>
+<h2 id="指针变址寄存器：SP-BP-SI-DI"><a href="#指针变址寄存器：SP-BP-SI-DI" class="headerlink" title="指针变址寄存器：SP,BP,SI,DI"></a>指针变址寄存器：SP,BP,SI,DI</h2><p>都倾向于用来存地址</p>
+<h3 id="SP-Stack-Pointer"><a href="#SP-Stack-Pointer" class="headerlink" title="SP:Stack Pointer"></a>SP:Stack Pointer</h3><p>栈顶指针，和堆栈段的使用有关，<strong>定义堆栈段要手动把SP放在栈顶</strong></p>
+<h3 id="BP-Base-Pointer"><a href="#BP-Base-Pointer" class="headerlink" title="BP:Base Pointer"></a>BP:Base Pointer</h3><p>和BX有类似的用法，只是一般更倾向于用在<strong>堆栈段</strong>的数据里，<code>[BP]</code>默认为<code>SS:[BP]</code></p>
+<h3 id="SI-Source-Index"><a href="#SI-Source-Index" class="headerlink" title="SI:Source Index"></a>SI:Source Index</h3><h3 id="DI-Destination-Index"><a href="#DI-Destination-Index" class="headerlink" title="DI Destination Index"></a>DI Destination Index</h3><p>和BX有类似的用法，<code>[SI]</code>默认为<code>DS:[SI]</code>，如果要转移数据，倾向用SI存原地址，DI存新地址</p>
+<h2 id="段寄存器：CS-DS-SS-ES-IP"><a href="#段寄存器：CS-DS-SS-ES-IP" class="headerlink" title="段寄存器：CS,DS,SS,ES,IP"></a>段寄存器：CS,DS,SS,ES,IP</h2><ul>
+<li>段的存在方便我们以段地址+偏移地址的方式定位内存单元</li>
+<li>刚刚在例子中看到，一般的程序我们定义三个段，Data、stack和Code，它们的作用和名字是一致的</li>
+<li>这些寄存器都和程序段还有程序的运行有关。</li>
+<li>在程序启动的时候，操作系统会把IP(InstructionPointer)指向程序的第一句开始运行，之后IP会一直指向每次要运行的下一条指令(显然我们可以用IP玩一些花活，但是对于简单的程序，我们没有必要操作IP)</li>
+<li>在代码段的开始，我们就用Assume语句声明CS、DS、SS的地址和CS不同，DS和SS寄存器的值需要我们手动指定，而与SS寄存器绑定的SP指针也需要我们手动设置(SS:SP指向的就是栈顶元素)</li>
+<li>ES是Extra segment，程序有附加段落的时候才用，用法和DSSS差不多</li>
+</ul>
+<h2 id="标志寄存器：FLAG"><a href="#标志寄存器：FLAG" class="headerlink" title="标志寄存器：FLAG"></a>标志寄存器：FLAG</h2><p>只是写代码的话不用管它。16位分开使用，有各自不同的意思，结果会以下面的形式呈现在-R</p>
+<table>
+<thead>
+<tr>
+<th align="center">标志位名称</th>
+<th align="center">值为 1 时的标记</th>
+<th align="center">值为 0 时的标记</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">OF</td>
+<td align="center">OV</td>
+<td align="center">NV</td>
+</tr>
+<tr>
+<td align="center">SF</td>
+<td align="center">NG</td>
+<td align="center">PL</td>
+</tr>
+<tr>
+<td align="center">ZF</td>
+<td align="center">ZR</td>
+<td align="center">NZ</td>
+</tr>
+<tr>
+<td align="center">PF</td>
+<td align="center">PE</td>
+<td align="center">PO</td>
+</tr>
+<tr>
+<td align="center">CF</td>
+<td align="center">CY</td>
+<td align="center">NC</td>
+</tr>
+<tr>
+<td align="center">DF</td>
+<td align="center">DN</td>
+<td align="center">UP</td>
+</tr>
+</tbody></table>
+<h1 id="例题1"><a href="#例题1" class="headerlink" title="例题1"></a>例题1</h1><blockquote>
+<p>练习a x+y</p>
+<ol>
+<li>在数据段中定义三个word，其中x&#x3D;1234H，y&#x3D;2345H，z&#x3D;？</li>
+<li>将x+y的结果保存在z中</li>
+</ol>
+</blockquote>
+<figure class="highlight armasm"><table><tr><td class="code"><pre><span class="line"><span class="symbol">DSEG</span> SEGMENT</span><br><span class="line">    X DW <span class="number">1234</span>H</span><br><span class="line">    Y DW <span class="number">2345</span>H</span><br><span class="line">    Z DW ?</span><br><span class="line"><span class="symbol">DSEG</span> ENDS</span><br><span class="line"></span><br><span class="line"><span class="symbol">CSEG</span> SEGMENT</span><br><span class="line">    ASSUME DS:DSEG, CS:CSEG <span class="comment">;define</span></span><br><span class="line"></span><br><span class="line"><span class="symbol">BEGIN:</span> <span class="comment">;only a label which means you can use any words you like</span></span><br><span class="line">    <span class="keyword">MOV</span> AX,DSEG</span><br><span class="line">    <span class="keyword">MOV</span> DS, AX <span class="comment">;initialize DS</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">MOV</span> AX, X</span><br><span class="line">    <span class="keyword">ADD</span> AX, Y</span><br><span class="line">    <span class="keyword">MOV</span> Z, AX</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">MOV</span> AH, <span class="number">4</span>CH <span class="comment">;返回dos</span></span><br><span class="line">    INT <span class="number">21</span>H </span><br><span class="line"><span class="symbol">CSEG</span> ENDS</span><br><span class="line"><span class="symbol">END</span> BEGIN</span><br></pre></td></tr></table></figure>
+<h1 id="练习2"><a href="#练习2" class="headerlink" title="练习2"></a>练习2</h1><blockquote>
+<ol>
+<li>在数据段(data segment)中定义4个word,其中x&#x3D;1234H，y&#x3D;2345H,<br>Z&#x3D;-1234H，W&#x3D;?</li>
+<li>求max(x,y,z)储存于w</li>
+</ol>
+</blockquote>
+<figure class="highlight armasm"><table><tr><td class="code"><pre><span class="line"><span class="comment">; 求最大值</span></span><br><span class="line"><span class="symbol">DSEG</span> SEGMENT</span><br><span class="line">        X DW <span class="number">1234</span>H</span><br><span class="line">        Y DW <span class="number">2345</span>H</span><br><span class="line">        Z DW -<span class="number">1234</span>H</span><br><span class="line">        W DW ?</span><br><span class="line"><span class="symbol">DSEG</span> ENDS</span><br><span class="line"> </span><br><span class="line"><span class="comment">;程序是从上到下执行的，条件不符合JGE就会跳到下面的代码</span></span><br><span class="line"><span class="symbol">CSEG</span> SEGMENT</span><br><span class="line">    ASSUME DS:DSEG, CS:CSEG <span class="comment">;define</span></span><br><span class="line"><span class="symbol">BEGIN:</span> </span><br><span class="line">    <span class="keyword">MOV</span> AX,DSEG</span><br><span class="line">    <span class="keyword">MOV</span> DS, AX <span class="comment">;initialize DS</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">MOV</span> AX, X</span><br><span class="line">    <span class="keyword">CMP</span> AX, Y <span class="comment">;AX里面一直存放最大值</span></span><br><span class="line"></span><br><span class="line">    JGE X_LARGER</span><br><span class="line">    <span class="keyword">MOV</span> AX, Y<span class="comment">;AX&lt;Y</span></span><br><span class="line"></span><br><span class="line"><span class="symbol">X_LARGER:</span></span><br><span class="line">    <span class="keyword">CMP</span> AX, Z</span><br><span class="line">    JGE Z_LARGER</span><br><span class="line">    <span class="keyword">MOV</span> AX, Z</span><br><span class="line"></span><br><span class="line"><span class="symbol">Z_LARGER:</span></span><br><span class="line">    <span class="keyword">MOV</span> W, AX</span><br><span class="line"></span><br><span class="line">    <span class="keyword">MOV</span> AH, <span class="number">4</span>CH <span class="comment">;返回dos</span></span><br><span class="line">    INT <span class="number">21</span>H</span><br><span class="line"><span class="symbol">CSEG</span> ENDS</span><br><span class="line"><span class="symbol">END</span> BEGIN</span><br></pre></td></tr></table></figure>
+<p>注意label不要用跟命令一样的</p>
+<h1 id="堆栈的使用"><a href="#堆栈的使用" class="headerlink" title="堆栈的使用"></a>堆栈的使用</h1><h2 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h2><p>两个方法</p>
+<ol>
+<li>直观的（堆栈段中做定义）<ol>
+<li>在堆栈段划分位置，保存栈顶位置</li>
+<li>在程序段开始的时候把堆栈段的位置告诉堆栈寄存器SS，把栈顶的位置告诉指针寄存器SP <figure class="highlight armasm"><table><tr><td class="code"><pre><span class="line"><span class="symbol">SSEG</span> SEGMENT</span><br><span class="line">    STACK DW <span class="number">128</span> dup(?)</span><br><span class="line">    TOP DW LENGTH STACK <span class="comment">;划定范围</span></span><br><span class="line"><span class="symbol">SSEG</span> ENDS</span><br><span class="line"></span><br><span class="line"><span class="symbol">CSEG</span> SEGMENT</span><br><span class="line">    ASSUME CS:CSEG,DS:DSEG,SS:SSEG</span><br><span class="line"><span class="symbol">MAIN:</span></span><br><span class="line">    <span class="keyword">MOV</span> AX,DSEG</span><br><span class="line">    <span class="keyword">MOV</span> DS,AX</span><br><span class="line">    <span class="keyword">MOV</span> AX,SSEG</span><br><span class="line">    <span class="keyword">MOV</span> SS,AX</span><br><span class="line">    <span class="keyword">MOV</span> AX,TOP<span class="comment">;手动把栈顶指针放好</span></span><br><span class="line">    <span class="keyword">MOV</span> <span class="built_in">SP</span>,AX <span class="comment">;栈顶地址载入</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+</li>
+<li>没那么直观的（程序段中划空间）<br>直接给SP赋值 <figure class="highlight armasm"><table><tr><td class="code"><pre><span class="line"><span class="symbol">SSEG</span> SEGMENT</span><br><span class="line"><span class="symbol">SSEG</span> ENDS</span><br><span class="line"><span class="comment">;ss:0000-ss:1000</span></span><br><span class="line"></span><br><span class="line"><span class="symbol">CSEG</span> SEGMENT</span><br><span class="line">    ASSUME CS:CSEG, DS:DSEG,SS:SSEG</span><br><span class="line"><span class="symbol">BEGIN:</span></span><br><span class="line">    <span class="keyword">MOV</span> AX,DSEG</span><br><span class="line">    <span class="keyword">MOV</span> DS,AX</span><br><span class="line">    <span class="keyword">MOV</span> AX,SSEG</span><br><span class="line">    <span class="keyword">MOV</span> SS,AX</span><br><span class="line">    <span class="keyword">MOV</span> <span class="built_in">SP</span>,<span class="number">1000</span>H <span class="comment">;手动规定了1000H的空置空间(OFFSET 0H-1000H)</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="push和pop"><a href="#push和pop" class="headerlink" title="push和pop"></a>push和pop</h2><p><strong>只能操作寄存器，不能操作内存单元</strong></p>
+<hr>
+<p>假设当前：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">SS = 1000H</span><br><span class="line">SP = 2000H</span><br><span class="line">AX = 1234H</span><br></pre></td></tr></table></figure>
+<p> 执行 <code>PUSH AX</code> 后发生了什么？</p>
+<ol>
+<li>因为 <code>AX</code> 是一个 <strong>16位寄存器（两个字节）</strong>，所以要将这两个字节写入堆栈。</li>
+<li>写入之前，<strong>SP 先减去 2</strong> → <code>SP = 1FFEh</code></li>
+<li>然后把 <code>AX=1234H</code> 存入内存：<ul>
+<li>地址 <code>SS:1FFE</code> &#x3D; <code>34H</code>（低位）</li>
+<li>地址 <code>SS:1FFF</code> &#x3D; <code>12H</code>（高位）</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p>⚠️ 注意：x86 是小端序（Little Endian），低位字节放在低地址。</p>
+</blockquote>
+<p><strong>此时堆栈状态如下：</strong></p>
+<table>
+<thead>
+<tr>
+<th>地址</th>
+<th>数据</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SS:1FFF</td>
+<td>12H</td>
+</tr>
+<tr>
+<td>SS:1FFE</td>
+<td>34H</td>
+</tr>
+<tr>
+<td>SS:1FFD</td>
+<td>–</td>
+</tr>
+<tr>
+<td>…</td>
+<td>…</td>
+</tr>
+</tbody></table>
+<hr>
+<p>接着执行 <code>POP AX</code>：</p>
+<ol>
+<li>从当前 SP 所指向的位置读取两个字节：<ul>
+<li><code>SS:1FFE = 34H</code></li>
+<li><code>SS:1FFF = 12H</code></li>
+<li>组合起来就是 <code>AX = 1234H</code></li>
+</ul>
+</li>
+<li>然后 <strong>SP 增加 2</strong> → <code>SP = 2000H</code></li>
+</ol>
+<hr>
+<p><strong>🔁 总结一句话：</strong></p>
+<blockquote>
+<p>在 x86 架构中，堆栈是向下增长的，因此：</p>
+<ul>
+<li><code>PUSH</code> 操作：先让 SP 减 2，再把数据写入；</li>
+<li><code>POP</code> 操作：先读取数据，再让 SP 加 2。</li>
+</ul>
+</blockquote>
+<hr>
+<p><strong>🧩 类比记忆方法（类比现实中的“箱子”）</strong></p>
+<p>你可以把堆栈想象成一个箱子，只能从顶部拿东西和放东西：</p>
+<ul>
+<li>箱子底部是高地址；</li>
+<li>放东西进去（<code>PUSH</code>）→ 箱子里的东西变多，顶部下移（SP 减小）；</li>
+<li>拿东西出来（<code>POP</code>）→ 箱子里的东西变少，顶部上移（SP 增大）。</li>
+</ul>
+<hr>
+<p><strong>✅ 补充知识：SP 指的是栈顶的偏移地址</strong></p>
+<ul>
+<li><code>SS</code> 是堆栈段寄存器；</li>
+<li><code>SP</code> 是当前堆栈指针（偏移地址）；</li>
+<li>实际访问的内存地址是：<code>SS:SP</code></li>
+</ul>
+<hr>
+<h1 id="PROC和MACRO"><a href="#PROC和MACRO" class="headerlink" title="&lt;函数&gt;:PROC和MACRO"></a>&lt;函数&gt;:PROC和MACRO</h1><h2 id="PROC"><a href="#PROC" class="headerlink" title="PROC"></a>PROC</h2><p>以下是根据你的描述整理的Markdown格式内容：</p>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="section"># 子程序(PROC)和宏(MACRO)</span></span><br><span class="line"></span><br><span class="line"><span class="section">## PROC &amp; CALL（子程序结构）</span></span><br><span class="line"></span><br><span class="line"><span class="strong">**定义：**</span> </span><br><span class="line"></span><br><span class="line"><span class="code">```assembly</span></span><br><span class="line"><span class="code">MAIN:</span></span><br><span class="line"><span class="code">    CALL NM</span></span><br><span class="line"><span class="code"></span></span><br><span class="line"><span class="code">NM PROC</span></span><br><span class="line"><span class="code">    ...</span></span><br><span class="line"><span class="code">    RET</span></span><br><span class="line"><span class="code">NM ENDP</span></span><br><span class="line"><span class="code">...</span></span><br><span class="line"><span class="code">END MAIN</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>完整的表达式：</strong></p>
+<ul>
+<li>调用：<code>CALL FAR/NEAR PTR NM</code></li>
+<li>定义：<code>NM PROC FAR/NEAR</code></li>
+</ul>
+<p>如果只需要主Label调用，则可以留空，默认为Near。</p>
+<p><strong>PROC的本质：</strong></p>
+<p>入栈程序出口指针，RET时返回到出口指针的位置。因此：</p>
+<ol>
+<li>第一个出栈元素会是一个偏移地址。</li>
+<li>如果最后SP的指针位置不对，就无法正确RET。</li>
+</ol>
+<p>简单的方法是使用寄存器BP保护SP，并使用BP进行数据读取。</p>
+<h3 id="示例：求两个栈顶元素之和并存储于AX中"><a href="#示例：求两个栈顶元素之和并存储于AX中" class="headerlink" title="示例：求两个栈顶元素之和并存储于AX中"></a>示例：求两个栈顶元素之和并存储于AX中</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">SUM PROC </span><br><span class="line">    MOV BP, SP</span><br><span class="line">    MOV AX, [BP+2]</span><br><span class="line">    ADD AX, [BP+4]</span><br><span class="line">    RET</span><br><span class="line">SUM ENDP</span><br></pre></td></tr></table></figure>
+
+<h2 id="MACRO（宏定义）"><a href="#MACRO（宏定义）" class="headerlink" title="MACRO（宏定义）"></a>MACRO（宏定义）</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">NM MACRO R1, R2...</span><br><span class="line">    ...</span><br><span class="line">ENDM</span><br></pre></td></tr></table></figure>
+
+<p>例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">NM MACRO AX, BX...</span><br><span class="line">    ...</span><br><span class="line">ENDM</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong></p>
+<ul>
+<li><code>PROC</code>的使用有调用开销（程序中断、跳转、继续），而<code>MACRO</code>没有。</li>
+<li><code>MACRO</code>相当于写代码的人把重复写代码的过程交给了汇编器，相比子程序来说，它是通过多占程序的内存来提高运行速度。</li>
+</ul>
+<h1 id="INT-21H指令：输入-输出"><a href="#INT-21H指令：输入-输出" class="headerlink" title="INT 21H指令：输入&#x2F;输出"></a>INT 21H指令：输入&#x2F;输出</h1><h2 id="键盘输入"><a href="#键盘输入" class="headerlink" title="键盘输入"></a>键盘输入</h2><h3 id="单个字符输入（1号指令）"><a href="#单个字符输入（1号指令）" class="headerlink" title="单个字符输入（1号指令）"></a>单个字符输入（1号指令）</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">MOV AH, 1</span><br><span class="line">INT 21H</span><br><span class="line">; 内容保存在AL</span><br></pre></td></tr></table></figure>
+
+<h3 id="字符串输入（10号指令）"><a href="#字符串输入（10号指令）" class="headerlink" title="字符串输入（10号指令）"></a>字符串输入（10号指令）</h3><p>需要在内存里划分三个部分：</p>
+<ol>
+<li>一个字节存放最大长度。</li>
+<li>一个字节存放实际长度（指令运行完CPU会填写）。</li>
+<li>一些字节用来存字符串。</li>
+</ol>
+<p>示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">DATA SEGMENT</span><br><span class="line">    MAXLENGTH DB 100 ; 最大长度</span><br><span class="line">    ACTUALLENGTH DB ? ; 实际长度</span><br><span class="line">    STRING DB 100 DUP(?) ; 字符串</span><br><span class="line">DATA ENDS</span><br><span class="line"></span><br><span class="line">STACK SEGMENT</span><br><span class="line">STACK ENDS</span><br><span class="line"></span><br><span class="line">CODE SEGMENT</span><br><span class="line">ASSUME DS:DATA, SS:STACK, CS:CODE</span><br><span class="line">MAIN:</span><br><span class="line">    MOV AX, DATA</span><br><span class="line">    MOV DS, AX</span><br><span class="line">    MOV DX, OFFSET MAXLENGTH</span><br><span class="line">    MOV AH, 10</span><br><span class="line">    INT 21H</span><br><span class="line">    MOV AH, 4CH</span><br><span class="line">    INT 21H</span><br><span class="line">CODE ENDS</span><br><span class="line">END MAIN</span><br></pre></td></tr></table></figure>
+
+<h2 id="显示器输出"><a href="#显示器输出" class="headerlink" title="显示器输出"></a>显示器输出</h2><h3 id="单个字符输出（2号调用）"><a href="#单个字符输出（2号调用）" class="headerlink" title="单个字符输出（2号调用）"></a>单个字符输出（2号调用）</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">MOV DL, &#x27;A&#x27;</span><br><span class="line">MOV AH, 2</span><br><span class="line">INT 21H</span><br></pre></td></tr></table></figure>
+
+<h3 id="字符串输出（9号调用）"><a href="#字符串输出（9号调用）" class="headerlink" title="字符串输出（9号调用）"></a>字符串输出（9号调用）</h3><p>字符串必须以<code>&#39;$&#39;</code>结尾，类似于C语言中的<code>&#39;\0&#39;</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">MOV DX, OFFSET STRING</span><br><span class="line">MOV AH, 9</span><br><span class="line">INT 21H</span><br></pre></td></tr></table></figure>
+
+<h1 id="综合练习"><a href="#综合练习" class="headerlink" title="综合练习"></a>综合练习</h1><h2 id="练习d-大小写转换-输入输出"><a href="#练习d-大小写转换-输入输出" class="headerlink" title="练习d: 大小写转换+输入输出"></a>练习d: 大小写转换+输入输出</h2><p>用户输入一个单词，程序将所有大写字母转换为小写字母并输出到显示器。</p>
+<p>提示： <code>&#39;a&#39; = &#39;A&#39; + 20H</code></p>
+<pre><code>
+这段整理涵盖了你提供的关于汇编语言中子程序(`PROC`)和宏(`MACRO`)的使用方法、堆栈操作以及如何使用`INT 21H`进行输入输出处理的基本知识。希望这对你有所帮助！如果有任何进一步的问题或需要更多细节，请随时告知。
+</code></pre>
+</div></section><div id="reward-container"><span class="hty-icon-button button-glow" id="reward-button" title="打赏" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === &quot;none&quot;) ? &quot;block&quot; : &quot;none&quot;;"><svg class="icon ri:hand-coin-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:hand-coin-line"></use></svg></span><div id="reward-comment">I'm so cute. Please give me money.</div></div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>Lisette Peng</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://1231lisette.github.io/01paw/2025/05/asm_learning/" title="8086/8088学习">https://1231lisette.github.io/01paw/2025/05/asm_learning/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><span class="icon iconify" data-icon="ri:creative-commons-line"></span><span class="icon iconify" data-icon="ri:creative-commons-by-line"></span><span class="icon iconify" data-icon="ri:creative-commons-nc-line"></span><span class="icon iconify" data-icon="ri:creative-commons-sa-line"></span></a> 许可协议。</li></ul><script>document.addEventListener('copy', function (event) {
+  const clipboardData = event.clipboardData || window.clipboardData;
+  if (!clipboardData) { return; }
+  const text = window.getSelection().toString();
+  if (text) {
+    event.preventDefault();
+    clipboardData.setData('text/plain', text + '\n\n本文作者：Lisette Peng\n本文链接：https://1231lisette.github.io/01paw/2025/05/asm_learning/\n版权声明：本博客所有文章除特别声明外，均默认采用 CC BY-NC-SA 4.0 许可协议。');
+  }
+});</script></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/01paw/2025/07/git-review/" rel="prev" title="git_review"><svg class="icon ri:arrow-left-s-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:arrow-left-s-line"></use></svg><span class="post-nav-text">git_review</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/01paw/2025/05/Python_vsc_conda_notes/" rel="next" title="Python 与 VS Code 和 Conda 的使用笔记"><span class="post-nav-text">Python 与 VS Code 和 Conda 的使用笔记</span><svg class="icon ri:arrow-right-s-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:arrow-right-s-line"></use></svg></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>如果您有任何关于博客内容的相关讨论，欢迎前往 <a https://github.com/1231Lisette/01paw/discussions" target="_blank">GitHub Discussions</a> 与我交流。</span><br><a class="hty-button hty-button--raised" id="github-discussions" target="_blank" rel="noopener" href="https://github.com/1231Lisette/1231lisette.github.io/discussions/new">GitHub Discussions</a></div><style>.utterances {
+  max-width: 100%;
+}</style><script src="https://giscus.app/client.js" data-repo="231Lisette/01paw" data-repo-id="R_kgDONzMlDQ" data-category="General" data-category-id="DIC_kwDONzMlDc4CuuKh" data-mapping="pathname" data-reactions-enabled="1" data-emit-metadata="0" data-theme="light" crossorigin="anonymous" async></script></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2025 </span><span class="with-love" id="animate"><svg class="icon icon-cloud-line" aria-hidden="true" style="width: 20px; height: 20px;"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> Lisette Peng</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v7.3.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.10.11</span></div><div class="live-time"><span>本博客已萌萌哒地运行</span><span id="display_live_time"></span><span class="moe-text">(●'◡'●)</span><script>function blog_live_time() {
+  setTimeout(blog_live_time, 1000);
+  const start = new Date('2025-02-04T22:15:00');
+  const now = new Date();
+  const timeDiff = (now.getTime() - start.getTime());
+  const msPerMinute = 60 * 1000;
+  const msPerHour = 60 * msPerMinute;
+  const msPerDay = 24 * msPerHour;
+  const passDay = Math.floor(timeDiff / msPerDay);
+  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
+  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
+  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
+  display_live_time.innerHTML = ` ${passDay} 天 ${passHour} 小时 ${passMinute} 分 ${passSecond} 秒`;
+}
+blog_live_time();
+</script></div></footer></div><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><svg class="icon ri:arrow-up-s-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#6200ee" stroke-width="2" stroke-linecap="round"></circle></svg></a><script>function initMourn() {
+  const date = new Date();
+  const today = (date.getMonth() + 1) + "-" + date.getDate()
+  const mourn_days = ["4-4","9-18"]
+  if (mourn_days.includes(today)) {
+    document.documentElement.style.filter = "grayscale(1)";
+  }
+}
+initMourn();</script><script src="https://fastly.jsdelivr.net/npm/medium-zoom@1.0.6/dist/medium-zoom.min.js"></script><script>const images = [...document.querySelectorAll('.markdown-body img')]
+mediumZoom(images)</script><style>.medium-zoom-image {
+  z-index: 99;
+}</style></body></html>

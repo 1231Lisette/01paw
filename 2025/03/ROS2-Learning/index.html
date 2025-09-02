@@ -1,0 +1,462 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#6200ee"><meta name="author" content="Lisette Peng"><meta name="copyright" content="Lisette Peng"><meta name="generator" content="Hexo 7.3.0"><meta name="theme" content="hexo-theme-yun"><title>ROS2_Learning | 01paw</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/star-markdown-css@0.4.1/dist/yun/yun-markdown.min.css"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/prism-theme-vars/base.css"><script src="https://fastly.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
+  [".post-card",".markdown-body img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+}
+document.addEventListener("DOMContentLoaded", initScrollReveal);
+document.addEventListener("pjax:success", initScrollReveal);
+</script><link rel="icon" type="image/svg+xml" href="/01paw/favicon.svg"><link rel="mask-icon" href="/01paw/favicon.svg" color="#6200ee"><link rel="preload" href="/01paw/css/hexo-theme-yun.css" as="style"><link rel="prefetch" href="/01paw/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="preconnect" href="https://fastly.jsdelivr.net/npm/" crossorigin><script id="yun-config">
+    window.Yun = {}
+    window.CONFIG = {"hostname":"1231lisette.github.io","root":"/01paw/","title":"二进制爪印","version":"1.10.11","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"搜索...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.yunyoujun.cn/img/avatar/none.jpg","say":{"api":"https://v1.hitokoto.cn","hitokoto":true},"fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]},"vendors":{"host":"https://fastly.jsdelivr.net/npm/","darken":"https://fastly.jsdelivr.net/npm/darken@1.5.0"}};
+  </script><link rel="stylesheet" href="/01paw/css/hexo-theme-yun.css"><script src="/01paw/js/hexo-theme-yun.js" type="module"></script><link rel="alternate" href="/01paw/atom.xml" title="01paw" type="application/atom+xml"><script src="//at.alicdn.com/t/font_1140697_dxory92pb0h.js" async></script><script>(function(){
+  var bp = document.createElement('script');
+  var curProtocol = window.location.protocol.split(':')[0];
+  if (curProtocol === 'https') {
+    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else {
+    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(bp, s);
+})();</script><meta name="description" content="ROS2中的命令行操作ros的本质是通信框架，具体做什么得按照你的需求来 ros2 run turtlesim turtlesim_node &#x2F;&#x2F;启动小海龟ros2 run turtlesim turtle_teleop_key &#x2F;&#x2F;开启电脑方向键控制小海龟运动ros2 node + 直接回车 &#x2F;&#x2F;会提示后面可以加什么ros2 node list &#x2F;&#x2F;会展示现在正在运行的节点们ros2 topic">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ROS2_Learning">
+<meta property="og:url" content="https://1231lisette.github.io/01paw/2025/03/ROS2-Learning/index.html">
+<meta property="og:site_name" content="01paw">
+<meta property="og:description" content="ROS2中的命令行操作ros的本质是通信框架，具体做什么得按照你的需求来 ros2 run turtlesim turtlesim_node &#x2F;&#x2F;启动小海龟ros2 run turtlesim turtle_teleop_key &#x2F;&#x2F;开启电脑方向键控制小海龟运动ros2 node + 直接回车 &#x2F;&#x2F;会提示后面可以加什么ros2 node list &#x2F;&#x2F;会展示现在正在运行的节点们ros2 topic">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-47.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-48.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-49.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-50.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-51.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-52.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-53.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-54.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-55.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-56.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-57.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-58.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-59.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-60.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-61.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-62.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-63.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-64.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-65.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-65.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-66.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-67.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-68.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-69.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-70.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-71.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-72.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-73.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-74.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-75.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-76.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-77.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-78.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-79.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-80.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-81.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-82.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-83.png">
+<meta property="article:published_time" content="2025-03-02T05:47:23.000Z">
+<meta property="article:modified_time" content="2025-08-31T04:58:21.161Z">
+<meta property="article:author" content="Lisette Peng">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="C++">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://1231lisette.github.io/images/image-47.png"><script>(function() {
+  if (CONFIG.mode !== 'auto') return
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+  const setting = localStorage.getItem('darken-mode') || 'auto'
+  if (setting === 'dark' || (prefersDark && setting !== 'light'))
+    document.documentElement.classList.toggle('dark', true)
+})()</script></head><body><script src="https://code.iconify.design/2/2.1.1/iconify.min.js"></script><script>// Define global variable
+IconifyProviders = {
+  // Empty prefix: overwrite default API provider configuration
+  '': {
+    // Use custom API first, use Iconify public API as backup
+    resources: [
+        'https://api.iconify.design',
+    ],
+    // Wait for 1 second before switching API hosts
+    rotate: 1000,
+  },
+};</script><script defer src="https://fastly.jsdelivr.net/npm/animejs@latest"></script><script defer src="/01paw/js/ui/fireworks.js" type="module"></script><canvas class="fireworks"></canvas><canvas id="trianglifyContainer"></canvas><script defer src="https://fastly.jsdelivr.net/npm/trianglify@4/dist/trianglify.bundle.js"></script><script>document.addEventListener("DOMContentLoaded", () => {
+  const pattern = trianglify({
+    width: 800,
+    height: 600,
+    cellSize: 75,
+    palette: ["YlGnBu", "GnBu", "Purples", "Blues"],
+  });
+  const canvasOpts = {
+    applyCssScaling: false
+  }
+  document.body.appendChild(pattern.toCanvas(trianglifyContainer, canvasOpts));
+});</script><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/01paw/js/sidebar.js" type="module"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><svg class="icon ri:list-ordered" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><svg class="icon ri:passport-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info mickey-mouse"><a class="site-author-avatar" href="/01paw/about/" title="Lisette Peng"><img width="96" loading="lazy" src="/01paw/images/avatar.jpg" alt="Lisette Peng"><span class="site-author-status" title="不想上学！！">😭</span></a><div class="site-author-name"><a href="/01paw/about/">Lisette Peng</a></div><span class="site-name">01paw</span><sub class="site-subtitle">好久不见</sub><div class="site-description">玩得开心</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/01paw/" title="首页"><span class="site-state-item-icon"><svg class="icon icon-home-4-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/01paw/archives/" title="归档"><span class="site-state-item-icon"><svg class="icon icon-archive-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">10</span></a></div><div class="site-state-item"><a href="/01paw/categories/" title="分类"><span class="site-state-item-icon"><svg class="icon icon-folder-2-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">2</span></a></div><div class="site-state-item"><a href="/01paw/tags/" title="标签"><span class="site-state-item-icon"><svg class="icon icon-price-tag-3-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">14</span></a></div><a class="site-state-item hty-icon-button" target="_blank" rel="noopener" href="https://yun.yunyoujun.cn" title="文档"><span class="site-state-item-icon"><svg class="icon ri:settings-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:settings-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:2405848533@qq.com" title="E-Mail" target="_blank" style="color:#8E71C1"><svg class="icon icon-mail-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#icon-mail-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/1231Lisette" title="GitHub" target="_blank" style="color:undefined"><svg class="icon icon-github-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#icon-github-line"></use></svg></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" href="/01paw/links/" title="我的小伙伴们" style="color:dodgerblue"><svg class="icon icon-genderless-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#icon-genderless-line"></use></svg></a><a class="links-item hty-icon-button" href="/01paw/about/" title="关于" style="color:green"><svg class="icon icon-user-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#icon-user-line"></use></svg></a><a class="links-item hty-icon-button" href="/01paw/categories/" title="分类" style="color:orange"><svg class="icon icon-folder-2-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#icon-folder-2-line"></use></svg></a><a class="links-item hty-icon-button" href="/01paw/tags/" title="标签" style="color:purple"><svg class="icon icon-price-tag-3-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#icon-price-tag-3-line"></use></svg></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon ri:contrast-2-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:contrast-2-line"></use></svg></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#ROS2%E4%B8%AD%E7%9A%84%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%93%8D%E4%BD%9C"><span class="toc-number">1.</span> <span class="toc-text">ROS2中的命令行操作</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A7%E5%88%B6%E6%B5%B7%E9%BE%9F%E8%BF%90%E5%8A%A8"><span class="toc-number">1.1.</span> <span class="toc-text">控制海龟运动</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E4%B8%80%E6%94%AF%E6%96%B0%E6%B5%B7%E9%BE%9F"><span class="toc-number">1.2.</span> <span class="toc-text">生成一支新海龟</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%B0%E5%BD%95%E6%B5%B7%E9%BE%9F%E7%9A%84%E6%95%B0%E6%8D%AE"><span class="toc-number">1.3.</span> <span class="toc-text">记录海龟的数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8A%E6%97%A5%E6%80%BB%E7%BB%93%EF%BC%9A"><span class="toc-number">1.4.</span> <span class="toc-text">今日总结：</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B7%A5%E4%BD%9C%E7%A9%BA%E9%97%B4%E4%B8%8E%E5%8A%9F%E8%83%BD%E5%8C%85"><span class="toc-number">2.</span> <span class="toc-text">工作空间与功能包</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%8A%82%E7%82%B9%EF%BC%9A%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%B7%A5%E4%BD%9C%E7%BB%86%E8%83%9E"><span class="toc-number">3.</span> <span class="toc-text">节点：机器人的工作细胞</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E4%B8%AA%E8%8A%82%E7%82%B9%EF%BC%88%E9%9D%A2%E5%90%91%E8%BF%87%E7%A8%8B%E7%BC%96%E7%A8%8B%EF%BC%89"><span class="toc-number">3.1.</span> <span class="toc-text">第一个节点（面向过程编程）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E7%AC%AC%E4%B8%80%E4%B8%AA%E8%8A%82%E7%82%B9%E7%9A%84%E4%BB%A3%E7%A0%81%EF%BC%88%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%BC%96%E7%A8%8B%EF%BC%89"><span class="toc-number">3.2.</span> <span class="toc-text">优化第一个节点的代码（面向对象编程）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AF%9D%E9%A2%98%EF%BC%9A%E8%8A%82%E7%82%B9%E9%97%B4%E4%BC%A0%E9%80%92%E6%95%B0%E6%8D%AE%E7%9A%84%E6%A1%A5%E6%A2%81"><span class="toc-number">4.</span> <span class="toc-text">话题：节点间传递数据的桥梁</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%91%E5%B8%83%E8%80%85"><span class="toc-number">4.1.</span> <span class="toc-text">发布者</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A2%E9%98%85%E8%80%85"><span class="toc-number">4.2.</span> <span class="toc-text">订阅者</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%8C%E6%88%90%E4%B8%80%E4%B8%AA%E6%9B%B4%E5%A4%8D%E6%9D%82%E7%9A%84%E8%8A%82%E7%82%B9%E9%80%9A%E4%BF%A1"><span class="toc-number">4.3.</span> <span class="toc-text">完成一个更复杂的节点通信</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%EF%BC%9A%E8%8A%82%E7%82%B9%E9%97%B4%E7%9A%84%E4%BD%A0%E9%97%AE%E6%88%91%E7%AD%94"><span class="toc-number">5.</span> <span class="toc-text">服务：节点间的你问我答</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E6%9C%8D%E5%8A%A1%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%9A%84%E7%A8%8B%E5%BA%8F%E6%B5%81%E7%A8%8B"><span class="toc-number">5.1.</span> <span class="toc-text">创建服务客户端的程序流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E6%9C%8D%E5%8A%A1%E6%9C%8D%E5%8A%A1%E7%AB%AF"><span class="toc-number">5.2.</span> <span class="toc-text">创建服务服务端</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E6%9B%B4%E4%B8%BA%E5%A4%8D%E6%9D%82%E7%9A%84%E6%9C%8D%E5%8A%A1%E9%80%9A%E4%BF%A1"><span class="toc-number">5.3.</span> <span class="toc-text">实现一个更为复杂的服务通信</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%80%9A%E4%BF%A1%E6%8E%A5%E5%8F%A3%EF%BC%9A%E6%95%B0%E6%8D%AE%E4%BC%A0%E9%80%92%E7%9A%84%E6%A0%87%E5%87%86%E6%8E%A5%E5%8F%A3"><span class="toc-number">6.</span> <span class="toc-text">通信接口：数据传递的标准接口</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8A%A8%E4%BD%9C%EF%BC%9A%E5%AE%8C%E6%95%B4%E8%A1%8C%E4%B8%BA%E5%9C%B0%E6%B5%81%E7%A8%8B%E7%AE%A1%E7%90%86"><span class="toc-number">7.</span> <span class="toc-text">动作：完整行为地流程管理</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E6%95%B0%EF%BC%9A%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%85%A8%E5%B1%80%E5%AD%97%E5%85%B8-%E7%B1%BB%E4%BC%BCc%E4%B8%AD%E7%9A%84%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F"><span class="toc-number">8.</span> <span class="toc-text">参数：机器人系统的全局字典(类似c中的全局变量)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E6%95%B0%E5%9C%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8"><span class="toc-number">8.1.</span> <span class="toc-text">参数在机器人中的应用</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E9%80%9A%E4%BF%A1%EF%BC%9A%E5%A4%9A%E8%AE%A1%E7%AE%97%E5%B9%B3%E5%8F%B0%E7%9A%84%E4%BB%BB%E5%8A%A1%E5%88%86%E9%85%8D"><span class="toc-number">9.</span> <span class="toc-text">分布式通信：多计算平台的任务分配</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#DDS-%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C"><span class="toc-number">10.</span> <span class="toc-text">DDS:机器人的神经网络</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Launch-%E5%A4%9A%E8%8A%82%E7%82%B9%E5%90%AF%E5%8A%A8%E4%B8%8E%E9%85%8D%E7%BD%AE%E8%84%9A%E6%9C%AC"><span class="toc-number">11.</span> <span class="toc-text">Launch: 多节点启动与配置脚本</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#TF%EF%BC%9A%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%9D%90%E6%A0%87%E7%B3%BB%E7%AE%A1%E7%90%86%E7%A5%9E%E5%99%A8"><span class="toc-number">12.</span> <span class="toc-text">TF：机器人坐标系管理神器</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%BA%E5%99%A8%E4%BA%BA%E4%B8%AD%E7%9A%84%E5%9D%90%E6%A0%87%E7%B3%BB"><span class="toc-number">12.1.</span> <span class="toc-text">机器人中的坐标系</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86"><span class="toc-number">12.2.</span> <span class="toc-text">底层原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#tf"><span class="toc-number">12.3.</span> <span class="toc-text">tf</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%B7%E9%BE%9F%E8%B7%9F%E9%9A%8F%E5%8A%9F%E8%83%BD%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="toc-number">12.4.</span> <span class="toc-text">海龟跟随功能的实现</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#URDF%EF%BC%9A%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%BB%BA%E6%A8%A1%E6%96%B9%E6%B3%95"><span class="toc-number">13.</span> <span class="toc-text">URDF：机器人的建模方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFURDF"><span class="toc-number">13.1.</span> <span class="toc-text">什么是URDF</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">13.2.</span> <span class="toc-text"></span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-1"><span class="toc-number">13.3.</span> <span class="toc-text"></span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-2"><span class="toc-number">13.4.</span> <span class="toc-text"></span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E6%9C%BA%E5%99%A8%E4%BA%BAurdf%E6%A8%A1%E5%9E%8B"><span class="toc-number">13.5.</span> <span class="toc-text">创建机器人urdf模型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8BURDF%E6%A8%A1%E5%9E%8B%E7%BB%93%E6%9E%84"><span class="toc-number">13.5.1.</span> <span class="toc-text">查看URDF模型结构</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Gazebo%EF%BC%9A%E4%B8%89%E7%BB%B4%E7%89%A9%E7%90%86%E4%BB%BF%E7%9C%9F%E5%B9%B3%E5%8F%B0"><span class="toc-number">14.</span> <span class="toc-text">Gazebo：三维物理仿真平台</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#urdf%E6%A8%A1%E5%9E%8B%E7%9A%84%E8%BF%9B%E5%8C%96%E7%89%88%E6%9C%AC%E2%80%94%E2%80%94XACRO%E6%A8%A1%E5%9E%8B%E6%96%87%E4%BB%B6"><span class="toc-number">14.1.</span> <span class="toc-text">urdf模型的进化版本——XACRO模型文件</span></a></li></ol></li></ol></div></div></div><div class="tag-cloud"><div class="tag-cloud-tags"><a href="/01paw/tags/C/" style="font-size: 12px; color: #999">C</a> <a href="/01paw/tags/C/" style="font-size: 12px; color: #999">C++</a> <a href="/01paw/tags/Hexo/" style="font-size: 12px; color: #999">Hexo</a> <a href="/01paw/tags/Python/" style="font-size: 30px; color: #0078e7">Python</a> <a href="/01paw/tags/SSH/" style="font-size: 12px; color: #999">SSH</a> <a href="/01paw/tags/WiFi%E9%85%8D%E7%BD%AE/" style="font-size: 12px; color: #999">WiFi配置</a> <a href="/01paw/tags/assembly-language/" style="font-size: 12px; color: #999">assembly language</a> <a href="/01paw/tags/growth/" style="font-size: 12px; color: #999">growth</a> <a href="/01paw/tags/stm32/" style="font-size: 12px; color: #999">stm32</a> <a href="/01paw/tags/try/" style="font-size: 12px; color: #999">try</a> <a href="/01paw/tags/%E6%88%91%E7%9A%84%E7%AC%94%E8%AE%B0/" style="font-size: 12px; color: #999">我的笔记</a> <a href="/01paw/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" style="font-size: 12px; color: #999">树莓派,</a> <a href="/01paw/tags/%E7%BD%91%E7%BB%9C%E8%B0%83%E8%AF%95/" style="font-size: 12px; color: #999">网络调试</a> <a href="/01paw/tags/%E9%9D%99%E6%80%81IP/" style="font-size: 12px; color: #999">静态IP</a></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article" style="--smc-primary:#6200ee;"><link itemprop="mainEntityOfPage" href="https://1231Lisette.github.io/01paw/01paw/2025/03/ROS2-Learning/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Lisette Peng"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="01paw"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">ROS2_Learning<a class="post-edit-link" href="https://github.com/1231Lisette/01paw/hexo/source/_posts_posts/ROS2-Learning.md" target="_blank" title="编辑" rel="noopener"><svg class="icon ri:edit-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:edit-line"></use></svg></a></h1><div class="post-meta"><div class="post-time" style="display:block"><span class="post-meta-item-icon"><svg class="icon ri:calendar-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:calendar-line"></use></svg></span> <time title="创建时间：2025-03-02 13:47:23" itemprop="dateCreated datePublished" datetime="2025-03-02T13:47:23+08:00">2025-03-02</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon ri:calendar-2-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:calendar-2-line"></use></svg></span> <time title="修改时间：2025-08-31 12:58:21" itemprop="dateModified" datetime="2025-08-31T12:58:21+08:00">2025-08-31</time></div><span class="post-count"><span class="post-symbolcount"><span class="post-meta-item-icon" title="本文字数"><svg class="icon ri:file-word-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:file-word-line"></use></svg></span> <span title="本文字数">5.6k</span><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读时长"><svg class="icon ri:timer-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:timer-line"></use></svg></span> <span title="阅读时长">22m</span></span></span><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><svg class="icon ri:folder-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:folder-line"></use></svg></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/01paw/categories/%E6%88%91%E7%9A%84%E7%AC%94%E8%AE%B0/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">我的笔记</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/01paw/tags/Python/" style="--text-color:#3776ab"><span class="post-meta-item-icon"><svg class="icon ri:price-tag-3-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:price-tag-3-line"></use></svg></span><span class="tag-name">Python</span></a><a class="tag-item" href="/01paw/tags/C/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon ri:price-tag-3-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:price-tag-3-line"></use></svg></span><span class="tag-name">C++</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body"><h1 id="ROS2中的命令行操作"><a href="#ROS2中的命令行操作" class="headerlink" title="ROS2中的命令行操作"></a>ROS2中的命令行操作</h1><p>ros的本质是通信框架，具体做什么得按照你的需求来</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ros2 run turtlesim turtlesim_node //启动小海龟</span><br><span class="line">ros2 run turtlesim turtle_teleop_key //开启电脑方向键控制小海龟运动</span><br><span class="line">ros2 node + 直接回车 //会提示后面可以加什么</span><br><span class="line">ros2 node list //会展示现在正在运行的节点们</span><br><span class="line">ros2 topic + 直接回车</span><br><span class="line">ros2 topic echo /turtle/pose 订阅并在终端打印信息</span><br><span class="line">ros2 topic pub //publish a message to a topic</span><br></pre></td></tr></table></figure>
+
+<h2 id="控制海龟运动"><a href="#控制海龟运动" class="headerlink" title="控制海龟运动"></a>控制海龟运动</h2><p><code>ros2 topic pub --rate 1 /turtle1/cmd_vel geometry_msgs/msg/Twist &quot;&#123;linear: &#123;x: 2.0, y : 0.0, z : 0.0&#125;, angular: &#123;x : 0.0, y : 0.0, z : 1.8&#125;&#125;&quot; </code><br>这个指令的作用是每秒向 &#x2F;turtle1&#x2F;cmd_vel 话题发布一条 geometry_msgs&#x2F;msg&#x2F;Twist 类型的消息，消息内容表示海龟在 X 轴上的线性速度为 2.0，绕 Z 轴的角速度为 1.8，从而控制海龟的运动。</p>
+<ol>
+<li><code>ros2 topic pub</code><br>这是 ROS 2 提供的一个命令行工具，用于向指定的话题发布消息。在 ROS 2 中，话题（Topic）是节点之间进行异步通信的一种机制，节点可以发布消息到话题，也可以订阅话题来接收消息。</li>
+<li><code>--rate 1</code><br>这是一个可选的参数，用于指定消息发布的频率，单位是赫兹（Hz）。<code>--rate 1</code> 表示每秒发布 1 条消息。也就是说，该指令会以每秒 1 次的频率向指定话题发送消息。</li>
+<li><code>/turtle1/cmd_vel</code><br>这是要发布消息的话题名称。在 ROS 2 中，话题名称通常使用 <code>/</code> 作为分隔符，形成一个层次化的命名空间。<code>/turtle1/cmd_vel</code> 这个话题一般用于控制海龟仿真器（TurtleSim）中名为 <code>turtle1</code> 的海龟的运动速度。</li>
+<li><code>geometry_msgs/msg/Twist</code><br>这是消息的类型。在 ROS 2 中，消息类型定义了消息的结构，不同的消息类型用于表示不同的数据。<code>geometry_msgs/msg/Twist</code> 是一个标准的 ROS 2 消息类型，用于表示线性速度和角速度。它通常用于控制机器人的运动，包含两个主要部分：<code>linear</code>（线性速度）和 <code>angular</code>（角速度）。</li>
+<li><code>&quot;&#123;linear:&#123;x:2.0,y:0.0,z:0.0&#125;,angular:&#123;x:0.0,y:0.0,z:1.8&#125;&#125;&quot;</code><br>这是要发布的消息内容，以 JSON 格式表示。具体解释如下：</li>
+</ol>
+<ul>
+<li><code>linear</code>：表示线性速度，包含三个分量 <code>x</code>、<code>y</code> 和 <code>z</code>，分别代表在 X、Y 和 Z 轴上的线性速度。在这个例子中，<code>x</code> 轴的线性速度为 2.0，<code>y</code> 轴和 <code>z</code> 轴的线性速度为 0.0。</li>
+<li><code>angular</code>：表示角速度，同样包含三个分量 <code>x</code>、<code>y</code> 和 <code>z</code>，分别代表绕 X、Y 和 Z 轴的角速度。在这个例子中，<code>x</code> 轴和 <code>y</code> 轴的角速度为 0.0，<code>z</code> 轴的角速度为 1.8。</li>
+</ul>
+<h2 id="生成一支新海龟"><a href="#生成一支新海龟" class="headerlink" title="生成一支新海龟"></a>生成一支新海龟</h2><p><code>ros2 service call/spawn turtlesim/srv/Spawn &quot;&#123;x: 2, y: 2, theta: 0.2, name: &#39;wr&#39;&#125;&quot;</code></p>
+<p>话题是对机器人控制的一个接口</p>
+<h2 id="记录海龟的数据"><a href="#记录海龟的数据" class="headerlink" title="记录海龟的数据"></a>记录海龟的数据</h2><p><code>ros2 bag record</code><br><code>ros2 bag play</code></p>
+<ul>
+<li>eg:可以把无人机在户外飞的数据给记录下来，回到实验室可以复现数据来完成后续的算法处理与仿真</li>
+<li>小海龟复现的位置不一样？因为记录的是键盘信息，不是位置信息</li>
+</ul>
+<h2 id="今日总结："><a href="#今日总结：" class="headerlink" title="今日总结："></a>今日总结：</h2><ol>
+<li>一键安装了ros2，感谢鱼香肉丝</li>
+<li>学了一些基本指令</li>
+<li>开小海龟的时候：一个终端开节点，一个终端进行按键控制，一个终端进行话题发布与</li>
+</ol>
+<h1 id="工作空间与功能包"><a href="#工作空间与功能包" class="headerlink" title="工作空间与功能包"></a>工作空间与功能包</h1><ul>
+<li><p>工作空间：是一个存放项目开发相关文件的文件夹</p>
+<ul>
+<li>src：代码空间（source space）</li>
+<li>install：安装空间（install space）</li>
+<li>build：编译空间（build space）</li>
+<li>log：日志空间（log space）<br><img src="/images/image-47.png" alt="alt text" loading="lazy"></li>
+</ul>
+</li>
+<li><p>功能包<br><img src="/images/image-48.png" alt="alt text" loading="lazy"><br>比如说，创建一个c++的功能包，里面的package.xml描述的是基本信息和一些依赖项<br>cmakelists写的是编译规则，c++需要编译成可执行文件，但是Python语言是解析型的，不需要对代码去编译</p>
+</li>
+</ul>
+<blockquote>
+<p>突然忘记了视频好像有说到如果你对机器人不同的功能写了一套代码，要怎么给别人，但是我忘记了，好像没做笔记</p>
+</blockquote>
+<h1 id="节点：机器人的工作细胞"><a href="#节点：机器人的工作细胞" class="headerlink" title="节点：机器人的工作细胞"></a>节点：机器人的工作细胞</h1><p><img src="/images/image-49.png" alt="alt text" loading="lazy"><br>（如果是相同的语言，那不就相当于FPGA的不同模块）</p>
+<h2 id="第一个节点（面向过程编程）"><a href="#第一个节点（面向过程编程）" class="headerlink" title="第一个节点（面向过程编程）"></a>第一个节点（面向过程编程）</h2><p><code>ros2 run learning_node node_helloworld</code></p>
+<ol>
+<li><p>在根目录下<code>colcon build </code></p>
+</li>
+<li><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">@作者: 古月居(www.guyuehome.com)</span></span><br><span class="line"><span class="string">@说明: ROS2节点示例-发布“Hello World”日志信息, 使用面向过程的实现方式</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="comment"># 引入了Node这个类，类创建对象才能对他进行使用</span></span><br><span class="line"><span class="keyword">import</span> rclpy                                     <span class="comment"># ROS2 Python接口库</span></span><br><span class="line"><span class="keyword">from</span> rclpy.node <span class="keyword">import</span> Node                      <span class="comment"># ROS2 节点类</span></span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>(<span class="params">args=<span class="literal">None</span></span>):                             <span class="comment"># ROS2节点主入口main函数</span></span><br><span class="line">    rclpy.init(args=args)                        <span class="comment"># ROS2 Python接口初始化</span></span><br><span class="line">    node = Node(<span class="string">&quot;node_helloworld&quot;</span>)               <span class="comment"># 创建ROS2节点对象并进行初始化</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> rclpy.ok():                            <span class="comment"># ROS2系统是否正常运行</span></span><br><span class="line">        node.get_logger().info(<span class="string">&quot;Hello World&quot;</span>)    <span class="comment"># ROS2日志输出</span></span><br><span class="line">        time.sleep(<span class="number">0.5</span>)                          <span class="comment"># 休眠控制循环时间</span></span><br><span class="line">    </span><br><span class="line">    node.destroy_node()                          <span class="comment"># 销毁节点对象，内存销毁掉  </span></span><br><span class="line">    rclpy.shutdown()                             <span class="comment"># 关闭ROS2 Python接口</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>进行程序入口的配置，只针对Python版本</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># setup.py</span></span><br><span class="line"><span class="keyword">from</span> setuptools <span class="keyword">import</span> setup</span><br><span class="line"></span><br><span class="line">package_name = <span class="string">&#x27;learning_node&#x27;</span></span><br><span class="line"></span><br><span class="line">setup(</span><br><span class="line">    name=package_name,</span><br><span class="line">    version=<span class="string">&#x27;0.0.0&#x27;</span>,</span><br><span class="line">    packages=[package_name],</span><br><span class="line">    data_files=[</span><br><span class="line">        (<span class="string">&#x27;share/ament_index/resource_index/packages&#x27;</span>,</span><br><span class="line">            [<span class="string">&#x27;resource/&#x27;</span> + package_name]),</span><br><span class="line">        (<span class="string">&#x27;share/&#x27;</span> + package_name, [<span class="string">&#x27;package.xml&#x27;</span>]),</span><br><span class="line">    ],</span><br><span class="line">    install_requires=[<span class="string">&#x27;setuptools&#x27;</span>],</span><br><span class="line">    zip_safe=<span class="literal">True</span>,</span><br><span class="line">    maintainer=<span class="string">&#x27;Hu Chunxu&#x27;</span>,</span><br><span class="line">    maintainer_email=<span class="string">&#x27;huchunxu@guyuehome.com&#x27;</span>,</span><br><span class="line">    description=<span class="string">&#x27;TODO: Package description&#x27;</span>,</span><br><span class="line">    license=<span class="string">&#x27;TODO: License declaration&#x27;</span>,</span><br><span class="line">    tests_require=[<span class="string">&#x27;pytest&#x27;</span>],</span><br><span class="line">    entry_points=&#123;</span><br><span class="line">        <span class="string">&#x27;console_scripts&#x27;</span>: [</span><br><span class="line">         <span class="string">&#x27;node_helloworld       = learning_node.node_helloworld:main&#x27;</span>,</span><br><span class="line">         <span class="string">&#x27;node_helloworld_class = learning_node.node_helloworld_class:main&#x27;</span>,</span><br><span class="line">         <span class="string">&#x27;node_object            = learning_node.node_object:main&#x27;</span>,</span><br><span class="line">         <span class="string">&#x27;node_object_webcam     = learning_node.node_object_webcam:main&#x27;</span>,</span><br><span class="line">        ],</span><br><span class="line">    &#125;,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p> <code>&#39;node_helloworld       = learning_node.node_helloworld:main&#39;</code><br>程序名字 &#x3D; 文件夹.程序名称：main</p>
+</li>
+<li><p>才可以在工作环境的根目录下用<code>ros2 run 文件夹 程序名字</code>命令</p>
+</li>
+</ol>
+<p>主要过程：</p>
+<ul>
+<li>编程接口初始化</li>
+<li>创建ROS2节点对象并进行初始化</li>
+<li>实现节点功能</li>
+<li>销毁节点并关闭窗口</li>
+</ul>
+<h2 id="优化第一个节点的代码（面向对象编程）"><a href="#优化第一个节点的代码（面向对象编程）" class="headerlink" title="优化第一个节点的代码（面向对象编程）"></a>优化第一个节点的代码（面向对象编程）</h2><p>你得学习一些面向过程和面向对象编程不同的思想，面向过程编程不好进行机器人的模块化处理<br>source一下是什么意思</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">@作者: 古月居(www.guyuehome.com)</span></span><br><span class="line"><span class="string">@说明: ROS2节点示例-发布“Hello World”日志信息, 使用面向对象的实现方式</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> rclpy                                     <span class="comment"># ROS2 Python接口库</span></span><br><span class="line"><span class="keyword">from</span> rclpy.node <span class="keyword">import</span> Node                      <span class="comment"># ROS2 节点类</span></span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">创建一个HelloWorld节点, 初始化时输出“hello world”日志</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">HelloWorldNode</span>(<span class="title class_ inherited__">Node</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, name</span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__(name)                       <span class="comment"># ROS2节点父类初始化</span></span><br><span class="line">        <span class="keyword">while</span> rclpy.ok():                            <span class="comment"># ROS2系统是否正常运行</span></span><br><span class="line">            <span class="variable language_">self</span>.get_logger().info(<span class="string">&quot;Hello World&quot;</span>)    <span class="comment"># ROS2日志输出</span></span><br><span class="line">            time.sleep(<span class="number">0.5</span>)                          <span class="comment"># 休眠控制循环时间</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>(<span class="params">args=<span class="literal">None</span></span>):                                 <span class="comment"># ROS2节点主入口main函数</span></span><br><span class="line">    rclpy.init(args=args)                            <span class="comment"># ROS2 Python接口初始化</span></span><br><span class="line">    node = HelloWorldNode(<span class="string">&quot;node_helloworld_class&quot;</span>)   <span class="comment"># 创建ROS2节点对象并进行初始化</span></span><br><span class="line">    node.destroy_node()                              <span class="comment"># 销毁节点对象</span></span><br><span class="line">    rclpy.shutdown()                                 <span class="comment"># 关闭ROS2 Python接口</span></span><br></pre></td></tr></table></figure>
+
+<p><code>node = Node(&quot;node_helloworld&quot;) </code> 这里是运用ros2的Python接口创建的一个node<br><code>node = HelloWorldNode(&quot;node_helloworld_class&quot;)</code> 这里是自己定义一个class来创建一个node</p>
+<p>Q:为什么不在节点的类中直接初始化？<br>A1:因为父类的__init__会被子类新定义的覆盖掉，所以要用super（）.加载父类Node中的init<br>A2:功能分清楚啊，class就只是一个对象，它要被调用的时候才应该出初始化<br>A3:helloworldNode类是继承自Node节点类，在创建这个类的时候调用了自己的构造函数，然后调用了父类的构造函数，并且进入循环直到退出</p>
+<ul>
+<li><p>编写与修改程序之后要重新编译<code>colcon build</code>，因为编译过程中会将src里面的代码拷贝到install里面，ros2run的是install里面的代码，不编译的话，install里面的程序是不会更新的</p>
+</li>
+<li><p>colcon build只能在workplace里面的终端进行</p>
+</li>
+<li><p>刚刚出现的问题是因为旧的日志缓存一直没删除</p>
+</li>
+<li><p>解决办法：<br><code>cd ~/ros2/dev_ws  # 进入工作空间根目录 rm -rf build install log colcon build</code></p>
+</li>
+</ul>
+<p>节点不是孤立的哈<br><img src="/images/image-50.png" alt="alt text" loading="lazy"></p>
+<h1 id="话题：节点间传递数据的桥梁"><a href="#话题：节点间传递数据的桥梁" class="headerlink" title="话题：节点间传递数据的桥梁"></a>话题：节点间传递数据的桥梁</h1><ul>
+<li>发布&#x2F;订阅模型</li>
+<li>订阅者或发布者可以不唯一</li>
+<li>异步通信机制</li>
+<li>.msg文件定义通信的消息结构<br><img src="/images/image-51.png" alt="alt text" loading="lazy"></li>
+</ul>
+<h2 id="发布者"><a href="#发布者" class="headerlink" title="发布者"></a>发布者</h2><ul>
+<li>编程接口初始化</li>
+<li>创建节点初始化</li>
+<li>创建发布者对象</li>
+<li>创建并填充话题消息</li>
+<li>发布话题消息</li>
+<li>销毁节点并关闭接口</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> rclpy                                     <span class="comment"># ROS2 Python接口库</span></span><br><span class="line"><span class="keyword">from</span> rclpy.node <span class="keyword">import</span> Node                      <span class="comment"># ROS2 节点类</span></span><br><span class="line"><span class="keyword">from</span> std_msgs.msg <span class="keyword">import</span> String                  <span class="comment"># 字符串消息类型</span></span><br><span class="line"></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">创建一个发布者节点</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">PublisherNode</span>(<span class="title class_ inherited__">Node</span>):</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, name</span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__(name)                                    <span class="comment"># ROS2节点父类初始化</span></span><br><span class="line">        <span class="variable language_">self</span>.pub = <span class="variable language_">self</span>.create_publisher(String, <span class="string">&quot;chatter&quot;</span>, <span class="number">10</span>)   <span class="comment"># 创建发布者对象（消息类型、话题名、队列长度）</span></span><br><span class="line">        <span class="variable language_">self</span>.timer = <span class="variable language_">self</span>.create_timer(<span class="number">0.5</span>, <span class="variable language_">self</span>.timer_callback)  <span class="comment"># 创建一个定时器（单位为秒的周期，定时执行的回调函数）</span></span><br><span class="line">        </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">timer_callback</span>(<span class="params">self</span>):                                     <span class="comment"># 创建定时器周期执行的回调函数</span></span><br><span class="line">        msg = String()                                            <span class="comment"># 创建一个String类型的消息对象</span></span><br><span class="line">        msg.data = <span class="string">&#x27;Hello World&#x27;</span>                                  <span class="comment"># 填充消息对象中的消息数据</span></span><br><span class="line">        <span class="variable language_">self</span>.pub.publish(msg)                                     <span class="comment"># 发布话题消息</span></span><br><span class="line">        <span class="variable language_">self</span>.get_logger().info(<span class="string">&#x27;Publishing: &quot;%s&quot;&#x27;</span> % msg.data)     <span class="comment"># 输出日志信息，提示已经完成话题发布</span></span><br><span class="line">        </span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>(<span class="params">args=<span class="literal">None</span></span>):                                 <span class="comment"># ROS2节点主入口main函数</span></span><br><span class="line">    rclpy.init(args=args)                            <span class="comment"># ROS2 Python接口初始化</span></span><br><span class="line">    node = PublisherNode(<span class="string">&quot;topic_helloworld_pub&quot;</span>)     <span class="comment"># 创建ROS2节点对象并进行初始化</span></span><br><span class="line">    rclpy.spin(node)                                 <span class="comment"># 循环等待ROS2退出</span></span><br><span class="line">    node.destroy_node()                              <span class="comment"># 销毁节点对象</span></span><br><span class="line">    rclpy.shutdown()                                 <span class="comment"># 关闭ROS2 Python接口</span></span><br></pre></td></tr></table></figure>
+<p>别忘记setup.py!</p>
+<h2 id="订阅者"><a href="#订阅者" class="headerlink" title="订阅者"></a>订阅者</h2><ul>
+<li>编程接口初始化</li>
+<li>创建节点并初始化</li>
+<li>创建订阅者对象</li>
+<li>回调函数处理话题数据</li>
+<li>销毁节点并关闭接口</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> rclpy                                     <span class="comment"># ROS2 Python接口库</span></span><br><span class="line"><span class="keyword">from</span> rclpy.node   <span class="keyword">import</span> Node                    <span class="comment"># ROS2 节点类</span></span><br><span class="line"><span class="keyword">from</span> std_msgs.msg <span class="keyword">import</span> String                  <span class="comment"># ROS2标准定义的String消息</span></span><br><span class="line"></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">创建一个订阅者节点</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">SubscriberNode</span>(<span class="title class_ inherited__">Node</span>):</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, name</span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__(name)                                    <span class="comment"># ROS2节点父类初始化</span></span><br><span class="line">        <span class="variable language_">self</span>.sub = <span class="variable language_">self</span>.create_subscription(\</span><br><span class="line">            String, <span class="string">&quot;chatter&quot;</span>, <span class="variable language_">self</span>.listener_callback, <span class="number">10</span>)        <span class="comment"># 创建订阅者对象（消息类型、话题名、订阅者回调函数、队列长度）</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">listener_callback</span>(<span class="params">self, msg</span>):                             <span class="comment"># 创建回调函数，执行收到话题消息后对数据的处理</span></span><br><span class="line">        <span class="variable language_">self</span>.get_logger().info(<span class="string">&#x27;I heard: &quot;%s&quot;&#x27;</span> % msg.data)        <span class="comment"># 输出日志信息，提示订阅收到的话题消息</span></span><br><span class="line">        </span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>(<span class="params">args=<span class="literal">None</span></span>):                                 <span class="comment"># ROS2节点主入口main函数</span></span><br><span class="line">    rclpy.init(args=args)                            <span class="comment"># ROS2 Python接口初始化</span></span><br><span class="line">    node = SubscriberNode(<span class="string">&quot;topic_helloworld_sub&quot;</span>)    <span class="comment"># 创建ROS2节点对象并进行初始化</span></span><br><span class="line">    rclpy.spin(node)                                 <span class="comment"># 循环等待ROS2退出</span></span><br><span class="line">    node.destroy_node()                              <span class="comment"># 销毁节点对象</span></span><br><span class="line">    rclpy.shutdown()                                 <span class="comment"># 关闭ROS2 Python接口</span></span><br></pre></td></tr></table></figure>
+<h2 id="完成一个更复杂的节点通信"><a href="#完成一个更复杂的节点通信" class="headerlink" title="完成一个更复杂的节点通信"></a>完成一个更复杂的节点通信</h2><p><img src="/images/image-52.png" alt="alt text" loading="lazy"></p>
+<p><code>rqt_graph</code> 可以绘制节点的图片<br><img src="/images/image-53.png" alt="alt text" loading="lazy"></p>
+<h1 id="服务：节点间的你问我答"><a href="#服务：节点间的你问我答" class="headerlink" title="服务：节点间的你问我答"></a>服务：节点间的你问我答</h1><p><img src="/images/image-54.png" alt="alt text" loading="lazy"></p>
+<ul>
+<li>客户端&#x2F;服务器（c&#x2F;s）模型</li>
+<li>同步通信机制</li>
+<li>服务器唯一，客户端可以不唯一</li>
+<li>.srv文件定义请求和应答数据结构</li>
+</ul>
+<h2 id="创建服务客户端的程序流程"><a href="#创建服务客户端的程序流程" class="headerlink" title="创建服务客户端的程序流程"></a>创建服务客户端的程序流程</h2><ul>
+<li>编程接口初始化</li>
+<li>创建节点并初始化</li>
+<li>创建客户端对象</li>
+<li>创建并发送请求数据</li>
+<li>等待服务器端应答数据</li>
+<li>销毁节点并关闭接口</li>
+</ul>
+<h2 id="创建服务服务端"><a href="#创建服务服务端" class="headerlink" title="创建服务服务端"></a>创建服务服务端</h2><ul>
+<li>编程接口初始化</li>
+<li>创建节点并初始化</li>
+<li>创建服务器对象</li>
+<li>通过回调函数处进行服务</li>
+<li>向客户端反馈应答结果</li>
+<li>销毁节点并关闭接口</li>
+</ul>
+<h2 id="实现一个更为复杂的服务通信"><a href="#实现一个更为复杂的服务通信" class="headerlink" title="实现一个更为复杂的服务通信"></a>实现一个更为复杂的服务通信</h2><p><img src="/images/image-55.png" alt="alt text" loading="lazy"></p>
+<ol>
+<li>相机驱动节点：发布图像数据</li>
+<li>视觉识别节点：订阅图像数据，并且集成了一个服务器端的对象，随时准备提供目标的位置</li>
+<li>机器人目标跟踪节点（客户端的节点）：当需要根据目标运动时，就发送一次请求，拿到一个当前的目标位置</li>
+</ol>
+<h1 id="通信接口：数据传递的标准接口"><a href="#通信接口：数据传递的标准接口" class="headerlink" title="通信接口：数据传递的标准接口"></a>通信接口：数据传递的标准接口</h1><p><img src="/images/image-56.png" alt="alt text" loading="lazy"><br><img src="/images/image-57.png" alt="alt text" loading="lazy"></p>
+<ul>
+<li><p>服务通信<br><img src="/images/image-58.png" alt="alt text" loading="lazy"></p>
+</li>
+<li><p>话题通信<br><img src="/images/image-59.png" alt="alt text" loading="lazy"></p>
+<blockquote>
+<p>原理其实讲的很清楚了，ROS2的使用本来就是运行在应用层上的，所以作者没有讲具体的实现代码。这里一个节点启动摄像头，然后一个节点处理图像得到坐标并推送话题，最后一个节点订阅话题得到坐标。</p>
+</blockquote>
+</li>
+<li><p>服务：请求一次，反馈一次结果</p>
+</li>
+<li><p>话题：周期上地反馈结果</p>
+</li>
+</ul>
+<h1 id="动作：完整行为地流程管理"><a href="#动作：完整行为地流程管理" class="headerlink" title="动作：完整行为地流程管理"></a>动作：完整行为地流程管理</h1><p><img src="/images/image-60.png" alt="alt text" loading="lazy"></p>
+<ul>
+<li>客户端&#x2F;服务器（c&#x2F;s）模型</li>
+<li>服务器唯一，客户端可以不唯一</li>
+<li>同步通信机制</li>
+<li>.action文件定义通信接口地数据结构</li>
+</ul>
+<p><img src="/images/image-61.png" alt="alt text" loading="lazy"></p>
+<ul>
+<li>里面三个通信模块有两个服务和一个话题<ul>
+<li>当客户端发送运动目标请求时，使用的是服务的请求调用</li>
+<li>服务器端也会去反馈一个应答，表示收到命令</li>
+<li>动作的反馈过程就是一个话题的周期发布，服务器端是发布者，客户端是订阅者</li>
+</ul>
+</li>
+<li>动作就是一种应用层的通信机制，底层就是基于话题和服务实现的</li>
+</ul>
+<p><img src="/images/image-62.png" alt="alt text" loading="lazy"></p>
+<ul>
+<li>实现一个机器人画圆的动作<br><img src="/images/image-63.png" alt="alt text" loading="lazy"><ul>
+<li>使用MoveCircle.action来进行定义，且有3个部分<ul>
+<li>动作的目标</li>
+<li>动作的执行结果</li>
+<li>动作的周期反馈</li>
+</ul>
+</li>
+<li>通讯模型<ul>
+<li>客户端发送一个动作的目标服务器来控制机器人开始运动，并且进行周期反馈，反馈整体的一个信息</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>相比话题和服务的通讯，动作通讯的历程相对较长</p>
+<blockquote>
+<p>请后续复盘回调函数部分<br>有非常多的callback<br><img src="/images/image-64.png" alt="alt text" loading="lazy"></p>
+</blockquote>
+<h1 id="参数：机器人系统的全局字典-类似c中的全局变量"><a href="#参数：机器人系统的全局字典-类似c中的全局变量" class="headerlink" title="参数：机器人系统的全局字典(类似c中的全局变量)"></a>参数：机器人系统的全局字典(类似c中的全局变量)</h1><ul>
+<li>全局共享字典</li>
+<li>由键与值组成</li>
+<li>可实现动态监控</li>
+</ul>
+<h2 id="参数在机器人中的应用"><a href="#参数在机器人中的应用" class="headerlink" title="参数在机器人中的应用"></a>参数在机器人中的应用</h2><p><img src="/images/image-65.png" alt="alt text" loading="lazy"></p>
+<h1 id="分布式通信：多计算平台的任务分配"><a href="#分布式通信：多计算平台的任务分配" class="headerlink" title="分布式通信：多计算平台的任务分配"></a>分布式通信：多计算平台的任务分配</h1><p><img src="/images/image-65.png" alt="alt text" loading="lazy"><br><img src="/images/image-66.png" alt="alt text" loading="lazy"><br><img src="/images/image-67.png" alt="alt text" loading="lazy"><br><img src="/images/image-68.png" alt="alt text" loading="lazy"><br><img src="/images/image-69.png" alt="alt text" loading="lazy"><br><img src="/images/image-70.png" alt="alt text" loading="lazy"></p>
+<h1 id="DDS-机器人的神经网络"><a href="#DDS-机器人的神经网络" class="headerlink" title="DDS:机器人的神经网络"></a>DDS:机器人的神经网络</h1><p><img src="/images/image-71.png" alt="alt text" loading="lazy"><br>DDS，Data Distribution Service，即数据分发服务</p>
+<ul>
+<li>2004年由对象管理组织0MG(0bjectManagementGroup)发布</li>
+<li>专门为实时系统设计的数据分发&#x2F;订阅标准</li>
+<li>最早应用于美国海军，解决舰船复杂网络环境中大量软件升级的兼容性问题，目前已经成为美国国防部的强制标准，同时广泛应用于国防民航、工业控制等领域，成为分布式实时系统中数据发布&#x2F;订阅的标准解决方案。</li>
+<li>DDS强调以数据为中心，提供丰富的服务质量策略(QoS)，以保障数据进行实时、高效、灵活地分发，可满足各种分布式实时通信应用需求。</li>
+</ul>
+<p><img src="/images/image-72.png" alt="alt text" loading="lazy"><br><img src="/images/image-73.png" alt="alt text" loading="lazy"></p>
+<h1 id="Launch-多节点启动与配置脚本"><a href="#Launch-多节点启动与配置脚本" class="headerlink" title="Launch: 多节点启动与配置脚本"></a>Launch: 多节点启动与配置脚本</h1><ul>
+<li>rviz.launch.py<br><code>ros2 run rviz2 rviz2 -d /home/lisettepeng/ros2/dev_ws/src/ros2_21_tutorials/learning_launch/rviz/turtle_rviz.rviz</code> 该命令行是如何实现的？<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">from</span> ament_index_python.packages <span class="keyword">import</span> get_package_share_directory <span class="comment"># 查询功能包路径的方法</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> launch <span class="keyword">import</span> LaunchDescription    <span class="comment"># launch文件的描述类</span></span><br><span class="line"><span class="keyword">from</span> launch_ros.actions <span class="keyword">import</span> Node     <span class="comment"># 节点启动的描述类</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">generate_launch_description</span>():      <span class="comment"># 自动生成launch文件的函数</span></span><br><span class="line">   rviz_config = os.path.join(          <span class="comment"># 找到配置文件的完整路径</span></span><br><span class="line">      get_package_share_directory(<span class="string">&#x27;learning_launch&#x27;</span>),</span><br><span class="line">      <span class="string">&#x27;rviz&#x27;</span>,</span><br><span class="line">      <span class="string">&#x27;turtle_rviz.rviz&#x27;</span></span><br><span class="line">      )</span><br><span class="line"></span><br><span class="line">   <span class="keyword">return</span> LaunchDescription([           <span class="comment"># 返回launch文件的描述信息</span></span><br><span class="line">      Node(                             <span class="comment"># 配置一个节点的启动</span></span><br><span class="line">         package=<span class="string">&#x27;rviz2&#x27;</span>,               <span class="comment"># 节点所在的功能包</span></span><br><span class="line">         executable=<span class="string">&#x27;rviz2&#x27;</span>,            <span class="comment"># 节点的可执行文件名</span></span><br><span class="line">         name=<span class="string">&#x27;rviz2&#x27;</span>,                  <span class="comment"># 对节点重新命名!!!!</span></span><br><span class="line">         arguments=[<span class="string">&#x27;-d&#x27;</span>, rviz_config]  <span class="comment"># 加载命令行参数</span></span><br><span class="line">      )</span><br><span class="line">   ])</span><br></pre></td></tr></table></figure></li>
+</ul>
+<blockquote>
+<p>当我开发a机器人写了一堆资源用了一个名字，但你代码不想换，但你想换个名字，用B<br>这个时候不用改你源码，只用重新配置一个launch文件</p>
+</blockquote>
+<ul>
+<li><p>remapping.launch.py</p>
+ <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"> <span class="keyword">from</span> launch <span class="keyword">import</span> LaunchDescription      <span class="comment"># launch文件的描述类</span></span><br><span class="line"><span class="keyword">from</span> launch_ros.actions <span class="keyword">import</span> Node       <span class="comment"># 节点启动的描述类</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">generate_launch_description</span>():        <span class="comment"># 自动生成launch文件的函数</span></span><br><span class="line">    <span class="keyword">return</span> LaunchDescription([            <span class="comment"># 返回launch文件的描述信息</span></span><br><span class="line">        Node(                             <span class="comment"># 配置一个节点的启动</span></span><br><span class="line">            package=<span class="string">&#x27;turtlesim&#x27;</span>,          <span class="comment"># 节点所在的功能包</span></span><br><span class="line">            namespace=<span class="string">&#x27;turtlesim1&#x27;</span>,       <span class="comment"># 节点所在的命名空间</span></span><br><span class="line">            executable=<span class="string">&#x27;turtlesim_node&#x27;</span>,  <span class="comment"># 节点的可执行文件名</span></span><br><span class="line">            name=<span class="string">&#x27;sim&#x27;</span>                    <span class="comment"># 对节点重新命名</span></span><br><span class="line">        ),</span><br><span class="line">        Node(                             <span class="comment"># 配置一个节点的启动</span></span><br><span class="line">            package=<span class="string">&#x27;turtlesim&#x27;</span>,          <span class="comment"># 节点所在的功能包</span></span><br><span class="line">            namespace=<span class="string">&#x27;turtlesim2&#x27;</span>,       <span class="comment"># 节点所在的命名空间</span></span><br><span class="line">            executable=<span class="string">&#x27;turtlesim_node&#x27;</span>,  <span class="comment"># 节点的可执行文件名</span></span><br><span class="line">            name=<span class="string">&#x27;sim&#x27;</span>                    <span class="comment"># 对节点重新命名</span></span><br><span class="line">        ),</span><br><span class="line">        Node(                             <span class="comment"># 配置一个节点的启动</span></span><br><span class="line">            package=<span class="string">&#x27;turtlesim&#x27;</span>,          <span class="comment"># 节点所在的功能包</span></span><br><span class="line">            executable=<span class="string">&#x27;mimic&#x27;</span>,           <span class="comment"># 节点的可执行文件名</span></span><br><span class="line">            name=<span class="string">&#x27;mimic&#x27;</span>,                 <span class="comment"># 对节点重新命名</span></span><br><span class="line">            remappings=[                  <span class="comment"># 资源重映射列表</span></span><br><span class="line">                (<span class="string">&#x27;/input/pose&#x27;</span>, <span class="string">&#x27;/turtlesim1/turtle1/pose&#x27;</span>),         <span class="comment"># 将/input/pose话题名修改为/turtlesim1/turtle1/pose</span></span><br><span class="line">                (<span class="string">&#x27;/output/cmd_vel&#x27;</span>, <span class="string">&#x27;/turtlesim2/turtle1/cmd_vel&#x27;</span>),  <span class="comment"># 将/output/cmd_vel话题名修改为/turtlesim2/turtle1/cmd_vel</span></span><br><span class="line">                <span class="comment"># 重映射</span></span><br><span class="line">            ]</span><br><span class="line">        )</span><br><span class="line">    ])</span><br></pre></td></tr></table></figure></li>
+<li><p>parameters.launch.py</p>
+</li>
+<li><p>这是对参数的一个launch</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> launch <span class="keyword">import</span> LaunchDescription                   <span class="comment"># launch文件的描述类</span></span><br><span class="line"><span class="keyword">from</span> launch.actions <span class="keyword">import</span> DeclareLaunchArgument       <span class="comment"># 声明launch文件内使用的Argument类</span></span><br><span class="line"><span class="keyword">from</span> launch.substitutions <span class="keyword">import</span> LaunchConfiguration, TextSubstitution</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> launch_ros.actions <span class="keyword">import</span> Node                    <span class="comment"># 节点启动的描述类</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">generate_launch_description</span>():                     <span class="comment"># 自动生成launch文件的函数</span></span><br><span class="line">   background_r_launch_arg = DeclareLaunchArgument(</span><br><span class="line">      <span class="string">&#x27;background_r&#x27;</span>, default_value=TextSubstitution(text=<span class="string">&#x27;0&#x27;</span>)     <span class="comment"># 创建一个Launch文件内参数（arg）background_r</span></span><br><span class="line">   )</span><br><span class="line">   background_g_launch_arg = DeclareLaunchArgument(</span><br><span class="line">      <span class="string">&#x27;background_g&#x27;</span>, default_value=TextSubstitution(text=<span class="string">&#x27;84&#x27;</span>)    <span class="comment"># 创建一个Launch文件内参数（arg）background_g</span></span><br><span class="line">   )</span><br><span class="line">   background_b_launch_arg = DeclareLaunchArgument(</span><br><span class="line">      <span class="string">&#x27;background_b&#x27;</span>, default_value=TextSubstitution(text=<span class="string">&#x27;122&#x27;</span>)   <span class="comment"># 创建一个Launch文件内参数（arg）background_b</span></span><br><span class="line">   )</span><br><span class="line"></span><br><span class="line">   <span class="keyword">return</span> LaunchDescription([                                      <span class="comment"># 返回launch文件的描述信息</span></span><br><span class="line">      background_r_launch_arg,                                     <span class="comment"># 调用以上创建的参数（arg）</span></span><br><span class="line">      background_g_launch_arg,</span><br><span class="line">      background_b_launch_arg,</span><br><span class="line">      Node(                                                        <span class="comment"># 配置一个节点的启动</span></span><br><span class="line">         package=<span class="string">&#x27;turtlesim&#x27;</span>,</span><br><span class="line">         executable=<span class="string">&#x27;turtlesim_node&#x27;</span>,                              <span class="comment"># 节点所在的功能包</span></span><br><span class="line">         name=<span class="string">&#x27;sim&#x27;</span>,                                               <span class="comment"># 对节点重新命名</span></span><br><span class="line">         parameters=[&#123;                                             <span class="comment"># ROS参数列表</span></span><br><span class="line">            <span class="string">&#x27;background_r&#x27;</span>: LaunchConfiguration(<span class="string">&#x27;background_r&#x27;</span>),   <span class="comment"># 创建参数background_r</span></span><br><span class="line">            <span class="string">&#x27;background_g&#x27;</span>: LaunchConfiguration(<span class="string">&#x27;background_g&#x27;</span>),   <span class="comment"># 创建参数background_g</span></span><br><span class="line">            <span class="string">&#x27;background_b&#x27;</span>: LaunchConfiguration(<span class="string">&#x27;background_b&#x27;</span>),   <span class="comment"># 创建参数background_b</span></span><br><span class="line">         &#125;]</span><br><span class="line">      ),</span><br><span class="line">   ])</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>parameters_yaml.launch.py</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> ament_index_python.packages <span class="keyword">import</span> get_package_share_directory  <span class="comment"># 查询功能包路径的方法</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> launch <span class="keyword">import</span> LaunchDescription   <span class="comment"># launch文件的描述类</span></span><br><span class="line"><span class="keyword">from</span> launch_ros.actions <span class="keyword">import</span> Node    <span class="comment"># 节点启动的描述类</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">generate_launch_description</span>():     <span class="comment"># 自动生成launch文件的函数</span></span><br><span class="line">   config = os. n.join(              <span class="comment"># 找到参数文件的完整路径</span></span><br><span class="line">      get_package_share_directory(<span class="string">&#x27;learning_launch&#x27;</span>),</span><br><span class="line">      <span class="string">&#x27;config&#x27;</span>,</span><br><span class="line">      <span class="string">&#x27;turtlesim.yaml&#x27;</span></span><br><span class="line">      )</span><br><span class="line"></span><br><span class="line">   <span class="keyword">return</span> LaunchDescription([          <span class="comment"># 返回launch文件的描述信息</span></span><br><span class="line">      Node(                            <span class="comment"># 配置一个节点的启动</span></span><br><span class="line">         package=<span class="string">&#x27;turtlesim&#x27;</span>,          <span class="comment"># 节点所在的功能包</span></span><br><span class="line">         executable=<span class="string">&#x27;turtlesim_node&#x27;</span>,  <span class="comment"># 节点的可执行文件名</span></span><br><span class="line">         namespace=<span class="string">&#x27;turtlesim2&#x27;</span>,       <span class="comment"># 节点所在的命名空间</span></span><br><span class="line">         name=<span class="string">&#x27;sim&#x27;</span>,                   <span class="comment"># 对节点重新命名</span></span><br><span class="line">         parameters=[config]           <span class="comment"># 加载参数文件</span></span><br><span class="line">      )</span><br><span class="line">   ])</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>namespaces.launch.py</p>
+</li>
+<li><p>一个launch文件包含一堆</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> ament_index_python.packages <span class="keyword">import</span> get_package_share_directory  <span class="comment"># 查询功能包路径的方法</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> launch <span class="keyword">import</span> LaunchDescription                 <span class="comment"># launch文件的描述类</span></span><br><span class="line"><span class="keyword">from</span> launch.actions <span class="keyword">import</span> IncludeLaunchDescription  <span class="comment"># 节点启动的描述类</span></span><br><span class="line"><span class="keyword">from</span> launch.launch_description_sources <span class="keyword">import</span> PythonLaunchDescriptionSource</span><br><span class="line"><span class="keyword">from</span> launch.actions <span class="keyword">import</span> GroupAction               <span class="comment"># launch文件中的执行动作</span></span><br><span class="line"><span class="keyword">from</span> launch_ros.actions <span class="keyword">import</span> PushRosNamespace      <span class="comment"># ROS命名空间配置</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">generate_launch_description</span>():                   <span class="comment"># 自动生成launch文件的函数</span></span><br><span class="line">   parameter_yaml = IncludeLaunchDescription(        <span class="comment"># 包含指定路径下的另外一个launch文件</span></span><br><span class="line">      PythonLaunchDescriptionSource([os.path.join(</span><br><span class="line">         get_package_share_directory(<span class="string">&#x27;learning_launch&#x27;</span>), <span class="string">&#x27;launch&#x27;</span>),</span><br><span class="line">         <span class="string">&#x27;/parameters_nonamespace.launch.py&#x27;</span>])</span><br><span class="line">      )</span><br><span class="line">  </span><br><span class="line">   parameter_yaml_with_namespace = GroupAction(      <span class="comment"># 对指定launch文件中启动的功能加上命名空间</span></span><br><span class="line">      actions=[</span><br><span class="line">         PushRosNamespace(<span class="string">&#x27;turtlesim2&#x27;</span>),</span><br><span class="line">         parameter_yaml]</span><br><span class="line">      )</span><br><span class="line"></span><br><span class="line">   <span class="keyword">return</span> LaunchDescription([                        <span class="comment"># 返回launch文件的描述信息</span></span><br><span class="line">      parameter_yaml_with_namespace</span><br><span class="line">   ])</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h1 id="TF：机器人坐标系管理神器"><a href="#TF：机器人坐标系管理神器" class="headerlink" title="TF：机器人坐标系管理神器"></a>TF：机器人坐标系管理神器</h1><h2 id="机器人中的坐标系"><a href="#机器人中的坐标系" class="headerlink" title="机器人中的坐标系"></a>机器人中的坐标系</h2><p><img src="/images/image-74.png" alt="alt text" loading="lazy"></p>
+<h2 id="底层原理"><a href="#底层原理" class="headerlink" title="底层原理"></a>底层原理</h2><p><img src="/images/image-75.png" alt="alt text" loading="lazy"><br>关于坐标系变换关系的基本理论，在每一本机器人学的教材里面都会有详细的讲解，可以分解为<strong>平移和旋转</strong>两个部分，通过一个4*4的矩阵来进行描述，在空间中画出坐标系两者之间的关系变换其实就是这个向量的数学描述，ros2里面的tf就是对这些数学理论进行了详细的封装</p>
+<h2 id="tf"><a href="#tf" class="headerlink" title="tf"></a>tf</h2><ul>
+<li>作用：对坐标系进行管理</li>
+</ul>
+<ol>
+<li><p>相对不变的位置——静态tf广播<br>eg.雷达与机身地盘的位置<br><code>ros2 run learning_tf_static tf_broadcaster</code></p>
+</li>
+<li><p>查询两个坐标的相对位置——tf监听<br><code>ros2 run learning_tf tf_listener</code></p>
+</li>
+</ol>
+<h2 id="海龟跟随功能的实现"><a href="#海龟跟随功能的实现" class="headerlink" title="海龟跟随功能的实现"></a>海龟跟随功能的实现</h2><ul>
+<li>全局参考系：world<br><img src="/images/image-76.png" alt="alt text" loading="lazy"><br><code>ros2 launch learning_tf turtle_following_demo.launch.py</code><br><code>ros2 run turtlesim turtle_teleop_key</code><br>这个是我们自己通过代码实现的，先前的是ros2里面的案例</li>
+</ul>
+<h1 id="URDF：机器人的建模方法"><a href="#URDF：机器人的建模方法" class="headerlink" title="URDF：机器人的建模方法"></a>URDF：机器人的建模方法</h1><h2 id="什么是URDF"><a href="#什么是URDF" class="headerlink" title="什么是URDF"></a>什么是URDF</h2><ul>
+<li>Unified Robot Description Format，统一机器人描述格式;</li>
+<li>ROS中一个非常重要的机器人模型描述格式;</li>
+<li>可以解析URDF文件中使用XML格式描述的机器人模型;</li>
+<li>包含<strong>link和joint自身及相关属性</strong>的描述信息;<br><img src="/images/image-77.png" alt="alt text" loading="lazy"><br><img src="/images/image-78.png" alt="alt text" loading="lazy"></li>
+</ul>
+<h2 id=""><a href="#" class="headerlink" title=""></a><link></h2><ul>
+<li>描述机器人某个刚体部分的外观和物理属性;</li>
+<li>描述连杆尺寸(size)、颜色(color)，形状(shape)，惯性矩阵(inertial matrix)，碰撞参数(collision properties)等。</li>
+<li>每个Link会成为一个坐标系<br><img src="/images/image-79.png" alt="alt text" loading="lazy"></li>
+</ul>
+<h2 id="-1"><a href="#-1" class="headerlink" title=""></a><joint></h2><ul>
+<li><p>描述两个link之间的关系，分为以下六种类型：</p>
+<table>
+<thead>
+<tr>
+<th align="center">关节类型</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">continuous</td>
+<td align="center">旋转关节，可以围绕单轴无限旋转</td>
+</tr>
+<tr>
+<td align="center">revolute</td>
+<td align="center">旋转关节，类似于continuous，但是有旋转的角度极限</td>
+</tr>
+<tr>
+<td align="center">prismatic</td>
+<td align="center">滑动关节，沿某一轴线移动的关节，带有位置极限</td>
+</tr>
+<tr>
+<td align="center">fixed</td>
+<td align="center">固定关节，不允许运动的特殊关节</td>
+</tr>
+<tr>
+<td align="center">floating</td>
+<td align="center">浮动关节，允许进行平移、旋转运动</td>
+</tr>
+<tr>
+<td align="center">planar</td>
+<td align="center">平面关节，允许在平面正交方向上平移或者旋转</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>包括关节运动的位置和速度限制</p>
+</li>
+<li><p>描述机器人关节的运动学和动力属性<br><img src="/images/image-80.png" alt="alt text" loading="lazy"><br>r是回转角绕z轴旋转，p是俯仰角绕y轴，y是偏转角绕x轴</p>
+</li>
+</ul>
+<h2 id="-2"><a href="#-2" class="headerlink" title=""></a><robot></h2><ul>
+<li>完整机器人模型的最顶层标签</li>
+<li><link>和<ioint>标签都必须包含在<robot>标签内</li>
+<li>一个完整的机器人模型，由一系列<link>和<joint>组成<br><img src="/images/image-81.png" alt="alt text" loading="lazy"><br><img src="/images/image-82.png" alt="alt text" loading="lazy"></li>
+</ul>
+<h2 id="创建机器人urdf模型"><a href="#创建机器人urdf模型" class="headerlink" title="创建机器人urdf模型"></a>创建机器人urdf模型</h2><ul>
+<li>urdf:存放机器人模型的URDF或xacro文件</li>
+<li>meshes:放置URDF中引用的模型渲染文件</li>
+<li>launch:保存相关启动文件</li>
+<li>rviz:保存rviz的配置文件</li>
+</ul>
+<h3 id="查看URDF模型结构"><a href="#查看URDF模型结构" class="headerlink" title="查看URDF模型结构"></a>查看URDF模型结构</h3><p><img src="/images/image-83.png" alt="alt text" loading="lazy"><br><code>urdf_to_graphviz mbot_base.urdf # 在模型文件夹下</code></p>
+<h1 id="Gazebo：三维物理仿真平台"><a href="#Gazebo：三维物理仿真平台" class="headerlink" title="Gazebo：三维物理仿真平台"></a>Gazebo：三维物理仿真平台</h1><p>Gazebo是一款功能强大的三维物理仿真平台具备强大的物理引擎</p>
+<ul>
+<li>高质量的图形渲染</li>
+<li>方便的编程与图形接口</li>
+<li>开源免费</li>
+</ul>
+<p>其典型应用场景包括</p>
+<ul>
+<li>测试机器人算法</li>
+<li>机器人的设计</li>
+<li>现实情景下的回溯测试</li>
+</ul>
+<h2 id="urdf模型的进化版本——XACRO模型文件"><a href="#urdf模型的进化版本——XACRO模型文件" class="headerlink" title="urdf模型的进化版本——XACRO模型文件"></a>urdf模型的进化版本——XACRO模型文件</h2><ul>
+<li>精简模型代码<ul>
+<li>创建宏定义</li>
+<li>文件包含</li>
+</ul>
+</li>
+<li>提供可编程接口<ul>
+<li>常量</li>
+<li>变量</li>
+<li>数学计算</li>
+<li>条件语句</li>
+</ul>
+</li>
+</ul>
+</div></section><div id="reward-container"><span class="hty-icon-button button-glow" id="reward-button" title="打赏" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === &quot;none&quot;) ? &quot;block&quot; : &quot;none&quot;;"><svg class="icon ri:hand-coin-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:hand-coin-line"></use></svg></span><div id="reward-comment">I'm so cute. Please give me money.</div></div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>Lisette Peng</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://1231lisette.github.io/01paw/2025/03/ROS2-Learning/" title="ROS2_Learning">https://1231lisette.github.io/01paw/2025/03/ROS2-Learning/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><span class="icon iconify" data-icon="ri:creative-commons-line"></span><span class="icon iconify" data-icon="ri:creative-commons-by-line"></span><span class="icon iconify" data-icon="ri:creative-commons-nc-line"></span><span class="icon iconify" data-icon="ri:creative-commons-sa-line"></span></a> 许可协议。</li></ul><script>document.addEventListener('copy', function (event) {
+  const clipboardData = event.clipboardData || window.clipboardData;
+  if (!clipboardData) { return; }
+  const text = window.getSelection().toString();
+  if (text) {
+    event.preventDefault();
+    clipboardData.setData('text/plain', text + '\n\n本文作者：Lisette Peng\n本文链接：https://1231lisette.github.io/01paw/2025/03/ROS2-Learning/\n版权声明：本博客所有文章除特别声明外，均默认采用 CC BY-NC-SA 4.0 许可协议。');
+  }
+});</script></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/01paw/2025/03/drone-learning-note/" rel="prev" title="drone_learning_note"><svg class="icon ri:arrow-left-s-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:arrow-left-s-line"></use></svg><span class="post-nav-text">drone_learning_note</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/01paw/2025/02/stm32%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="next" title="stm32学习笔记"><span class="post-nav-text">stm32学习笔记</span><svg class="icon ri:arrow-right-s-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:arrow-right-s-line"></use></svg></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>如果您有任何关于博客内容的相关讨论，欢迎前往 <a https://github.com/1231Lisette/01paw/discussions" target="_blank">GitHub Discussions</a> 与我交流。</span><br><a class="hty-button hty-button--raised" id="github-discussions" target="_blank" rel="noopener" href="https://github.com/1231Lisette/1231lisette.github.io/discussions/new">GitHub Discussions</a></div><style>.utterances {
+  max-width: 100%;
+}</style><script src="https://giscus.app/client.js" data-repo="231Lisette/01paw" data-repo-id="R_kgDONzMlDQ" data-category="General" data-category-id="DIC_kwDONzMlDc4CuuKh" data-mapping="pathname" data-reactions-enabled="1" data-emit-metadata="0" data-theme="light" crossorigin="anonymous" async></script></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2025 </span><span class="with-love" id="animate"><svg class="icon icon-cloud-line" aria-hidden="true" style="width: 20px; height: 20px;"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> Lisette Peng</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v7.3.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.10.11</span></div><div class="live-time"><span>本博客已萌萌哒地运行</span><span id="display_live_time"></span><span class="moe-text">(●'◡'●)</span><script>function blog_live_time() {
+  setTimeout(blog_live_time, 1000);
+  const start = new Date('2025-02-04T22:15:00');
+  const now = new Date();
+  const timeDiff = (now.getTime() - start.getTime());
+  const msPerMinute = 60 * 1000;
+  const msPerHour = 60 * msPerMinute;
+  const msPerDay = 24 * msPerHour;
+  const passDay = Math.floor(timeDiff / msPerDay);
+  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
+  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
+  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
+  display_live_time.innerHTML = ` ${passDay} 天 ${passHour} 小时 ${passMinute} 分 ${passSecond} 秒`;
+}
+blog_live_time();
+</script></div></footer></div><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><svg class="icon ri:arrow-up-s-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#6200ee" stroke-width="2" stroke-linecap="round"></circle></svg></a><script>function initMourn() {
+  const date = new Date();
+  const today = (date.getMonth() + 1) + "-" + date.getDate()
+  const mourn_days = ["4-4","9-18"]
+  if (mourn_days.includes(today)) {
+    document.documentElement.style.filter = "grayscale(1)";
+  }
+}
+initMourn();</script><script src="https://fastly.jsdelivr.net/npm/medium-zoom@1.0.6/dist/medium-zoom.min.js"></script><script>const images = [...document.querySelectorAll('.markdown-body img')]
+mediumZoom(images)</script><style>.medium-zoom-image {
+  z-index: 99;
+}</style></body></html>

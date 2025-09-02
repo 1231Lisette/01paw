@@ -1,0 +1,265 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#6200ee"><meta name="author" content="Lisette Peng"><meta name="copyright" content="Lisette Peng"><meta name="generator" content="Hexo 7.3.0"><meta name="theme" content="hexo-theme-yun"><title>drone_learning_note | 01paw</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/star-markdown-css@0.4.1/dist/yun/yun-markdown.min.css"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/prism-theme-vars/base.css"><script src="https://fastly.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
+  [".post-card",".markdown-body img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+}
+document.addEventListener("DOMContentLoaded", initScrollReveal);
+document.addEventListener("pjax:success", initScrollReveal);
+</script><link rel="icon" type="image/svg+xml" href="/01paw/favicon.svg"><link rel="mask-icon" href="/01paw/favicon.svg" color="#6200ee"><link rel="preload" href="/01paw/css/hexo-theme-yun.css" as="style"><link rel="prefetch" href="/01paw/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="preconnect" href="https://fastly.jsdelivr.net/npm/" crossorigin><script id="yun-config">
+    window.Yun = {}
+    window.CONFIG = {"hostname":"1231lisette.github.io","root":"/01paw/","title":"二进制爪印","version":"1.10.11","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"搜索...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.yunyoujun.cn/img/avatar/none.jpg","say":{"api":"https://v1.hitokoto.cn","hitokoto":true},"fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]},"vendors":{"host":"https://fastly.jsdelivr.net/npm/","darken":"https://fastly.jsdelivr.net/npm/darken@1.5.0"}};
+  </script><link rel="stylesheet" href="/01paw/css/hexo-theme-yun.css"><script src="/01paw/js/hexo-theme-yun.js" type="module"></script><link rel="alternate" href="/01paw/atom.xml" title="01paw" type="application/atom+xml"><script src="//at.alicdn.com/t/font_1140697_dxory92pb0h.js" async></script><script>(function(){
+  var bp = document.createElement('script');
+  var curProtocol = window.location.protocol.split(':')[0];
+  if (curProtocol === 'https') {
+    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else {
+    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(bp, s);
+})();</script><meta name="description" content="无人机、ros、px4必知知识四旋翼飞机的组成机身机架指标参数 重量  轴距两个对角的电机之间中心点的距离  布局  材料碳纤维材料密度小，刚度和强度大门，提升续航减小震动，但是价格比较贵   起落架 支撑多旋翼重量，保存机身水平 避免飞机与地面发生摩擦 减弱起飞和降落的气流对飞机的干扰 消耗和吸收多旋翼在着陆时的撞击能量  动力系统决定多旋翼系统的主要性能  悬停时间 载重能力 飞行速度 飞行距">
+<meta property="og:type" content="article">
+<meta property="og:title" content="drone_learning_note">
+<meta property="og:url" content="https://1231lisette.github.io/01paw/2025/03/drone-learning-note/index.html">
+<meta property="og:site_name" content="01paw">
+<meta property="og:description" content="无人机、ros、px4必知知识四旋翼飞机的组成机身机架指标参数 重量  轴距两个对角的电机之间中心点的距离  布局  材料碳纤维材料密度小，刚度和强度大门，提升续航减小震动，但是价格比较贵   起落架 支撑多旋翼重量，保存机身水平 避免飞机与地面发生摩擦 减弱起飞和降落的气流对飞机的干扰 消耗和吸收多旋翼在着陆时的撞击能量  动力系统决定多旋翼系统的主要性能  悬停时间 载重能力 飞行速度 飞行距">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-87.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-88.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-89.png">
+<meta property="article:published_time" content="2025-03-18T07:33:20.000Z">
+<meta property="article:modified_time" content="2025-08-31T04:58:21.162Z">
+<meta property="article:author" content="Lisette Peng">
+<meta property="article:tag" content="hexo">
+<meta property="article:tag" content="博客">
+<meta property="article:tag" content="Lisette Peng">
+<meta property="article:tag" content="个人网站">
+<meta property="article:tag" content="1231Lisette">
+<meta property="article:tag" content="blog">
+<meta property="article:tag" content="个人博客">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://1231lisette.github.io/images/image-87.png"><script>(function() {
+  if (CONFIG.mode !== 'auto') return
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+  const setting = localStorage.getItem('darken-mode') || 'auto'
+  if (setting === 'dark' || (prefersDark && setting !== 'light'))
+    document.documentElement.classList.toggle('dark', true)
+})()</script></head><body><script src="https://code.iconify.design/2/2.1.1/iconify.min.js"></script><script>// Define global variable
+IconifyProviders = {
+  // Empty prefix: overwrite default API provider configuration
+  '': {
+    // Use custom API first, use Iconify public API as backup
+    resources: [
+        'https://api.iconify.design',
+    ],
+    // Wait for 1 second before switching API hosts
+    rotate: 1000,
+  },
+};</script><script defer src="https://fastly.jsdelivr.net/npm/animejs@latest"></script><script defer src="/01paw/js/ui/fireworks.js" type="module"></script><canvas class="fireworks"></canvas><canvas id="trianglifyContainer"></canvas><script defer src="https://fastly.jsdelivr.net/npm/trianglify@4/dist/trianglify.bundle.js"></script><script>document.addEventListener("DOMContentLoaded", () => {
+  const pattern = trianglify({
+    width: 800,
+    height: 600,
+    cellSize: 75,
+    palette: ["YlGnBu", "GnBu", "Purples", "Blues"],
+  });
+  const canvasOpts = {
+    applyCssScaling: false
+  }
+  document.body.appendChild(pattern.toCanvas(trianglifyContainer, canvasOpts));
+});</script><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/01paw/js/sidebar.js" type="module"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><svg class="icon ri:list-ordered" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><svg class="icon ri:passport-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info mickey-mouse"><a class="site-author-avatar" href="/01paw/about/" title="Lisette Peng"><img width="96" loading="lazy" src="/01paw/images/avatar.jpg" alt="Lisette Peng"><span class="site-author-status" title="不想上学！！">😭</span></a><div class="site-author-name"><a href="/01paw/about/">Lisette Peng</a></div><span class="site-name">01paw</span><sub class="site-subtitle">好久不见</sub><div class="site-description">玩得开心</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/01paw/" title="首页"><span class="site-state-item-icon"><svg class="icon icon-home-4-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/01paw/archives/" title="归档"><span class="site-state-item-icon"><svg class="icon icon-archive-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">10</span></a></div><div class="site-state-item"><a href="/01paw/categories/" title="分类"><span class="site-state-item-icon"><svg class="icon icon-folder-2-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">2</span></a></div><div class="site-state-item"><a href="/01paw/tags/" title="标签"><span class="site-state-item-icon"><svg class="icon icon-price-tag-3-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">14</span></a></div><a class="site-state-item hty-icon-button" target="_blank" rel="noopener" href="https://yun.yunyoujun.cn" title="文档"><span class="site-state-item-icon"><svg class="icon ri:settings-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:settings-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:2405848533@qq.com" title="E-Mail" target="_blank" style="color:#8E71C1"><svg class="icon icon-mail-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#icon-mail-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/1231Lisette" title="GitHub" target="_blank" style="color:undefined"><svg class="icon icon-github-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#icon-github-line"></use></svg></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" href="/01paw/links/" title="我的小伙伴们" style="color:dodgerblue"><svg class="icon icon-genderless-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#icon-genderless-line"></use></svg></a><a class="links-item hty-icon-button" href="/01paw/about/" title="关于" style="color:green"><svg class="icon icon-user-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#icon-user-line"></use></svg></a><a class="links-item hty-icon-button" href="/01paw/categories/" title="分类" style="color:orange"><svg class="icon icon-folder-2-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#icon-folder-2-line"></use></svg></a><a class="links-item hty-icon-button" href="/01paw/tags/" title="标签" style="color:purple"><svg class="icon icon-price-tag-3-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#icon-price-tag-3-line"></use></svg></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon ri:contrast-2-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:contrast-2-line"></use></svg></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%97%A0%E4%BA%BA%E6%9C%BA%E3%80%81ros%E3%80%81px4%E5%BF%85%E7%9F%A5%E7%9F%A5%E8%AF%86"><span class="toc-number">1.</span> <span class="toc-text">无人机、ros、px4必知知识</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E6%97%8B%E7%BF%BC%E9%A3%9E%E6%9C%BA%E7%9A%84%E7%BB%84%E6%88%90"><span class="toc-number">1.1.</span> <span class="toc-text">四旋翼飞机的组成</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%BA%E8%BA%AB"><span class="toc-number">1.1.1.</span> <span class="toc-text">机身</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%BA%E6%9E%B6"><span class="toc-number">1.1.1.1.</span> <span class="toc-text">机架</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%8C%87%E6%A0%87%E5%8F%82%E6%95%B0"><span class="toc-number">1.1.1.1.1.</span> <span class="toc-text">指标参数</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%B5%B7%E8%90%BD%E6%9E%B6"><span class="toc-number">1.1.1.2.</span> <span class="toc-text">起落架</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A8%E5%8A%9B%E7%B3%BB%E7%BB%9F"><span class="toc-number">1.1.2.</span> <span class="toc-text">动力系统</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E8%9E%BA%E6%97%8B%E6%A1%A8"><span class="toc-number">1.1.2.1.</span> <span class="toc-text">1. 螺旋桨</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E7%94%B5%E6%9C%BA"><span class="toc-number">1.1.2.2.</span> <span class="toc-text">2. 电机</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E7%94%B5%E8%B0%83"><span class="toc-number">1.1.2.3.</span> <span class="toc-text">3. 电调</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-%E7%94%B5%E6%B1%A0"><span class="toc-number">1.1.2.4.</span> <span class="toc-text">4. 电池</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A7%E5%88%B6%E7%B3%BB%E7%BB%9F"><span class="toc-number">1.1.3.</span> <span class="toc-text">控制系统</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A3%9E%E6%8E%A7"><span class="toc-number">1.1.3.1.</span> <span class="toc-text">飞控</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9C%B0%E9%9D%A2%E7%AB%99"><span class="toc-number">1.1.3.2.</span> <span class="toc-text">地面站</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%81%A5%E6%8E%A7%E5%99%A8"><span class="toc-number">1.1.3.3.</span> <span class="toc-text">遥控器</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%A3%9E%E8%A1%8C%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.1.3.3.1.</span> <span class="toc-text">飞行模式</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%88%9D%E6%AD%A5%E8%AE%A4%E8%AF%86"><span class="toc-number">1.1.3.3.2.</span> <span class="toc-text">初步认识</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%BA%E8%BD%BD%E8%AE%A1%E7%AE%97%E6%9C%BA"><span class="toc-number">1.1.3.4.</span> <span class="toc-text">机载计算机</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%A0%E6%84%9F%E5%99%A8%E5%92%8C%E5%A4%96%E8%AE%BE"><span class="toc-number">1.1.3.5.</span> <span class="toc-text">传感器和外设</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#GPS%E5%92%8C%E7%BD%97%E7%9B%98%E5%92%8C%E5%AE%89%E5%85%A8%E5%BC%80%E5%85%B3"><span class="toc-number">1.1.3.6.</span> <span class="toc-text">GPS和罗盘和安全开关</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%B7%9D%E7%A6%BB%E4%BC%A0%E6%84%9F%E5%99%A8"><span class="toc-number">1.1.3.7.</span> <span class="toc-text">距离传感器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%89%E6%B5%81"><span class="toc-number">1.1.3.8.</span> <span class="toc-text">光流</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%B0%E4%BC%A0"><span class="toc-number">1.1.3.9.</span> <span class="toc-text">数传</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SD%E5%8D%A1"><span class="toc-number">1.1.3.10.</span> <span class="toc-text">SD卡</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%A3%9E%E8%A1%8C%E7%8A%B6%E6%80%81"><span class="toc-number">1.1.3.10.1.</span> <span class="toc-text">飞行状态</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%87%E6%8C%A5%E7%B3%BB%E7%BB%9F"><span class="toc-number">1.1.4.</span> <span class="toc-text">指挥系统</span></a></li></ol></li></ol></li></ol></div></div></div><div class="tag-cloud"><div class="tag-cloud-tags"><a href="/01paw/tags/C/" style="font-size: 12px; color: #999">C</a> <a href="/01paw/tags/C/" style="font-size: 12px; color: #999">C++</a> <a href="/01paw/tags/Hexo/" style="font-size: 12px; color: #999">Hexo</a> <a href="/01paw/tags/Python/" style="font-size: 30px; color: #0078e7">Python</a> <a href="/01paw/tags/SSH/" style="font-size: 12px; color: #999">SSH</a> <a href="/01paw/tags/WiFi%E9%85%8D%E7%BD%AE/" style="font-size: 12px; color: #999">WiFi配置</a> <a href="/01paw/tags/assembly-language/" style="font-size: 12px; color: #999">assembly language</a> <a href="/01paw/tags/growth/" style="font-size: 12px; color: #999">growth</a> <a href="/01paw/tags/stm32/" style="font-size: 12px; color: #999">stm32</a> <a href="/01paw/tags/try/" style="font-size: 12px; color: #999">try</a> <a href="/01paw/tags/%E6%88%91%E7%9A%84%E7%AC%94%E8%AE%B0/" style="font-size: 12px; color: #999">我的笔记</a> <a href="/01paw/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" style="font-size: 12px; color: #999">树莓派,</a> <a href="/01paw/tags/%E7%BD%91%E7%BB%9C%E8%B0%83%E8%AF%95/" style="font-size: 12px; color: #999">网络调试</a> <a href="/01paw/tags/%E9%9D%99%E6%80%81IP/" style="font-size: 12px; color: #999">静态IP</a></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article" style="--smc-primary:#6200ee;"><link itemprop="mainEntityOfPage" href="https://1231Lisette.github.io/01paw/01paw/2025/03/drone-learning-note/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Lisette Peng"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="01paw"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">drone_learning_note<a class="post-edit-link" href="https://github.com/1231Lisette/01paw/hexo/source/_posts_posts/drone-learning-note.md" target="_blank" title="编辑" rel="noopener"><svg class="icon ri:edit-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:edit-line"></use></svg></a></h1><div class="post-meta"><div class="post-time" style="display:block"><span class="post-meta-item-icon"><svg class="icon ri:calendar-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:calendar-line"></use></svg></span> <time title="创建时间：2025-03-18 15:33:20" itemprop="dateCreated datePublished" datetime="2025-03-18T15:33:20+08:00">2025-03-18</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon ri:calendar-2-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:calendar-2-line"></use></svg></span> <time title="修改时间：2025-08-31 12:58:21" itemprop="dateModified" datetime="2025-08-31T12:58:21+08:00">2025-08-31</time></div><span class="post-count"><span class="post-symbolcount"><span class="post-meta-item-icon" title="本文字数"><svg class="icon ri:file-word-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:file-word-line"></use></svg></span> <span title="本文字数">1.9k</span><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读时长"><svg class="icon ri:timer-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:timer-line"></use></svg></span> <span title="阅读时长">6m</span></span></span><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><svg class="icon ri:folder-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:folder-line"></use></svg></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/01paw/categories/%E6%88%91%E7%9A%84%E7%AC%94%E8%AE%B0/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">我的笔记</span></a></span></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body"><h1 id="无人机、ros、px4必知知识"><a href="#无人机、ros、px4必知知识" class="headerlink" title="无人机、ros、px4必知知识"></a>无人机、ros、px4必知知识</h1><h2 id="四旋翼飞机的组成"><a href="#四旋翼飞机的组成" class="headerlink" title="四旋翼飞机的组成"></a>四旋翼飞机的组成</h2><h3 id="机身"><a href="#机身" class="headerlink" title="机身"></a>机身</h3><h4 id="机架"><a href="#机架" class="headerlink" title="机架"></a>机架</h4><h5 id="指标参数"><a href="#指标参数" class="headerlink" title="指标参数"></a>指标参数</h5><ol>
+<li><p>重量</p>
+</li>
+<li><p>轴距<br>两个对角的电机之间中心点的距离</p>
+</li>
+<li><p>布局</p>
+</li>
+<li><p>材料<br>碳纤维材料密度小，刚度和强度大门，提升续航减小震动，但是价格比较贵</p>
+</li>
+</ol>
+<h4 id="起落架"><a href="#起落架" class="headerlink" title="起落架"></a>起落架</h4><ol>
+<li>支撑多旋翼重量，保存机身水平</li>
+<li>避免飞机与地面发生摩擦</li>
+<li>减弱起飞和降落的气流对飞机的干扰</li>
+<li>消耗和吸收多旋翼在着陆时的撞击能量</li>
+</ol>
+<h3 id="动力系统"><a href="#动力系统" class="headerlink" title="动力系统"></a>动力系统</h3><p>决定多旋翼系统的主要性能</p>
+<ul>
+<li>悬停时间</li>
+<li>载重能力</li>
+<li>飞行速度</li>
+<li>飞行距离</li>
+</ul>
+<h4 id="1-螺旋桨"><a href="#1-螺旋桨" class="headerlink" title="1. 螺旋桨"></a>1. 螺旋桨</h4><ul>
+<li>相邻的两个桨是不一样的，因为要做扭矩来保持平衡<ul>
+<li>正桨（不带R）：逆时针旋转</li>
+<li>逆桨（带R）：顺时针旋转</li>
+<li>一定要装对，要不然飞机会发生侧翻等危险情况！！！</li>
+</ul>
+</li>
+<li>分类：<ul>
+<li>塑料：成本低，但性能低，脆弱</li>
+<li>碳纤维：啥都好就是贵</li>
+<li>木质：效率低下，平衡性好，震动小</li>
+</ul>
+</li>
+<li>型号：一般由4个数字表示，前面两位表示螺旋桨的直径，后面两位螺旋桨的螺距。<ul>
+<li>APC1045(10*45)：桨的直径10英寸，逻辑4.5英寸（1in &#x3D; 2.54cm）</li>
+</ul>
+</li>
+<li>桨叶数<br>有实验表明：有实验表明二叶桨的力效会比三叶桨稍高一些</li>
+<li>安全转速<br>超过安全转速，可能发生形变，导致效率降低</li>
+</ul>
+<h4 id="2-电机"><a href="#2-电机" class="headerlink" title="2. 电机"></a>2. 电机</h4><ul>
+<li>无刷直流电机：效率高，便于小型化，制造成本比较低<ul>
+<li>外转子电机</li>
+<li>内转子电机</li>
+</ul>
+</li>
+<li>尺寸：四位数字组成：2205（22*05），前面给两位代表定子的直径，后两位代表定子的高度</li>
+<li>kv值：<ul>
+<li>空载情况下，外加1v电压得到的电机转速值</li>
+<li>单位RPM转每分钟</li>
+<li>kv小的电机可以产生更大的力矩，大螺旋桨用小kv值</li>
+</ul>
+</li>
+</ul>
+<h4 id="3-电调"><a href="#3-电调" class="headerlink" title="3. 电调"></a>3. 电调</h4><ul>
+<li>电子调速器（ESC）<ul>
+<li>调速：通过飞控板给定的PWM波形进行调速</li>
+<li>充当转换器的角色：无刷电机没有电刷换向，需要靠esc电子换相，将直接电源转化为三相电源供给无数电机</li>
+<li>常见参数<ol>
+<li>最大持续电流:最大持续电流正在工作模式下持续输出的电流</li>
+<li>刷新频率 :  400hz</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="4-电池"><a href="#4-电池" class="headerlink" title="4. 电池"></a>4. 电池</h4><ol>
+<li>电压：小型飞行器专用的锂聚合电池，单节电芯的标称电压3.7v，满电4.2v，一般无人机3.6低电压报警</li>
+<li>组合：s表示串联series，p表示并联parallel</li>
+<li>容量 毫安时<br>5300毫安时的电池表示以5300毫安的电流放电可以持续一个小时</li>
+</ol>
+<h3 id="控制系统"><a href="#控制系统" class="headerlink" title="控制系统"></a>控制系统</h3><h4 id="飞控"><a href="#飞控" class="headerlink" title="飞控"></a>飞控</h4><p>最底层的控制器，直接对无人机进行控制（输出pwm波，对电机进行控制）；其他的控制系统充当高级控制器，对飞控进行控制</p>
+<h4 id="地面站"><a href="#地面站" class="headerlink" title="地面站"></a>地面站</h4><p>QGroundControl简介</p>
+<ul>
+<li>飞行地图显示显示无人机位置、飞行轨迹、航路点和飞机<br>仪表。</li>
+<li>对飞控进行配置，支持ArduPilot 和 PX4 Pro。</li>
+<li>自主飞行的任务规划</li>
+<li>显示视频流。</li>
+<li>QGC在 Windows、OS X、Linux 平台、iOS 和 Android 设<br>备上运行:<br>(<a target="_blank" rel="noopener" href="https://docs.qgroundcontrol.com/master/en/getting_started/download_and_instal.html">https://docs.qgroundcontrol.com/master/en/getting_started/download_and_instal.html</a>)</li>
+</ul>
+<h4 id="遥控器"><a href="#遥控器" class="headerlink" title="遥控器"></a>遥控器</h4><p>无人机最常用的远程控制单元形式如图所示。横滚&#x2F;俯仰和油门&#x2F;偏航的控制分别布置在摇杆上(飞行器最少需要4个通道)</p>
+<h5 id="飞行模式"><a href="#飞行模式" class="headerlink" title="飞行模式"></a>飞行模式</h5><p>飞行模式一般来说分为<strong>手动或自主</strong>。手动模式是用户通过遥控器控制杆控制飞行器的运动，然而自主模式完全由飞控控制，并且不需要飞手的控制输入。</p>
+<ul>
+<li>Stabilized :自稳模式，直接控制无人机姿态</li>
+<li>Altitude :定高模式，高度可以恒定</li>
+<li>Position:定点模式，可以进行悬停<br>可以使用遥控上的开关或地面站来切换飞行模式</li>
+</ul>
+<h5 id="初步认识"><a href="#初步认识" class="headerlink" title="初步认识"></a>初步认识</h5><ul>
+<li>四个旋翼，对角旋向一致，相邻旋向相反，反扭矩相互抵消<br><img src="/images/image-87.png" alt="alt text" loading="lazy"> </li>
+<li>通过控制四个旋翼的转速，实现四个自由度运动<ul>
+<li>升降、偏航、俯仰、横滚</li>
+</ul>
+</li>
+<li>一些概念<ul>
+<li>地理坐标系（NED）<ul>
+<li>“北-东-地”</li>
+<li>原点一般指无人机起飞点</li>
+<li>N轴水平指北、D轴指向地心、E轴水平指东</li>
+<li>是右手系</li>
+</ul>
+</li>
+<li>运载体坐标系（FRD）<ul>
+<li>原点位于运载体质心</li>
+<li>x轴沿运载体纵轴，指向前方</li>
+<li>y轴沿运载体横轴，指向右翼</li>
+<li>z轴与x轴、y轴构成右手系，指向运载体底部</li>
+</ul>
+</li>
+<li>姿态角<ul>
+<li>横滚角(φ，Roll)<ul>
+<li>y轴与水平面的夹角</li>
+</ul>
+</li>
+<li>俯仰角(0，Pitch)<ul>
+<li>x轴与水平面的夹角</li>
+</ul>
+</li>
+<li>偏航角(ψ，Yaw)<ul>
+<li>x轴在水平面的投影与N轴的夹角，顺时针为正</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="机载计算机"><a href="#机载计算机" class="headerlink" title="机载计算机"></a>机载计算机</h4><ul>
+<li>PX4 可以通过串行接线或 WiFi 由独立的机载飞计算机进行控制。</li>
+<li>机载计算机通常使用MAVLinKAPI(如MAVSDK或MAVROS)进行通信。<ul>
+<li>Offboard 模式-用于从地面站或机载计算机对 PX4 进行 Offboard 控制的飞行模式</li>
+</ul>
+</li>
+</ul>
+<h4 id="传感器和外设"><a href="#传感器和外设" class="headerlink" title="传感器和外设"></a>传感器和外设</h4><ul>
+<li>基于 PX4 的系统使用传感器来确定飞行器状态(自稳和启用自主控制所需)。</li>
+<li>飞行器状态包括:位置&#x2F;高度电池电量等航向，速度，空速，方向(姿态)，</li>
+<li>系统 最低要求 陀螺仪，加速度计，磁力计(罗盘)和气压计。需要 GPS 或其他定位系统来启用所有自动模<br>式和一些辅助模式。</li>
+<li>最小的传感器组合集成在 Pixhawk飞控板上。</li>
+<li>附加：外部传感器可以连接到控制器。<br><img src="/images/image-88.png" alt="alt text" loading="lazy"></li>
+</ul>
+<h4 id="GPS和罗盘和安全开关"><a href="#GPS和罗盘和安全开关" class="headerlink" title="GPS和罗盘和安全开关"></a>GPS和罗盘和安全开关</h4><ul>
+<li>PX4 支持许多全球导航卫星系统(GNSS)罗盘(磁力计)。它还支持 实时动态(RTK)GPS接收器，它将 GPS 系统扩展到厘米级精通常</li>
+<li>GPS还自带罗盘，用于测定航向角。</li>
+<li>Pixhawk4 GPS集成了安全开关。当不在使用时PX4是加锁状态的，必须在起飞前进行解锁，</li>
+<li>Pixhawk4 GPS还集成了LED灯和蜂鸣器</li>
+</ul>
+<h4 id="距离传感器"><a href="#距离传感器" class="headerlink" title="距离传感器"></a>距离传感器</h4><p>距离传感器用于精准着陆，避障和地形跟随。使用定高雷达定高会稳定很多。</p>
+<h4 id="光流"><a href="#光流" class="headerlink" title="光流"></a>光流</h4><p>传感器使用下视相机和向下的距离传感器进行速度估计。PX4 将光流传感器输出与来自其他定位源(例如 GPS)的信息融合以提供更准确的位置。该传感器可以用于没有 GPS 信号的室内。</p>
+<h4 id="数传"><a href="#数传" class="headerlink" title="数传"></a>数传</h4><p>数传电台 可以在诸如 OGC 地面站 与运行PX4 的机体之间提供无线 MAVLink 连接。这使得飞机飞行中调试参数、实时检查遥测信息、更改任务等等成为了可能</p>
+<h4 id="SD卡"><a href="#SD卡" class="headerlink" title="SD卡"></a>SD卡</h4><p>SD卡用于记录无人机飞行信息，可以当作飞机的黑匣子</p>
+<h5 id="飞行状态"><a href="#飞行状态" class="headerlink" title="飞行状态"></a>飞行状态</h5><p>PX4提供基于机载视觉(LED)和声音(蜂鸣器)的高级飞行状态和飞行准备提示。</p>
+<ul>
+<li>例如，这些提示表明飞行器是否正确校准是否有SD卡，是否有位置锁定，是否可以安全起飞，是否解锁是否可以起飞等</li>
+<li>此外，PX4在地面站的起飞前检查中提供更详细的关于起飞准备的信息。<br><img src="/images/image-89.png" alt="alt text" loading="lazy"></li>
+</ul>
+<h3 id="指挥系统"><a href="#指挥系统" class="headerlink" title="指挥系统"></a>指挥系统</h3></div></section><div id="reward-container"><span class="hty-icon-button button-glow" id="reward-button" title="打赏" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === &quot;none&quot;) ? &quot;block&quot; : &quot;none&quot;;"><svg class="icon ri:hand-coin-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:hand-coin-line"></use></svg></span><div id="reward-comment">I'm so cute. Please give me money.</div></div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>Lisette Peng</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://1231lisette.github.io/01paw/2025/03/drone-learning-note/" title="drone_learning_note">https://1231lisette.github.io/01paw/2025/03/drone-learning-note/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><span class="icon iconify" data-icon="ri:creative-commons-line"></span><span class="icon iconify" data-icon="ri:creative-commons-by-line"></span><span class="icon iconify" data-icon="ri:creative-commons-nc-line"></span><span class="icon iconify" data-icon="ri:creative-commons-sa-line"></span></a> 许可协议。</li></ul><script>document.addEventListener('copy', function (event) {
+  const clipboardData = event.clipboardData || window.clipboardData;
+  if (!clipboardData) { return; }
+  const text = window.getSelection().toString();
+  if (text) {
+    event.preventDefault();
+    clipboardData.setData('text/plain', text + '\n\n本文作者：Lisette Peng\n本文链接：https://1231lisette.github.io/01paw/2025/03/drone-learning-note/\n版权声明：本博客所有文章除特别声明外，均默认采用 CC BY-NC-SA 4.0 许可协议。');
+  }
+});</script></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/01paw/2025/05/Python_vsc_conda_notes/" rel="prev" title="Python 与 VS Code 和 Conda 的使用笔记"><svg class="icon ri:arrow-left-s-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:arrow-left-s-line"></use></svg><span class="post-nav-text">Python 与 VS Code 和 Conda 的使用笔记</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/01paw/2025/03/ROS2-Learning/" rel="next" title="ROS2_Learning"><span class="post-nav-text">ROS2_Learning</span><svg class="icon ri:arrow-right-s-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:arrow-right-s-line"></use></svg></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>如果您有任何关于博客内容的相关讨论，欢迎前往 <a https://github.com/1231Lisette/01paw/discussions" target="_blank">GitHub Discussions</a> 与我交流。</span><br><a class="hty-button hty-button--raised" id="github-discussions" target="_blank" rel="noopener" href="https://github.com/1231Lisette/1231lisette.github.io/discussions/new">GitHub Discussions</a></div><style>.utterances {
+  max-width: 100%;
+}</style><script src="https://giscus.app/client.js" data-repo="231Lisette/01paw" data-repo-id="R_kgDONzMlDQ" data-category="General" data-category-id="DIC_kwDONzMlDc4CuuKh" data-mapping="pathname" data-reactions-enabled="1" data-emit-metadata="0" data-theme="light" crossorigin="anonymous" async></script></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2025 </span><span class="with-love" id="animate"><svg class="icon icon-cloud-line" aria-hidden="true" style="width: 20px; height: 20px;"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> Lisette Peng</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v7.3.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.10.11</span></div><div class="live-time"><span>本博客已萌萌哒地运行</span><span id="display_live_time"></span><span class="moe-text">(●'◡'●)</span><script>function blog_live_time() {
+  setTimeout(blog_live_time, 1000);
+  const start = new Date('2025-02-04T22:15:00');
+  const now = new Date();
+  const timeDiff = (now.getTime() - start.getTime());
+  const msPerMinute = 60 * 1000;
+  const msPerHour = 60 * msPerMinute;
+  const msPerDay = 24 * msPerHour;
+  const passDay = Math.floor(timeDiff / msPerDay);
+  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
+  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
+  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
+  display_live_time.innerHTML = ` ${passDay} 天 ${passHour} 小时 ${passMinute} 分 ${passSecond} 秒`;
+}
+blog_live_time();
+</script></div></footer></div><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><svg class="icon ri:arrow-up-s-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#6200ee" stroke-width="2" stroke-linecap="round"></circle></svg></a><script>function initMourn() {
+  const date = new Date();
+  const today = (date.getMonth() + 1) + "-" + date.getDate()
+  const mourn_days = ["4-4","9-18"]
+  if (mourn_days.includes(today)) {
+    document.documentElement.style.filter = "grayscale(1)";
+  }
+}
+initMourn();</script><script src="https://fastly.jsdelivr.net/npm/medium-zoom@1.0.6/dist/medium-zoom.min.js"></script><script>const images = [...document.querySelectorAll('.markdown-body img')]
+mediumZoom(images)</script><style>.medium-zoom-image {
+  z-index: 99;
+}</style></body></html>

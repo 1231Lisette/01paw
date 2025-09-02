@@ -1,0 +1,910 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#6200ee"><meta name="author" content="Lisette Peng"><meta name="copyright" content="Lisette Peng"><meta name="generator" content="Hexo 7.3.0"><meta name="theme" content="hexo-theme-yun"><title>stm32学习笔记 | 01paw</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/star-markdown-css@0.4.1/dist/yun/yun-markdown.min.css"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/prism-theme-vars/base.css"><script src="https://fastly.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
+  [".post-card",".markdown-body img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+}
+document.addEventListener("DOMContentLoaded", initScrollReveal);
+document.addEventListener("pjax:success", initScrollReveal);
+</script><link rel="icon" type="image/svg+xml" href="/01paw/favicon.svg"><link rel="mask-icon" href="/01paw/favicon.svg" color="#6200ee"><link rel="preload" href="/01paw/css/hexo-theme-yun.css" as="style"><link rel="prefetch" href="/01paw/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="preconnect" href="https://fastly.jsdelivr.net/npm/" crossorigin><script id="yun-config">
+    window.Yun = {}
+    window.CONFIG = {"hostname":"1231lisette.github.io","root":"/01paw/","title":"二进制爪印","version":"1.10.11","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"搜索...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.yunyoujun.cn/img/avatar/none.jpg","say":{"api":"https://v1.hitokoto.cn","hitokoto":true},"fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]},"vendors":{"host":"https://fastly.jsdelivr.net/npm/","darken":"https://fastly.jsdelivr.net/npm/darken@1.5.0"}};
+  </script><link rel="stylesheet" href="/01paw/css/hexo-theme-yun.css"><script src="/01paw/js/hexo-theme-yun.js" type="module"></script><link rel="alternate" href="/01paw/atom.xml" title="01paw" type="application/atom+xml"><script src="//at.alicdn.com/t/font_1140697_dxory92pb0h.js" async></script><script>(function(){
+  var bp = document.createElement('script');
+  var curProtocol = window.location.protocol.split(':')[0];
+  if (curProtocol === 'https') {
+    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else {
+    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(bp, s);
+})();</script><meta name="description" content="基于江科大的stm32学习于2025.2.5启动，希望10号前能多学点！   stm32简介stm32介绍 STM32是ST公司基于ARM Cortex-M内核开发的32位微控制器（M——Microcontroller ） STM32常应用在嵌入式领域如智能车、无人机、机器人无线通信、物联网、工业控制、娱乐电子产品等 STM32功能强大、性能优异片上资源丰富、功耗低，是一款经典的嵌入式微控制器">
+<meta property="og:type" content="article">
+<meta property="og:title" content="stm32学习笔记">
+<meta property="og:url" content="https://1231lisette.github.io/01paw/2025/02/stm32%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="01paw">
+<meta property="og:description" content="基于江科大的stm32学习于2025.2.5启动，希望10号前能多学点！   stm32简介stm32介绍 STM32是ST公司基于ARM Cortex-M内核开发的32位微控制器（M——Microcontroller ） STM32常应用在嵌入式领域如智能车、无人机、机器人无线通信、物联网、工业控制、娱乐电子产品等 STM32功能强大、性能优异片上资源丰富、功耗低，是一款经典的嵌入式微控制器">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://1231lisette.github.io/images/image.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-1.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-2.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-3.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-4.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-6.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-7.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-8.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-9.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-10.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-11.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-12.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-13.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-14.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-15.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-16.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-17.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-18.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-19.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-20.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-21.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-22.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-24.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-23.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-25.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-26.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-27.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-28.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-29.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-30.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-31.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-32.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-33.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-34.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-35.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-36.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-39.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-37.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-38.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-40.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-41.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-42.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-43.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-44.png">
+<meta property="og:image" content="https://1231lisette.github.io/images/image-45.png">
+<meta property="article:published_time" content="2025-02-05T08:26:24.000Z">
+<meta property="article:modified_time" content="2025-08-31T04:58:21.162Z">
+<meta property="article:author" content="Lisette Peng">
+<meta property="article:tag" content="stm32">
+<meta property="article:tag" content="C">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://1231lisette.github.io/images/image.png"><script>(function() {
+  if (CONFIG.mode !== 'auto') return
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+  const setting = localStorage.getItem('darken-mode') || 'auto'
+  if (setting === 'dark' || (prefersDark && setting !== 'light'))
+    document.documentElement.classList.toggle('dark', true)
+})()</script></head><body><script src="https://code.iconify.design/2/2.1.1/iconify.min.js"></script><script>// Define global variable
+IconifyProviders = {
+  // Empty prefix: overwrite default API provider configuration
+  '': {
+    // Use custom API first, use Iconify public API as backup
+    resources: [
+        'https://api.iconify.design',
+    ],
+    // Wait for 1 second before switching API hosts
+    rotate: 1000,
+  },
+};</script><script defer src="https://fastly.jsdelivr.net/npm/animejs@latest"></script><script defer src="/01paw/js/ui/fireworks.js" type="module"></script><canvas class="fireworks"></canvas><canvas id="trianglifyContainer"></canvas><script defer src="https://fastly.jsdelivr.net/npm/trianglify@4/dist/trianglify.bundle.js"></script><script>document.addEventListener("DOMContentLoaded", () => {
+  const pattern = trianglify({
+    width: 800,
+    height: 600,
+    cellSize: 75,
+    palette: ["YlGnBu", "GnBu", "Purples", "Blues"],
+  });
+  const canvasOpts = {
+    applyCssScaling: false
+  }
+  document.body.appendChild(pattern.toCanvas(trianglifyContainer, canvasOpts));
+});</script><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/01paw/js/sidebar.js" type="module"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><svg class="icon ri:list-ordered" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><svg class="icon ri:passport-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info mickey-mouse"><a class="site-author-avatar" href="/01paw/about/" title="Lisette Peng"><img width="96" loading="lazy" src="/01paw/images/avatar.jpg" alt="Lisette Peng"><span class="site-author-status" title="不想上学！！">😭</span></a><div class="site-author-name"><a href="/01paw/about/">Lisette Peng</a></div><span class="site-name">01paw</span><sub class="site-subtitle">好久不见</sub><div class="site-description">玩得开心</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/01paw/" title="首页"><span class="site-state-item-icon"><svg class="icon icon-home-4-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/01paw/archives/" title="归档"><span class="site-state-item-icon"><svg class="icon icon-archive-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">10</span></a></div><div class="site-state-item"><a href="/01paw/categories/" title="分类"><span class="site-state-item-icon"><svg class="icon icon-folder-2-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">2</span></a></div><div class="site-state-item"><a href="/01paw/tags/" title="标签"><span class="site-state-item-icon"><svg class="icon icon-price-tag-3-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">14</span></a></div><a class="site-state-item hty-icon-button" target="_blank" rel="noopener" href="https://yun.yunyoujun.cn" title="文档"><span class="site-state-item-icon"><svg class="icon ri:settings-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:settings-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:2405848533@qq.com" title="E-Mail" target="_blank" style="color:#8E71C1"><svg class="icon icon-mail-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#icon-mail-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/1231Lisette" title="GitHub" target="_blank" style="color:undefined"><svg class="icon icon-github-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#icon-github-line"></use></svg></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" href="/01paw/links/" title="我的小伙伴们" style="color:dodgerblue"><svg class="icon icon-genderless-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#icon-genderless-line"></use></svg></a><a class="links-item hty-icon-button" href="/01paw/about/" title="关于" style="color:green"><svg class="icon icon-user-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#icon-user-line"></use></svg></a><a class="links-item hty-icon-button" href="/01paw/categories/" title="分类" style="color:orange"><svg class="icon icon-folder-2-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#icon-folder-2-line"></use></svg></a><a class="links-item hty-icon-button" href="/01paw/tags/" title="标签" style="color:purple"><svg class="icon icon-price-tag-3-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#icon-price-tag-3-line"></use></svg></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon ri:contrast-2-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:contrast-2-line"></use></svg></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#stm32%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">stm32简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#stm32%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.1.</span> <span class="toc-text">stm32介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ARM%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.2.</span> <span class="toc-text">ARM介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#STM32F103C8T6"><span class="toc-number">1.3.</span> <span class="toc-text">STM32F103C8T6</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%87%E4%B8%8A%E8%B5%84%E6%BA%90-%E5%A4%96%E8%AE%BE"><span class="toc-number">1.4.</span> <span class="toc-text">片上资源&#x2F;外设</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%91%BD%E5%90%8D%E8%A7%84%E5%88%99"><span class="toc-number">1.5.</span> <span class="toc-text">命名规则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8%E9%85%8D%E7%BD%AE"><span class="toc-number">1.6.</span> <span class="toc-text">启动配置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85"><span class="toc-number">2.</span> <span class="toc-text">软件安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B0%E5%BB%BA%E5%B7%A5%E7%A8%8B%E6%A8%A1%E6%9D%BF"><span class="toc-number">3.</span> <span class="toc-text">新建工程模板</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E%E5%90%AF%E5%8A%A8%E6%96%87%E4%BB%B6"><span class="toc-number">3.1.</span> <span class="toc-text">关于启动文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E9%85%8D%E7%BD%AE%E5%AF%84%E5%AD%98%E5%99%A8%E5%92%8C%E5%BA%93%E5%87%BD%E6%95%B0%E7%9A%84%E6%96%B9%E6%B3%95%E7%82%B9%E4%BA%AE%E4%B8%80%E9%A2%97%E7%81%AF"><span class="toc-number">3.2.</span> <span class="toc-text">用配置寄存器和库函数的方法点亮一颗灯</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B0%E5%BB%BA%E5%B7%A5%E7%A8%8B%E7%9A%84%E6%AD%A5%E9%AA%A4"><span class="toc-number">3.3.</span> <span class="toc-text">新建工程的步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A5%E7%A8%8B%E6%9E%B6%E6%9E%84"><span class="toc-number">3.4.</span> <span class="toc-text">工程架构</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GPIO%E8%BE%93%E5%87%BA"><span class="toc-number">4.</span> <span class="toc-text">GPIO输出</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#GPIO%E7%AE%80%E4%BB%8B"><span class="toc-number">4.1.</span> <span class="toc-text">GPIO简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GPIO%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84"><span class="toc-number">4.2.</span> <span class="toc-text">GPIO基本结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GPIO%E6%A8%A1%E5%BC%8F"><span class="toc-number">4.3.</span> <span class="toc-text">GPIO模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%81%E6%B0%B4%E7%81%AF"><span class="toc-number">4.4.</span> <span class="toc-text">流水灯</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%9C%82%E9%B8%A3%E5%99%A8"><span class="toc-number">4.5.</span> <span class="toc-text">蜂鸣器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GPIO%E8%BE%93%E5%85%A5"><span class="toc-number">5.</span> <span class="toc-text">GPIO输入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%89%E9%94%AE%E4%BB%8B%E7%BB%8D"><span class="toc-number">5.1.</span> <span class="toc-text">按键介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E6%8C%89%E9%94%AE%E6%8E%A7%E5%88%B6LED%E4%BA%AE%E7%81%AD"><span class="toc-number">5.2.</span> <span class="toc-text">用按键控制LED亮灭</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8C%89%E9%94%AE%E7%9A%84%E7%A1%AC%E4%BB%B6%E7%94%B5%E8%B7%AF"><span class="toc-number">5.2.1.</span> <span class="toc-text">按键的硬件电路</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%A0%E6%84%9F%E5%99%A8%E6%A8%A1%E5%9D%97%EF%BC%88%E6%88%91%E6%B2%A1%E4%B9%B0%EF%BC%89"><span class="toc-number">5.3.</span> <span class="toc-text">传感器模块（我没买）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E7%9A%84GPIO%E5%87%BD%E6%95%B0"><span class="toc-number">6.</span> <span class="toc-text">常用的GPIO函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E7%9B%B8%E5%85%B3%E5%87%BD%E6%95%B0"><span class="toc-number">6.1.</span> <span class="toc-text">初始化相关函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96%E6%95%B0%E6%8D%AE%E7%9B%B8%E5%85%B3%E5%87%BD%E6%95%B0"><span class="toc-number">6.2.</span> <span class="toc-text">读取数据相关函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%99%E5%85%A5%E6%95%B0%E6%8D%AE%E7%9B%B8%E5%85%B3%E5%87%BD%E6%95%B0"><span class="toc-number">6.3.</span> <span class="toc-text">写入数据相关函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#OLED"><span class="toc-number">7.</span> <span class="toc-text">OLED</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">7.1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B0%83%E8%AF%95%E6%96%B9%E5%BC%8F"><span class="toc-number">7.2.</span> <span class="toc-text">调试方式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%AD%E6%96%AD%E7%B3%BB%E7%BB%9F"><span class="toc-number">8.</span> <span class="toc-text">中断系统</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#stm32%E4%B8%AD%E6%96%AD"><span class="toc-number">8.1.</span> <span class="toc-text">stm32中断</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NVIC"><span class="toc-number">8.2.</span> <span class="toc-text">NVIC</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84"><span class="toc-number">8.2.1.</span> <span class="toc-text">基本结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%98%E5%85%88%E7%BA%A7%E5%88%86%E7%BB%84"><span class="toc-number">8.2.2.</span> <span class="toc-text">优先级分组</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#EXTI"><span class="toc-number">8.3.</span> <span class="toc-text">EXTI</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84-1"><span class="toc-number">8.3.1.</span> <span class="toc-text">基本结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">8.3.2.</span> <span class="toc-text">注意事项</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%8B%E8%BD%AC%E7%BC%96%E7%A0%81%E5%99%A8%EF%BC%88%E6%88%91%E6%B2%A1%E4%B9%B0%EF%BC%89"><span class="toc-number">8.4.</span> <span class="toc-text">旋转编码器（我没买）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TIM-Timer-%E5%AE%9A%E6%97%B6%E5%99%A8"><span class="toc-number">9.</span> <span class="toc-text">TIM(Timer)定时器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E6%97%B6%E5%99%A8%E7%B1%BB%E5%9E%8B"><span class="toc-number">9.1.</span> <span class="toc-text">定时器类型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9A%E6%97%B6%E4%B8%AD%E6%96%AD"><span class="toc-number">9.1.1.</span> <span class="toc-text">定时中断</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E6%97%B6%E4%B8%AD%E6%96%AD%E5%92%8C%E5%86%85%E5%A4%96%E6%97%B6%E9%92%9F%E6%BA%90%E9%80%89%E6%8B%A9"><span class="toc-number">9.2.</span> <span class="toc-text">定时中断和内外时钟源选择</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BE%93%E5%87%BA%E6%AF%94%E8%BE%83"><span class="toc-number">9.3.</span> <span class="toc-text">输出比较</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#PWM%E7%AE%80%E4%BB%8B"><span class="toc-number">9.3.1.</span> <span class="toc-text">PWM简介</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#pwm%E7%9A%84%E7%BB%93%E6%9E%84"><span class="toc-number">9.3.1.1.</span> <span class="toc-text">pwm的结构</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#pwm%E7%9A%84%E5%8F%82%E6%95%B0%E8%AE%A1%E7%AE%97"><span class="toc-number">9.3.1.2.</span> <span class="toc-text">pwm的参数计算</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%88%B5%E6%9C%BA%E7%AE%80%E4%BB%8B"><span class="toc-number">9.3.2.</span> <span class="toc-text">舵机简介</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9B%B4%E6%B5%81%E7%94%B5%E6%9C%BA%E5%8F%8A%E9%A9%B1%E5%8A%A8%E7%AE%80%E4%BB%8B"><span class="toc-number">9.3.3.</span> <span class="toc-text">直流电机及驱动简介</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pwm%E9%A9%B1%E5%8A%A8LED%E5%91%BC%E5%90%B8%E7%81%AF"><span class="toc-number">9.3.4.</span> <span class="toc-text">pwm驱动LED呼吸灯</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pwm%E9%A9%B1%E5%8A%A8%E8%88%B5%E6%9C%BA"><span class="toc-number">9.3.5.</span> <span class="toc-text">pwm驱动舵机</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pwm%E9%A9%B1%E5%8A%A8%E7%9B%B4%E6%B5%81%E7%94%B5%E6%9C%BA"><span class="toc-number">9.3.6.</span> <span class="toc-text">pwm驱动直流电机</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BE%93%E5%85%A5%E6%8D%95%E8%8E%B7"><span class="toc-number">9.4.</span> <span class="toc-text">输入捕获</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%90%86%E8%AE%BA%E9%83%A8%E5%88%86"><span class="toc-number">9.4.1.</span> <span class="toc-text">理论部分</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B-1"><span class="toc-number">9.4.1.1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%A2%91%E7%8E%87%E6%B5%8B%E9%87%8F"><span class="toc-number">9.4.1.2.</span> <span class="toc-text">频率测量</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%BE%93%E5%85%A5%E6%8D%95%E8%8E%B7%E7%BB%93%E6%9E%84"><span class="toc-number">9.4.1.3.</span> <span class="toc-text">输入捕获结构</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#PWMI%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84"><span class="toc-number">9.4.1.4.</span> <span class="toc-text">PWMI基本结构</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BE%93%E5%85%A5%E6%8D%95%E8%8E%B7%E6%8D%95%E8%8E%B7%E6%A8%A1%E5%BC%8F%E6%B5%8B%E9%A2%91%E7%8E%87"><span class="toc-number">9.4.2.</span> <span class="toc-text">输入捕获捕获模式测频率</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#PWMI%E6%A8%A1%E5%BC%8F%E6%B5%8B%E9%A2%91%E7%8E%87%E5%8D%A0%E7%A9%BA%E6%AF%94"><span class="toc-number">9.4.3.</span> <span class="toc-text">PWMI模式测频率占空比</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E7%A0%81%E5%99%A8%E6%8E%A5%E5%8F%A3"><span class="toc-number">9.5.</span> <span class="toc-text">编码器接口</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84-2"><span class="toc-number">9.5.1.</span> <span class="toc-text">基本结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%97%8B%E8%BD%AC%E7%BC%96%E7%A0%81%E5%99%A8%E6%B5%8B%E9%80%9F"><span class="toc-number">9.5.2.</span> <span class="toc-text">旋转编码器测速</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ADC"><span class="toc-number">10.</span> <span class="toc-text">ADC</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B-2"><span class="toc-number">10.1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%90%E6%AC%A1%E6%B8%90%E8%BF%9B%E5%9E%8BADC"><span class="toc-number">10.2.</span> <span class="toc-text">逐次渐进型ADC</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ADC%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84"><span class="toc-number">10.3.</span> <span class="toc-text">ADC基本结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BE%93%E5%85%A5%E9%80%9A%E9%81%93"><span class="toc-number">10.4.</span> <span class="toc-text">输入通道</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BD%AC%E6%8D%A2%E6%A8%A1%E5%BC%8F"><span class="toc-number">10.5.</span> <span class="toc-text">转换模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%AF%B9%E9%BD%90"><span class="toc-number">10.6.</span> <span class="toc-text">数据对齐</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BD%AC%E6%8D%A2%E6%97%B6%E9%97%B4"><span class="toc-number">10.7.</span> <span class="toc-text">转换时间</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%A1%E5%87%86"><span class="toc-number">10.8.</span> <span class="toc-text">校准</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DMA%E7%9B%B4%E6%8E%A5%E5%AD%98%E5%82%A8%E5%99%A8%E8%AF%BB%E5%8F%96"><span class="toc-number">11.</span> <span class="toc-text">DMA直接存储器读取</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B-3"><span class="toc-number">11.1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E5%99%A8%E6%98%A0%E5%83%8F"><span class="toc-number">11.2.</span> <span class="toc-text">存储器映像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84-3"><span class="toc-number">11.3.</span> <span class="toc-text">基本结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E8%BD%AC%E8%BF%90-DMA"><span class="toc-number">11.4.</span> <span class="toc-text">数据转运+DMA</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ADC%E6%89%AB%E6%8F%8F%E6%A8%A1%E5%BC%8F-DMA"><span class="toc-number">11.5.</span> <span class="toc-text">ADC扫描模式+DMA</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#USART%E4%B8%B2%E5%8F%A3%E5%8D%8F%E8%AE%AE"><span class="toc-number">12.</span> <span class="toc-text">USART串口协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E4%BF%A1%E6%8E%A5%E5%8F%A3"><span class="toc-number">12.1.</span> <span class="toc-text">通信接口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%B2%E5%8F%A3%E9%80%9A%E4%BF%A1"><span class="toc-number">12.2.</span> <span class="toc-text">串口通信</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A1%AC%E4%BB%B6%E7%94%B5%E8%B7%AF"><span class="toc-number">12.3.</span> <span class="toc-text">硬件电路</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%B5%E5%B9%B3%E6%A0%87%E5%87%86"><span class="toc-number">12.4.</span> <span class="toc-text">电平标准</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%B2%E5%8F%A3%E5%8F%82%E6%95%B0%E5%8F%8A%E6%97%B6%E5%BA%8F"><span class="toc-number">12.5.</span> <span class="toc-text">串口参数及时序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#USART"><span class="toc-number">12.6.</span> <span class="toc-text">USART</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84-4"><span class="toc-number">12.6.1.</span> <span class="toc-text">基本结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#HEX%E6%95%B0%E6%8D%AE%E5%8C%85"><span class="toc-number">12.6.2.</span> <span class="toc-text">HEX数据包</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#HEX%E6%95%B0%E6%8D%AE%E5%8C%85%E6%8E%A5%E6%94%B6"><span class="toc-number">12.6.3.</span> <span class="toc-text">HEX数据包接收</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%87%E6%9C%AC%E6%95%B0%E6%8D%AE%E5%8C%85"><span class="toc-number">12.6.4.</span> <span class="toc-text">文本数据包</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#IIC%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE"><span class="toc-number">13.</span> <span class="toc-text">IIC通信协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A1%AC%E4%BB%B6%E7%94%B5%E8%B7%AF-1"><span class="toc-number">13.1.</span> <span class="toc-text">硬件电路</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#I2C%E6%97%B6%E5%BA%8F%E5%9F%BA%E6%9C%AC%E5%8D%95%E5%85%83"><span class="toc-number">13.2.</span> <span class="toc-text">I2C时序基本单元</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#I2C%E6%97%B6%E5%BA%8F"><span class="toc-number">13.3.</span> <span class="toc-text">I2C时序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MPU6050"><span class="toc-number">13.4.</span> <span class="toc-text">MPU6050</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B-4"><span class="toc-number">13.4.1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%82%E6%95%B0"><span class="toc-number">13.4.2.</span> <span class="toc-text">参数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A1%AC%E4%BB%B6%E7%94%B5%E8%B7%AF-2"><span class="toc-number">13.4.3.</span> <span class="toc-text">硬件电路</span></a></li></ol></li></ol></li></ol></div></div></div><div class="tag-cloud"><div class="tag-cloud-tags"><a href="/01paw/tags/C/" style="font-size: 12px; color: #999">C</a> <a href="/01paw/tags/C/" style="font-size: 12px; color: #999">C++</a> <a href="/01paw/tags/Hexo/" style="font-size: 12px; color: #999">Hexo</a> <a href="/01paw/tags/Python/" style="font-size: 30px; color: #0078e7">Python</a> <a href="/01paw/tags/SSH/" style="font-size: 12px; color: #999">SSH</a> <a href="/01paw/tags/WiFi%E9%85%8D%E7%BD%AE/" style="font-size: 12px; color: #999">WiFi配置</a> <a href="/01paw/tags/assembly-language/" style="font-size: 12px; color: #999">assembly language</a> <a href="/01paw/tags/growth/" style="font-size: 12px; color: #999">growth</a> <a href="/01paw/tags/stm32/" style="font-size: 12px; color: #999">stm32</a> <a href="/01paw/tags/try/" style="font-size: 12px; color: #999">try</a> <a href="/01paw/tags/%E6%88%91%E7%9A%84%E7%AC%94%E8%AE%B0/" style="font-size: 12px; color: #999">我的笔记</a> <a href="/01paw/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" style="font-size: 12px; color: #999">树莓派,</a> <a href="/01paw/tags/%E7%BD%91%E7%BB%9C%E8%B0%83%E8%AF%95/" style="font-size: 12px; color: #999">网络调试</a> <a href="/01paw/tags/%E9%9D%99%E6%80%81IP/" style="font-size: 12px; color: #999">静态IP</a></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article" style="--smc-primary:#6200ee;"><link itemprop="mainEntityOfPage" href="https://1231Lisette.github.io/01paw/01paw/2025/02/stm32%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Lisette Peng"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="01paw"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">stm32学习笔记<a class="post-edit-link" href="https://github.com/1231Lisette/01paw/hexo/source/_posts_posts/stm32学习笔记.md" target="_blank" title="编辑" rel="noopener"><svg class="icon ri:edit-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:edit-line"></use></svg></a></h1><div class="post-meta"><div class="post-time" style="display:block"><span class="post-meta-item-icon"><svg class="icon ri:calendar-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:calendar-line"></use></svg></span> <time title="创建时间：2025-02-05 16:26:24" itemprop="dateCreated datePublished" datetime="2025-02-05T16:26:24+08:00">2025-02-05</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon ri:calendar-2-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:calendar-2-line"></use></svg></span> <time title="修改时间：2025-08-31 12:58:21" itemprop="dateModified" datetime="2025-08-31T12:58:21+08:00">2025-08-31</time></div><span class="post-count"><span class="post-symbolcount"><span class="post-meta-item-icon" title="本文字数"><svg class="icon ri:file-word-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:file-word-line"></use></svg></span> <span title="本文字数">10.2k</span><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读时长"><svg class="icon ri:timer-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:timer-line"></use></svg></span> <span title="阅读时长">38m</span></span></span><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><svg class="icon ri:folder-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:folder-line"></use></svg></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/01paw/categories/%E6%88%91%E7%9A%84%E7%AC%94%E8%AE%B0/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">我的笔记</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/01paw/tags/stm32/" style="--text-color:#03234B"><span class="post-meta-item-icon"><svg class="icon ri:price-tag-3-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:price-tag-3-line"></use></svg></span><span class="tag-name">stm32</span></a><a class="tag-item" href="/01paw/tags/C/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon ri:price-tag-3-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:price-tag-3-line"></use></svg></span><span class="tag-name">C</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body"><blockquote>
+<p>基于江科大的stm32学习于2025.2.5启动，希望10号前能多学点！</p>
+</blockquote>
+<hr>
+<h2 id="stm32简介"><a href="#stm32简介" class="headerlink" title="stm32简介"></a>stm32简介</h2><h3 id="stm32介绍"><a href="#stm32介绍" class="headerlink" title="stm32介绍"></a>stm32介绍</h3><ul>
+<li>STM32是ST公司基于ARM Cortex-M内核开发的32位微控制器（M——Microcontroller ）</li>
+<li>STM32常应用在嵌入式领域如智能车、无人机、机器人无线通信、物联网、工业控制、娱乐电子产品等</li>
+<li>STM32功能强大、性能优异片上资源丰富、功耗低，是一款经典的嵌入式微控制器</li>
+</ul>
+<h3 id="ARM介绍"><a href="#ARM介绍" class="headerlink" title="ARM介绍"></a>ARM介绍</h3><ul>
+<li>ARM既指ARM公司，也指ARM处理器内核</li>
+<li>ARM公司是全球领先的半导体知识产权(IP)提供商，全世界超过95%的智能手机和平板电脑都采用ARM架构（它卖方案）</li>
+<li>ARM公司设计ARM内核，半导体厂商完善内核周边电路并生产芯片</li>
+</ul>
+<h3 id="STM32F103C8T6"><a href="#STM32F103C8T6" class="headerlink" title="STM32F103C8T6"></a>STM32F103C8T6</h3><ul>
+<li>系列:主流系列STM32F1</li>
+<li>内核:ARM Cortex-M3</li>
+<li>主频:72MHZ(SRAM)</li>
+<li>RAM :20K</li>
+<li>ROM :64K(Flash)</li>
+<li>供电:2.0~3.6V(标准3.3V)</li>
+<li>封装:LQFP48</li>
+</ul>
+<h3 id="片上资源-外设"><a href="#片上资源-外设" class="headerlink" title="片上资源&#x2F;外设"></a>片上资源&#x2F;外设</h3><p><img src="/images/image.png" alt="外设" loading="lazy"><br>(英文是peripheral)</p>
+<ul>
+<li>NVIC：用于内核里面管理中断，配置中断优先级</li>
+<li>Systick：内核里的定时器，主要用来给操作系统提供定时服务，进行任务切换；stm32可以加入操作系统，例如freeRTOS，UCOS（江科课程不涉及操作系统）</li>
+<li>RCC：用于外设时钟的使能（stm32外设在上电情况下默认是没有时钟的；无时钟时，操作外设是无效的，目的是为了减少功耗；所以在操作外设之前必须使能它的时钟）</li>
+<li>看门狗：当单片机因为电磁干扰死机或者程序设计不合理出现死循环时，看门狗可以及时复位芯片，保证系统的稳定<br>（c8t6没有后四个外设，详情去看datasheet）</li>
+</ul>
+<h3 id="命名规则"><a href="#命名规则" class="headerlink" title="命名规则"></a>命名规则</h3><p><img src="/images/image-1.png" alt="alt text" loading="lazy"></p>
+<h3 id="启动配置"><a href="#启动配置" class="headerlink" title="启动配置"></a>启动配置</h3><p><img src="/images/image-2.png" alt="alt text" loading="lazy"> </p>
+<hr>
+<h2 id="软件安装"><a href="#软件安装" class="headerlink" title="软件安装"></a>软件安装</h2><hr>
+<h2 id="新建工程模板"><a href="#新建工程模板" class="headerlink" title="新建工程模板"></a>新建工程模板</h2><h3 id="关于启动文件"><a href="#关于启动文件" class="headerlink" title="关于启动文件"></a>关于启动文件</h3><p><img src="/images/image-3.png" alt="alt text" loading="lazy"><br><img src="/images/image-4.png" alt="alt text" loading="lazy"></p>
+<h3 id="用配置寄存器和库函数的方法点亮一颗灯"><a href="#用配置寄存器和库函数的方法点亮一颗灯" class="headerlink" title="用配置寄存器和库函数的方法点亮一颗灯"></a>用配置寄存器和库函数的方法点亮一颗灯</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;stm32f10x.h&quot;</span>                  <span class="comment">// Device header</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="comment">/*RCC-&gt;APB2ENR = 0x00000010;//打开GPLC的时钟</span></span><br><span class="line"><span class="comment">	GPIOC-&gt;CRH = 0x00300000;//配置PC13口的模式，什么推挽输出blabla，寄存器配置，具体看原理图</span></span><br><span class="line"><span class="comment">	GPIOC-&gt;ODR = 0x00000000;//灯是低电平点亮的，等等我的和江科是相反的*/</span></span><br><span class="line">	<span class="comment">//1. 配置时钟寄存器</span></span><br><span class="line">	<span class="comment">//2. 配置GPIO寄存器模式</span></span><br><span class="line">	<span class="comment">//3. 配置GPIO端口输出寄存器</span></span><br><span class="line">	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC,ENABLE);</span><br><span class="line">	GPIO_InitTypeDef GPIO_InitStructure;</span><br><span class="line">	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;</span><br><span class="line">	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_13;</span><br><span class="line">	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;</span><br><span class="line">	GPIO_Init(GPIOC,&amp;GPIO_InitStructure);</span><br><span class="line">	GPIO_SetBits(GPIOC,GPIO_Pin_13);</span><br><span class="line">	<span class="comment">//GPIO_ResetBits(GPIOC,GPIO_Pin_13);</span></span><br><span class="line">	<span class="keyword">while</span>(<span class="number">1</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>用库函数的话有许多前置条件，你要有start启动文件，library装依赖的库函数，user装你的main函数啥的，好难🤯</p>
+<h3 id="新建工程的步骤"><a href="#新建工程的步骤" class="headerlink" title="新建工程的步骤"></a>新建工程的步骤</h3><ol>
+<li>建立工程文件夹，Kei中新建工程，选择型号</li>
+<li>工程文件夹里建立Start、Library、User等文件夹，复制固件库里面的文件到工程文件夹</li>
+<li>工程里对应建立Start、Library、User等同名称的分组，然后将文件夹内的文件添加到工程分组里</li>
+<li>工程选项，C&#x2F;C++，Include Paths内声明所有包含头文件的文件夹<br>   <img src="/images/image-6.png" alt="alt text" loading="lazy"></li>
+<li>工程选项，C&#x2F;C++，Define内定义USE STDPERIPH DRIVER</li>
+<li>工程选项，Debug，下拉列表选择对应调试器，Settings，FlashDownload里勾选Reset and Run</li>
+</ol>
+<h3 id="工程架构"><a href="#工程架构" class="headerlink" title="工程架构"></a>工程架构</h3><p><img src="/images/image-7.png" alt="alt text" loading="lazy"></p>
+<p>结束，2025&#x2F;2&#x2F;6 0:00;好难。</p>
+<hr>
+<h2 id="GPIO输出"><a href="#GPIO输出" class="headerlink" title="GPIO输出"></a>GPIO输出</h2><h3 id="GPIO简介"><a href="#GPIO简介" class="headerlink" title="GPIO简介"></a>GPIO简介</h3><ul>
+<li>GPIO(General Purpose Input Output)通用输入输出口</li>
+<li>可配置为8种输入输出模式</li>
+<li>引脚电平:0V~3.3V，部分引脚可容忍5V</li>
+<li>输出模式下可控制端口输出高低电平，用以驱动LED、控制蜂鸣器模拟通信协议输出时序等</li>
+<li>输入模式下可读取端口的高低电平或电压，用于读取按键输入、外接模块电平信号输入、ADC电压采集、模拟通信协议接收数据等</li>
+</ul>
+<h3 id="GPIO基本结构"><a href="#GPIO基本结构" class="headerlink" title="GPIO基本结构"></a>GPIO基本结构</h3><p><img src="/images/image-8.png" alt="alt text" loading="lazy"></p>
+<h3 id="GPIO模式"><a href="#GPIO模式" class="headerlink" title="GPIO模式"></a>GPIO模式</h3><ul>
+<li>通过配置GPIO的端口配置寄存器，端口可以配置成一下8种模式<br><img src="/images/image-9.png" alt="GPIO模式" loading="lazy"></li>
+</ul>
+<ol>
+<li>开漏输出模式下，高电平为高阻态，所以无驱动力;只有低电平有驱动能力</li>
+<li>推挽输出高低电平均有驱动能力</li>
+</ol>
+<h3 id="流水灯"><a href="#流水灯" class="headerlink" title="流水灯"></a>流水灯</h3><ul>
+<li>一种cv,一种用for<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;stm32f10x.h&quot;</span>                  <span class="comment">// Device header</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Delay.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);</span><br><span class="line">	</span><br><span class="line">	GPIO_InitTypeDef GPIO_InitStructure;</span><br><span class="line">	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;</span><br><span class="line">	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_All;</span><br><span class="line">	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;</span><br><span class="line">	GPIO_Init(GPIOA, &amp;GPIO_InitStructure);</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">while</span> (<span class="number">1</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		GPIO_Write(GPIOA, ~<span class="number">0x0001</span>);	<span class="comment">//0000 0000 0000 0001</span></span><br><span class="line">		Delay_ms(<span class="number">100</span>);</span><br><span class="line">		GPIO_Write(GPIOA, ~<span class="number">0x0002</span>);	<span class="comment">//0000 0000 0000 0010</span></span><br><span class="line">		Delay_ms(<span class="number">100</span>);</span><br><span class="line">		GPIO_Write(GPIOA, ~<span class="number">0x0004</span>);	<span class="comment">//0000 0000 0000 0100</span></span><br><span class="line">		Delay_ms(<span class="number">100</span>);</span><br><span class="line">		GPIO_Write(GPIOA, ~<span class="number">0x0008</span>);	<span class="comment">//0000 0000 0000 1000</span></span><br><span class="line">		Delay_ms(<span class="number">100</span>);</span><br><span class="line">		GPIO_Write(GPIOA, ~<span class="number">0x0010</span>);	<span class="comment">//0000 0000 0001 0000</span></span><br><span class="line">		Delay_ms(<span class="number">100</span>);</span><br><span class="line">		GPIO_Write(GPIOA, ~<span class="number">0x0020</span>);	<span class="comment">//0000 0000 0010 0000</span></span><br><span class="line">		Delay_ms(<span class="number">100</span>);</span><br><span class="line">		GPIO_Write(GPIOA, ~<span class="number">0x0040</span>);	<span class="comment">//0000 0000 0100 0000</span></span><br><span class="line">		Delay_ms(<span class="number">100</span>);</span><br><span class="line">		GPIO_Write(GPIOA, ~<span class="number">0x0080</span>);	<span class="comment">//0000 0000 1000 0000</span></span><br><span class="line">		Delay_ms(<span class="number">100</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;stm32f10x.h&quot;</span>                  <span class="comment">// Device header</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Delay.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> i; </span><br><span class="line"></span><br><span class="line">    <span class="comment">// 1. 配置时钟寄存器</span></span><br><span class="line">    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);  <span class="comment">// 这里使用apb2是因为gpio的总线接在APB2</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. 配置GPIO寄存器模式</span></span><br><span class="line">    GPIO_InitTypeDef GPIO_InitStructure;</span><br><span class="line">    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;  <span class="comment">// 推挽输出，就是可以输出高低电平，直接驱动小功耗器件</span></span><br><span class="line">    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_All;</span><br><span class="line">    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3. 配置GPIO端口输出寄存器</span></span><br><span class="line">    GPIO_Init(GPIOA, &amp;GPIO_InitStructure);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (<span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">8</span>; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="type">int</span> value = ~(<span class="number">0x0001</span> &lt;&lt; i);</span><br><span class="line">            <span class="comment">// 写入 GPIOA 端口</span></span><br><span class="line">            GPIO_Write(GPIOA, value);</span><br><span class="line">            <span class="comment">// 延迟 500 毫秒</span></span><br><span class="line">            Delay_ms(<span class="number">500</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="蜂鸣器"><a href="#蜂鸣器" class="headerlink" title="蜂鸣器"></a>蜂鸣器</h3><ul>
+<li>I&#x2F;O口随便找个接就好了，但是不要找那些调试接口<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;stm32f10x.h&quot;</span>                  <span class="comment">// Device header</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Delay.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 1. 配置时钟寄存器</span></span><br><span class="line">    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);  <span class="comment">// 这里使用apb2是因为gpio的总线接在APB2</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. 配置GPIO寄存器模式</span></span><br><span class="line">    GPIO_InitTypeDef GPIO_InitStructure;</span><br><span class="line">    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;  <span class="comment">// 推挽输出，就是可以输出高低电平，直接驱动小功耗器件</span></span><br><span class="line">    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12;</span><br><span class="line">    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3. 配置GPIO端口输出寄存器</span></span><br><span class="line">    GPIO_Init(GPIOB, &amp;GPIO_InitStructure);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (<span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        GPIO_ResetBits(GPIOB, GPIO_Pin_12);</span><br><span class="line">		Delay_ms(<span class="number">100</span>);</span><br><span class="line">		GPIO_SetBits(GPIOB, GPIO_Pin_12);</span><br><span class="line">		Delay_ms(<span class="number">100</span>);</span><br><span class="line">		GPIO_ResetBits(GPIOB, GPIO_Pin_12);</span><br><span class="line">		Delay_ms(<span class="number">100</span>);</span><br><span class="line">		GPIO_SetBits(GPIOB, GPIO_Pin_12);</span><br><span class="line">		Delay_ms(<span class="number">700</span>);</span><br><span class="line">		</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<h2 id="GPIO输入"><a href="#GPIO输入" class="headerlink" title="GPIO输入"></a>GPIO输入</h2><h3 id="按键介绍"><a href="#按键介绍" class="headerlink" title="按键介绍"></a>按键介绍</h3><ul>
+<li>按键:常见的输入设备，按下导通，松手断开</li>
+<li>按键抖动:由于按键内部使用的是机械式弹簧片来进行通断的，所以在按下和松手的瞬间会伴随有一连串的抖动<br><img src="/images/image-10.png" alt="抖动" loading="lazy"></li>
+</ul>
+<h3 id="用按键控制LED亮灭"><a href="#用按键控制LED亮灭" class="headerlink" title="用按键控制LED亮灭"></a>用按键控制LED亮灭</h3><blockquote>
+<p>Key.c</p>
+</blockquote>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;stm32f10x.h&quot;</span>                  <span class="comment">// Device header</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Delay.h&quot;</span></span></span><br><span class="line"><span class="type">void</span> <span class="title function_">Key_Init</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);  </span><br><span class="line">    GPIO_InitTypeDef GPIO_InitStructure;</span><br><span class="line">    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU; </span><br><span class="line">    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1 | GPIO_Pin_11;</span><br><span class="line">    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;</span><br><span class="line">    GPIO_Init(GPIOB, &amp;GPIO_InitStructure);</span><br><span class="line">	GPIO_SetBits(GPIOB, GPIO_Pin_1 | GPIO_Pin_11);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">uint8_t</span> <span class="title function_">Key_GetNum</span><span class="params">(<span class="type">void</span>)</span><span class="comment">//unsigned char</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">uint8_t</span> KeyNum = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">if</span>(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_1) == <span class="number">0</span>)<span class="comment">//这里的返回值就是输入寄存器某一位的值,按键按下的话</span></span><br><span class="line">	&#123;</span><br><span class="line">		Delay_ms(<span class="number">20</span>);</span><br><span class="line">		<span class="keyword">while</span>(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_1) == <span class="number">0</span>)<span class="comment">//如果按键一直按下，那就一直在这里循环</span></span><br><span class="line">		Delay_ms(<span class="number">20</span>);</span><br><span class="line">		KeyNum = <span class="number">1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_11) == <span class="number">0</span>)<span class="comment">//这里的返回值就是输入寄存器某一位的值,按键按下的话</span></span><br><span class="line">	&#123;</span><br><span class="line">		Delay_ms(<span class="number">20</span>);</span><br><span class="line">		<span class="keyword">while</span>(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_11) == <span class="number">0</span>)<span class="comment">//如果按键一直按下，那就一直在这里循环</span></span><br><span class="line">		Delay_ms(<span class="number">20</span>);</span><br><span class="line">		KeyNum = <span class="number">2</span>;</span><br><span class="line">	&#125;		</span><br><span class="line">	<span class="keyword">return</span> KeyNum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Key.h</p>
+</blockquote>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifndef</span> __KEY_H</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> __KEY_H</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">Key_Init</span><span class="params">(<span class="type">void</span>)</span>;</span><br><span class="line"><span class="type">uint8_t</span> <span class="title function_">Key_GetNum</span><span class="params">(<span class="type">void</span>)</span>;<span class="comment">//unsigned char</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>LED.c</p>
+</blockquote>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;stm32f10x.h&quot;</span>                  <span class="comment">// Device header</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">LED_Init</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="comment">// 1. 配置时钟寄存器</span></span><br><span class="line">    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);  <span class="comment">// 这里使用apb2是因为gpio的总线接在APB2</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. 配置GPIO寄存器模式</span></span><br><span class="line">    GPIO_InitTypeDef GPIO_InitStructure;</span><br><span class="line">    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;  <span class="comment">// 推挽输出，就是可以输出高低电平，直接驱动小功耗器件</span></span><br><span class="line">    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1 | GPIO_Pin_2;</span><br><span class="line">    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3. 配置GPIO端口输出寄存器</span></span><br><span class="line">    GPIO_Init(GPIOA, &amp;GPIO_InitStructure);</span><br><span class="line">	</span><br><span class="line">	GPIO_SetBits(GPIOA, GPIO_Pin_1 | GPIO_Pin_2);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">LED1_ON</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	GPIO_SetBits(GPIOA, GPIO_Pin_1);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">LED1_OFF</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	GPIO_ResetBits(GPIOA, GPIO_Pin_1);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">LED2_ON</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	GPIO_SetBits(GPIOA, GPIO_Pin_2);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">LED2_OFF</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	GPIO_ResetBits(GPIOA, GPIO_Pin_2);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">LED1_Turn</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span>(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_1) == <span class="number">0</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		GPIO_SetBits(GPIOA, GPIO_Pin_1);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		GPIO_ResetBits(GPIOA, GPIO_Pin_1);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">LED2_Turn</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span>(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_2) == <span class="number">0</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		GPIO_SetBits(GPIOA, GPIO_Pin_2);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		GPIO_ResetBits(GPIOA, GPIO_Pin_2);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>LED.h</p>
+</blockquote>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifndef</span> __LED_H</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> __LED_H</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">LED_Init</span><span class="params">(<span class="type">void</span>)</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">LED1_ON</span><span class="params">(<span class="type">void</span>)</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">LED1_OFF</span><span class="params">(<span class="type">void</span>)</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">LED2_ON</span><span class="params">(<span class="type">void</span>)</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">LED2_OFF</span><span class="params">(<span class="type">void</span>)</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">LED1_Turn</span><span class="params">(<span class="type">void</span>)</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">LED2_Turn</span><span class="params">(<span class="type">void</span>)</span>;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>main.c</p>
+</blockquote>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;stm32f10x.h&quot;</span>                  <span class="comment">// Device header</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Delay.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;LED.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Key.h&quot;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">uint8_t</span> KeyNum;</span><br><span class="line">	LED_Init();</span><br><span class="line">	Key_Init();</span><br><span class="line">    <span class="keyword">while</span> (<span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">		KeyNum = Key_GetNum();</span><br><span class="line">		<span class="keyword">if</span>(KeyNum == <span class="number">1</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			LED1_Turn();</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span>(KeyNum == <span class="number">2</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			LED2_Turn();</span><br><span class="line">		&#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="按键的硬件电路"><a href="#按键的硬件电路" class="headerlink" title="按键的硬件电路"></a>按键的硬件电路</h4><ul>
+<li>常用的就是以下这两种电路，按键按下时引脚时低电平，松手是高电平<br><img src="/images/image-11.png" alt="电路" loading="lazy"><br>左边的接法必须要求是上拉或者是下拉输入模式，右边的接法可以是浮空输入模式，因为已经外置了上拉电阻和下拉电阻</li>
+</ul>
+<h3 id="传感器模块（我没买）"><a href="#传感器模块（我没买）" class="headerlink" title="传感器模块（我没买）"></a>传感器模块（我没买）</h3><ul>
+<li>传感器模块:传感器元件(光敏电阻&#x2F;热敏电阻&#x2F;红外接收管等)的电阻会随外界模拟量的变化而变化，通过与定值电阻分压即可得到模拟电压输出，再通过电压比较器进行二值化即可得到数字电压输出</li>
+</ul>
+<h2 id="常用的GPIO函数"><a href="#常用的GPIO函数" class="headerlink" title="常用的GPIO函数"></a>常用的GPIO函数</h2><p>这些函数是 STM32 标准库中用于 GPIO（通用输入输出）操作的函数，下面为你详细介绍每个函数的使用情景：</p>
+<h3 id="初始化相关函数"><a href="#初始化相关函数" class="headerlink" title="初始化相关函数"></a>初始化相关函数</h3><p><code>void GPIO_Init(GPIO_TypeDef* GPIOx, GPIO_InitTypeDef* GPIO_InitStruct);</code></p>
+<ul>
+<li><strong>使用情景</strong>：该函数用于根据 <code>GPIO_InitStruct</code> 结构体中的参数初始化指定的 GPIO 端口。在使用 GPIO 之前，需要先对其进行初始化，设置 GPIO 的模式（如输入、输出、复用等）、引脚、速度等参数。例如，在控制 LED 灯、读取按键状态等操作前，都需要先调用此函数对相应的 GPIO 端口进行初始化。</li>
+<li><strong>示例代码</strong>：<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">GPIO_InitTypeDef GPIO_InitStructure;</span><br><span class="line"><span class="comment">// 使能 GPIOA 时钟</span></span><br><span class="line">RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);</span><br><span class="line"><span class="comment">// 配置 GPIO 模式为推挽输出</span></span><br><span class="line">GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;</span><br><span class="line"><span class="comment">// 选择要初始化的引脚</span></span><br><span class="line">GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0;</span><br><span class="line"><span class="comment">// 配置 GPIO 速度</span></span><br><span class="line">GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;</span><br><span class="line"><span class="comment">// 初始化 GPIOA 的 0 号引脚</span></span><br><span class="line">GPIO_Init(GPIOA, &amp;GPIO_InitStructure);</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p> <code>void GPIO_StructInit(GPIO_InitTypeDef* GPIO_InitStruct);</code></p>
+<ul>
+<li><strong>使用情景</strong>：该函数用于将 <code>GPIO_InitTypeDef</code> 结构体的成员变量初始化为默认值。当你不想手动为结构体的每个成员赋值时，可以先调用此函数进行默认初始化，然后再根据需要修改部分成员的值。</li>
+<li><strong>示例代码</strong>：<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">GPIO_InitTypeDef GPIO_InitStructure;</span><br><span class="line"><span class="comment">// 将 GPIO_InitStructure 初始化为默认值</span></span><br><span class="line">GPIO_StructInit(&amp;GPIO_InitStructure);</span><br><span class="line"><span class="comment">// 修改部分成员的值</span></span><br><span class="line">GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;</span><br><span class="line">GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;</span><br><span class="line"><span class="comment">// 初始化 GPIOA 的 1 号引脚</span></span><br><span class="line">GPIO_Init(GPIOA, &amp;GPIO_InitStructure);</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="读取数据相关函数"><a href="#读取数据相关函数" class="headerlink" title="读取数据相关函数"></a>读取数据相关函数</h3><p> <code>uint8_t GPIO_ReadInputDataBit(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);</code></p>
+<ul>
+<li><strong>使用情景</strong>：该函数用于读取指定 GPIO 端口的单个引脚的输入电平状态。当你需要检测某个按键是否被按下，或者读取外部传感器的信号时，可以使用此函数。</li>
+<li><strong>示例代码</strong>：<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 假设 GPIOA 的 2 号引脚连接了一个按键</span></span><br><span class="line"><span class="keyword">if</span> (GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_2) == Bit_SET) &#123;</span><br><span class="line">    <span class="comment">// 按键被按下，执行相应操作</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+ <code>uint16_t GPIO_ReadInputData(GPIO_TypeDef* GPIOx);</code></li>
+<li><strong>使用情景</strong>：该函数用于读取指定 GPIO 端口的所有引脚的输入电平状态，返回一个 16 位的值，每一位对应一个引脚的状态。当你需要同时读取多个引脚的状态时，可以使用此函数。</li>
+<li><strong>示例代码</strong>：<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 读取 GPIOA 端口所有引脚的输入状态</span></span><br><span class="line"><span class="type">uint16_t</span> inputData = GPIO_ReadInputData(GPIOA);</span><br><span class="line"><span class="comment">// 判断 GPIOA 的 3 号引脚状态</span></span><br><span class="line"><span class="keyword">if</span> (inputData &amp; GPIO_Pin_3) &#123;</span><br><span class="line">    <span class="comment">// 3 号引脚为高电平，执行相应操作</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+ <code>uint8_t GPIO_ReadOutputDataBit(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);</code></li>
+<li><strong>使用情景</strong>：该函数用于读取指定 GPIO 端口的单个引脚的输出电平状态。通常在调试或者需要确认当前引脚的输出状态时使用。</li>
+<li><strong>示例代码</strong>：<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 读取 GPIOA 的 4 号引脚的输出状态</span></span><br><span class="line"><span class="type">uint8_t</span> outputBit = GPIO_ReadOutputDataBit(GPIOA, GPIO_Pin_4);</span><br></pre></td></tr></table></figure>
+ <code>uint16_t GPIO_ReadOutputData(GPIO_TypeDef* GPIOx);</code></li>
+<li><strong>使用情景</strong>：该函数用于读取指定 GPIO 端口的所有引脚的输出电平状态，返回一个 16 位的值，每一位对应一个引脚的状态。类似于 <code>GPIO_ReadInputData</code>，但读取的是输出状态。</li>
+<li><strong>示例代码</strong>：<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 读取 GPIOA 端口所有引脚的输出状态</span></span><br><span class="line"><span class="type">uint16_t</span> outputData = GPIO_ReadOutputData(GPIOA);</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="写入数据相关函数"><a href="#写入数据相关函数" class="headerlink" title="写入数据相关函数"></a>写入数据相关函数</h3><p> <code>void GPIO_SetBits(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);</code></p>
+<ul>
+<li><strong>使用情景</strong>：该函数用于将指定 GPIO 端口的单个或多个引脚置为高电平。当你需要点亮 LED 灯、驱动继电器等需要高电平触发的设备时，可以使用此函数。</li>
+<li><strong>示例代码</strong>：<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 将 GPIOA 的 5 号引脚置为高电平</span></span><br><span class="line">GPIO_SetBits(GPIOA, GPIO_Pin_5);</span><br></pre></td></tr></table></figure>
+ <code>void GPIO_ResetBits(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);</code></li>
+<li><strong>使用情景</strong>：该函数用于将指定 GPIO 端口的单个或多个引脚置为低电平。当你需要熄灭 LED 灯、关闭继电器等需要低电平触发的设备时，可以使用此函数。</li>
+<li><strong>示例代码</strong>：<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 将 GPIOA 的 6 号引脚置为低电平</span></span><br><span class="line">GPIO_ResetBits(GPIOA, GPIO_Pin_6);</span><br></pre></td></tr></table></figure>
+ <code>void GPIO_WriteBit(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, BitAction BitVal);</code></li>
+<li><strong>使用情景</strong>：该函数用于将指定 GPIO 端口的单个引脚设置为指定的电平状态（高电平或低电平）。可以根据需要动态地改变引脚的电平。</li>
+<li><strong>示例代码</strong>：<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 将 GPIOA 的 7 号引脚设置为高电平</span></span><br><span class="line">GPIO_WriteBit(GPIOA, GPIO_Pin_7, Bit_SET);</span><br></pre></td></tr></table></figure>
+<code>void GPIO_Write(GPIO_TypeDef* GPIOx, uint16_t PortVal);</code></li>
+<li><strong>使用情景</strong>：该函数用于将一个 16 位的值写入指定的 GPIO 端口，同时设置多个引脚的电平状态。当你需要同时控制多个引脚的输出状态时，可以使用此函数。</li>
+<li><strong>示例代码</strong>：<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 将 GPIOA 端口的所有引脚设置为 0x000F（低 4 位为高电平，其余为低电平）</span></span><br><span class="line">GPIO_Write(GPIOA, <span class="number">0x000F</span>);</span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<h2 id="OLED"><a href="#OLED" class="headerlink" title="OLED"></a>OLED</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><ul>
+<li>OLED(Organic Light Emitting Diode):有机发光二极管</li>
+<li>OLED显示屏:性能优异的新型显示屏，具有功耗低、相应速度快，宽视角、轻薄柔韧等特点</li>
+<li>0.96寸OLED模块:小巧玲珑、占用接口少、简单易用，是电子设计中非常常见的显示屏模块</li>
+<li>供电:3~5.5V，通信协议:12C&#x2F;SPI，分辨率:128*64</li>
+</ul>
+<h3 id="调试方式"><a href="#调试方式" class="headerlink" title="调试方式"></a>调试方式</h3><ol>
+<li>串口调试:通过串口通信，将调试信息发送到电脑端，电脑使用串口助手显示调试信息</li>
+<li>显示屏调试:直接将显示屏连接到单片机，将调试信息打印在显示屏上</li>
+<li>Keil调试模式:借助Kei软件的调试模式，可使用单步运行、设置断点、查看寄存器及变量等功能</li>
+</ol>
+<ul>
+<li>因为I2C总线协议必须用开漏输出，否则容易短路</li>
+<li>但是，改成推挽输出就能亮了</li>
+</ul>
+<hr>
+<h2 id="中断系统"><a href="#中断系统" class="headerlink" title="中断系统"></a>中断系统</h2><ul>
+<li>中断:在主程序运行过程中，出现了特定的中断触发条件(中断源)，使得CPU暂停当前正在运行的程序，转而去处理中断程序处理完成后又返回原来被暂停的位置继续运行</li>
+<li>中断优先级:当有多个中断源同时申请中断时，CPU会根据中断源的轻重缓急进行裁决，优先响应更加紧急的中断源</li>
+<li>中断嵌套:当一个中断程序正在运行时，又有新的更高优先级的中断源申请中断，CPU再次暂停当前中断程序，转而去处理新的中断程序，处理完成后依次进行返回<br><img src="/images/image-12.png" alt="alt text" loading="lazy"></li>
+</ul>
+<h3 id="stm32中断"><a href="#stm32中断" class="headerlink" title="stm32中断"></a>stm32中断</h3><ul>
+<li>68个可屏蔽中断通道包含EXTI、TIM、ADCUSART、SPI、I2C、RTC等多个外设</li>
+<li>使用NVIC统一管理中断，每个中断通道都拥有16个可编程的优先等级，可对优先级进行分组，进一步设置抢占优先级和响应优先级</li>
+</ul>
+<h3 id="NVIC"><a href="#NVIC" class="headerlink" title="NVIC"></a>NVIC</h3><h4 id="基本结构"><a href="#基本结构" class="headerlink" title="基本结构"></a>基本结构</h4><p><img src="/images/image-13.png" alt="alt text" loading="lazy"></p>
+<h4 id="优先级分组"><a href="#优先级分组" class="headerlink" title="优先级分组"></a>优先级分组</h4><ul>
+<li>NVIC的中断优先级由优先级寄存器的4位(0~15)决定，这4位可以进行切分，分为高n位的抢占优先级和低4-n位的响应优先级</li>
+<li>抢占优先级高的可以中断嵌套，响应优先级高的可以优先排队，抢占优先级和响应优先级均相同的按中断号排队</li>
+<li>值越小，优先级越高</li>
+</ul>
+<p><strong>响应优先级就是不打断当前执行的，抢占优先级就是打断当前正在执行的低优先级中断</strong></p>
+<table>
+<thead>
+<tr>
+<th align="center">分组方式</th>
+<th align="center">抢占优先级</th>
+<th align="center">响应优先级</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">分组0</td>
+<td align="center">0位，取值位0</td>
+<td align="center">4位，取值位0~15</td>
+</tr>
+<tr>
+<td align="center">分组1</td>
+<td align="center">1位，取值位0~1</td>
+<td align="center">3位，取值0~7</td>
+</tr>
+<tr>
+<td align="center">分组2</td>
+<td align="center">2位，取值位0~3</td>
+<td align="center">2位，取值0~3</td>
+</tr>
+<tr>
+<td align="center">分组3</td>
+<td align="center">3位，取值位0~7</td>
+<td align="center">1位，取值0~1</td>
+</tr>
+<tr>
+<td align="center">分组4</td>
+<td align="center">4位，取值位0~15</td>
+<td align="center">0位，取值0</td>
+</tr>
+</tbody></table>
+<h3 id="EXTI"><a href="#EXTI" class="headerlink" title="EXTI"></a>EXTI</h3><ul>
+<li>EXTI(Extern Interrupt)外部中断</li>
+<li>EXTI可以监测指定GPIO口的电平信号，当其指定的GPIO口产生电平变化时，EXTI将立即向NVIC发出中断申请，经过NVIC裁决后即可中断CPU主程序，使CPU执行EXTI对应的中断程序</li>
+<li>支持的触发方式:上升沿&#x2F;下隆沿&#x2F;双边沿&#x2F;软件触发支持的GPIO口:所有GPIO口，但相同的Pin不能同时触发中断</li>
+<li>通道数:16个GPIO Pin，外加PVD输出、RTC闹钟、USB唤醒、以太网</li>
+<li>唤醒触发响应方式:中断响应&#x2F;事件响应</li>
+</ul>
+<h4 id="基本结构-1"><a href="#基本结构-1" class="headerlink" title="基本结构"></a>基本结构</h4><p><img src="/images/image-14.png" alt="alt text" loading="lazy"><br><strong>如何配置外部中断</strong></p>
+<ol>
+<li>配置RCC，把涉及的外设的时钟都打开</li>
+<li>配置GPIO，选择端口为输入模式</li>
+<li>配置AFIO，选择我们这一路的GPIO，连接后面的EXTI</li>
+<li>配置EXTI，选择边沿触发方式（比如上升沿、下降沿或者双边沿），选择触发响应方式（中断响应和事件响应）</li>
+<li>配置NVIC，为中断选一个合适的优先级（在misc.c中）</li>
+</ol>
+<p>（重映射就是引脚被占用，可以把别的引脚暂时变成你想用的引脚）<br>（这点其实讲错了，不是中断标志位，是中断挂起标志位，就是中断来了 可以处理了 先挂起等待处理着，也可以理解成等待处理标志位，中断标志位是 触发了中断条件就会产生的）</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;stm32f10x.h&quot;</span>                  <span class="comment">// Device header</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">uint16_t</span> CountSensor_Count;				<span class="comment">//全局变量，用于计数</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * 函    数：计数传感器初始化</span></span><br><span class="line"><span class="comment">  * 参    数：无</span></span><br><span class="line"><span class="comment">  * 返 回 值：无</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">CountSensor_Init</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="comment">/*开启时钟*/</span></span><br><span class="line">	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);		<span class="comment">//开启GPIOB的时钟</span></span><br><span class="line">	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);		<span class="comment">//开启AFIO的时钟，外部中断必须开启AFIO的时钟</span></span><br><span class="line">	</span><br><span class="line">	<span class="comment">/*GPIO初始化*/</span></span><br><span class="line">	GPIO_InitTypeDef GPIO_InitStructure;</span><br><span class="line">	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;</span><br><span class="line">	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_14;</span><br><span class="line">	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;</span><br><span class="line">	GPIO_Init(GPIOB, &amp;GPIO_InitStructure);						<span class="comment">//将PB14引脚初始化为上拉输入</span></span><br><span class="line">	</span><br><span class="line">	<span class="comment">/*AFIO选择中断引脚*/</span></span><br><span class="line">	GPIO_EXTILineConfig(GPIO_PortSourceGPIOB, GPIO_PinSource14);<span class="comment">//将外部中断的14号线映射到GPIOB，即选择PB14为外部中断引脚</span></span><br><span class="line">	</span><br><span class="line">	<span class="comment">/*EXTI初始化*/</span></span><br><span class="line">	EXTI_InitTypeDef EXTI_InitStructure;						<span class="comment">//定义结构体变量</span></span><br><span class="line">	EXTI_InitStructure.EXTI_Line = EXTI_Line14;					<span class="comment">//选择配置外部中断的14号线</span></span><br><span class="line">	EXTI_InitStructure.EXTI_LineCmd = ENABLE;					<span class="comment">//指定外部中断线使能</span></span><br><span class="line">	EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;			<span class="comment">//指定外部中断线为中断模式</span></span><br><span class="line">	EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Falling;		<span class="comment">//指定外部中断线为下降沿触发</span></span><br><span class="line">	EXTI_Init(&amp;EXTI_InitStructure);								<span class="comment">//将结构体变量交给EXTI_Init，配置EXTI外设</span></span><br><span class="line">	</span><br><span class="line">	<span class="comment">/*NVIC中断分组*/</span></span><br><span class="line">	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);				<span class="comment">//配置NVIC为分组2</span></span><br><span class="line">																<span class="comment">//即抢占优先级范围：0~3，响应优先级范围：0~3</span></span><br><span class="line">																<span class="comment">//此分组配置在整个工程中仅需调用一次</span></span><br><span class="line">																<span class="comment">//若有多个中断，可以把此代码放在main函数内，while循环之前</span></span><br><span class="line">																<span class="comment">//若调用多次配置分组的代码，则后执行的配置会覆盖先执行的配置</span></span><br><span class="line">	</span><br><span class="line">	<span class="comment">/*NVIC配置*/</span></span><br><span class="line">	NVIC_InitTypeDef NVIC_InitStructure;						<span class="comment">//定义结构体变量</span></span><br><span class="line">	NVIC_InitStructure.NVIC_IRQChannel = EXTI15_10_IRQn;		<span class="comment">//选择配置NVIC的EXTI15_10线</span></span><br><span class="line">	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;				<span class="comment">//指定NVIC线路使能</span></span><br><span class="line">	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = <span class="number">1</span>;	<span class="comment">//指定NVIC线路的抢占优先级为1</span></span><br><span class="line">	NVIC_InitStructure.NVIC_IRQChannelSubPriority = <span class="number">1</span>;			<span class="comment">//指定NVIC线路的响应优先级为1</span></span><br><span class="line">	NVIC_Init(&amp;NVIC_InitStructure);								<span class="comment">//将结构体变量交给NVIC_Init，配置NVIC外设</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * 函    数：获取计数传感器的计数值</span></span><br><span class="line"><span class="comment">  * 参    数：无</span></span><br><span class="line"><span class="comment">  * 返 回 值：计数值，范围：0~65535</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line"><span class="type">uint16_t</span> <span class="title function_">CountSensor_Get</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">return</span> CountSensor_Count;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * 函    数：EXTI15_10外部中断函数</span></span><br><span class="line"><span class="comment">  * 参    数：无</span></span><br><span class="line"><span class="comment">  * 返 回 值：无</span></span><br><span class="line"><span class="comment">  * 注意事项：此函数为中断函数，无需调用，中断触发后自动执行</span></span><br><span class="line"><span class="comment">  *           函数名为预留的指定名称，可以从启动文件复制</span></span><br><span class="line"><span class="comment">  *           请确保函数名正确，不能有任何差异，否则中断函数将不能进入</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">EXTI15_10_IRQHandler</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> (EXTI_GetITStatus(EXTI_Line14) == SET)		<span class="comment">//判断是否是外部中断14号线触发的中断</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">/*如果出现数据乱跳的现象，可再次判断引脚电平，以避免抖动*/</span></span><br><span class="line">		<span class="keyword">if</span> (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_14) == <span class="number">0</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			CountSensor_Count ++;					<span class="comment">//计数值自增一次</span></span><br><span class="line">		&#125;</span><br><span class="line">		EXTI_ClearITPendingBit(EXTI_Line14);		<span class="comment">//清除外部中断14号线的中断标志位</span></span><br><span class="line">													<span class="comment">//中断标志位必须清除</span></span><br><span class="line">													<span class="comment">//否则中断将连续不断地触发，导致主程序卡死</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h4><ol>
+<li><strong>中断函数要简短快速，别刚进中断就执行一个Delay多少毫秒这样的代码</strong>。因为中断是处理突发的事情，如果你为了一个突发的事情待着中断里不出来了，那么主程序就会受到严重的阻塞</li>
+<li>最好不要在中断函数和主函数调用相同的函数或者操作同一个硬件，尤其是硬件相关的函数，比如OLED显示函数，如果你既在主程序里调用OLED，又在中断里调用OLED，OLED就会显示错误。虽然在中断进入和退出的时候，会有保护现场和恢复现场，但这只能保证CPU程序能正常返回不出问题，对于外部硬件的话，并没有在进入中断时，进行现场保护。在实现功能的时候，<strong>可以在中断里操作变量或者标志位</strong>，当中断返回时，我再对这个变量进行显示和操作，这样既能保证中断函数的简短快速，又能保证不产生冲突的硬件操作</li>
+</ol>
+<h3 id="旋转编码器（我没买）"><a href="#旋转编码器（我没买）" class="headerlink" title="旋转编码器（我没买）"></a>旋转编码器（我没买）</h3><ul>
+<li>旋转编码器:用来测量位置、速度或旋转方向的装置，当其旋转轴旋转时，其输出端可以输出与旋转速度和方向对应的方波信号，读取方波信号的频率和相位信息即可得知旋转轴的速度和方向</li>
+<li>类型:机械触点式&#x2F;霍尔传感器式&#x2F;光栅式</li>
+</ul>
+<hr>
+<h2 id="TIM-Timer-定时器"><a href="#TIM-Timer-定时器" class="headerlink" title="TIM(Timer)定时器"></a>TIM(Timer)定时器</h2><ul>
+<li>定时器可以对输入的时钟进行计数，并在计数值达到设定值时触发中断</li>
+<li>16位计数器、预分频器、自动重装寄存器的时基单元，在72MHz计数时钟下可以实现最大59.65s的定时</li>
+<li>不仅具备基本的定时中断功能，而且还包含内外时钟源选择、输入捕获、输出比较、编码器接口、主从触发模式等多种功能</li>
+<li>根据复杂度和应用场景分为了高级定时器、通用定时器、基本定时器三种类型</li>
+</ul>
+<h3 id="定时器类型"><a href="#定时器类型" class="headerlink" title="定时器类型"></a>定时器类型</h3><table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">编号</th>
+<th align="center">总线</th>
+<th align="center">功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">高级定时器</td>
+<td align="center">TIM1、TIM8</td>
+<td align="center">APB2</td>
+<td align="center">拥有通用定时器全部功能，并额外具有重复计数器、死区生成、互补输出、刹车输入等功能</td>
+</tr>
+<tr>
+<td align="center">通用定时器</td>
+<td align="center">TIM2、TIM3、TIM4、TIM5</td>
+<td align="center">APB2</td>
+<td align="center">拥有基本定时器全部功能，并额外具有内外时钟源选择:输入捕获、输出比较、编码器接口、主从触发模式等功能</td>
+</tr>
+<tr>
+<td align="center">基本定时器</td>
+<td align="center">TIM6、TIM7</td>
+<td align="center">APB1</td>
+<td align="center">拥有定时中断、主模式触发DAC的功能</td>
+</tr>
+</tbody></table>
+<ul>
+<li>STM32F103C8T6定时器资源:TIM1、TIM2、TIM3、TIM4</li>
+</ul>
+<h4 id="定时中断"><a href="#定时中断" class="headerlink" title="定时中断"></a>定时中断</h4><p><img src="/images/image-15.png" alt="alt text" loading="lazy"><br>从基准时钟到预分频器，再到计数器，计时器自增，同时不断地与自动重装寄存器进行比较，值相等时，即计时时间到，计数值清零同时会产生一个更新中断和更新事件，CPU响应更新中断，就完成了我们定时中断的任务了</p>
+<ul>
+<li>时基单元<ul>
+<li>预分频器</li>
+<li>计数器</li>
+<li>自动重装载寄存器</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/image-16.png" alt="alt text" loading="lazy"></p>
+<h3 id="定时中断和内外时钟源选择"><a href="#定时中断和内外时钟源选择" class="headerlink" title="定时中断和内外时钟源选择"></a>定时中断和内外时钟源选择</h3><ul>
+<li>计数器溢出频率: <code>CK_CNT_OV=CK_CNT/(ARR +1) =CK PSC/(PSC + 1)/(ARR + 1)</code></li>
+</ul>
+<h3 id="输出比较"><a href="#输出比较" class="headerlink" title="输出比较"></a>输出比较</h3><ul>
+<li>OC(Output Compare)输出比较</li>
+<li>输出比较可以通过比较CNT（counter）与CCR（CCR是Capture&#x2F;Compare Register（捕获&#x2F;比较寄存器）的缩写）寄存器值的关系，来对输出电平进行置1、置0或翻转的操作，用于输出一定频率和占空比的PWM波形</li>
+<li>每个高级定时器和通用定时器都拥有4个输出比较通道</li>
+<li>高级定时器的前3个通道额外拥有死区生成和互补输出的功能</li>
+</ul>
+<h4 id="PWM简介"><a href="#PWM简介" class="headerlink" title="PWM简介"></a>PWM简介</h4><ul>
+<li><p>PWM(Pulse Width Modulation)脉冲宽度调制</p>
+</li>
+<li><p>在<strong>具有惯性的系统</strong>中，可以通过对一系列脉冲的宽度进行调制，来等效地获得所需要的模拟参量，常应用于电机控速等领域</p>
+</li>
+<li><p>PWM参数:<br>频率 &#x3D; $\frac{1}{T_s}$<br>占空比 &#x3D; $\frac{T_{on}}{T_s}$<br>分辨率 &#x3D; 占空比变化步距<br><img src="/images/image-17.png" alt="alt text" loading="lazy"><br>（一般LED只有完全灭和完全亮两个状态，但是如果我们让LED不断点亮、熄灭、点亮、熄灭，当这个点亮熄灭的频率足够大时，LED就不会闪烁了，而是呈现出一个中等亮度）</p>
+</li>
+<li><p>PWM的频率越快，那它等效模拟的信号就越平稳</p>
+</li>
+<li><p>pwm可以看成是通信协议，通信协议就双方约定好一个规律去识别信号，符合这个规律的信号就能被接收方接受并分析</p>
+</li>
+</ul>
+<h5 id="pwm的结构"><a href="#pwm的结构" class="headerlink" title="pwm的结构"></a>pwm的结构</h5><p><img src="/images/image-18.png" alt="alt text" loading="lazy"><br>(蓝色线是CNT的值，黄色线是ARR的值，红色线是CCR，绿色线是输出)</p>
+<h5 id="pwm的参数计算"><a href="#pwm的参数计算" class="headerlink" title="pwm的参数计算"></a>pwm的参数计算</h5><ul>
+<li>pwm频率： $Freq &#x3D; \frac{CK_{PSC}}{(PSC + 1)(ARR + 1)}$</li>
+<li>pwm占空比：$Duty &#x3D; \frac{CCR}{ARR+1}$</li>
+<li>pwm分辨率：$Reso&#x3D;\frac{1}{ARR+1}$ (占空比变化的越细腻越好)</li>
+</ul>
+<h4 id="舵机简介"><a href="#舵机简介" class="headerlink" title="舵机简介"></a>舵机简介</h4><ul>
+<li>舵机是一种根据输入PWM信号占空比来控制输出角度的装置</li>
+<li>输入PWM信号要求:周期为20ms，高电平宽度为0.5ms~2.5ms</li>
+</ul>
+<h4 id="直流电机及驱动简介"><a href="#直流电机及驱动简介" class="headerlink" title="直流电机及驱动简介"></a>直流电机及驱动简介</h4><ul>
+<li>直流电机是一种将电能转换为机械能的装置，有两个电极，当电极正接时，电机正转，当电极反接时</li>
+<li>直流电机反转直流电机属于大功率器件，GPIO口无法直接驱动，需要配合电机驱动电路来操作</li>
+<li>TB6612是一款双路H桥型的直流电机驱动芯片，可以驱动两个直流电机并且控制其转速和方向</li>
+</ul>
+<h4 id="pwm驱动LED呼吸灯"><a href="#pwm驱动LED呼吸灯" class="headerlink" title="pwm驱动LED呼吸灯"></a>pwm驱动LED呼吸灯</h4><ul>
+<li><p><strong>ocinit函数</strong>，是用结构体来初始化输出比较单元的（很重要）</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">TIM_OC1Init</span><span class="params">(TIM_TypeDef* TIMx, TIM_OCInitTypeDef* TIM_OCInitStruct)</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">TIM_OC2Init</span><span class="params">(TIM_TypeDef* TIMx, TIM_OCInitTypeDef* TIM_OCInitStruct)</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">TIM_OC3Init</span><span class="params">(TIM_TypeDef* TIMx, TIM_OCInitTypeDef* TIM_OCInitStruct)</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">TIM_OC4Init</span><span class="params">(TIM_TypeDef* TIMx, TIM_OCInitTypeDef* TIM_OCInitStruct)</span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>若要使用高级定时器，在使用高级定时器输出PWM时需要调用这个函数使能主输出否则PWM将不能正常输出</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">TIM_CtrlPWMOutputs</span><span class="params">(TIM_TypeDef* TIMx, FunctionalState NewState)</span>;</span><br></pre></td></tr></table></figure></li>
+<li><p>setcompare函数</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">TIM_SetCompare1</span><span class="params">(TIM_TypeDef* TIMx, <span class="type">uint16_t</span> Compare1)</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">TIM_SetCompare2</span><span class="params">(TIM_TypeDef* TIMx, <span class="type">uint16_t</span> Compare2)</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">TIM_SetCompare3</span><span class="params">(TIM_TypeDef* TIMx, <span class="type">uint16_t</span> Compare3)</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">TIM_SetCompare4</span><span class="params">(TIM_TypeDef* TIMx, <span class="type">uint16_t</span> Compare4)</span>;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p><strong>！！！！！</strong></p>
+<ul>
+<li>GPIO_PinRemapConfig(GPIO_ParticialRemap_TIM2, ENABLE)函数<br>作用：接触引脚复用<br><code>GPIO_Remap_SWJ</code>参数，不能用！！这个参数就是把SWD和JTAG的调试端口全部解除，也就是这个5个引脚全部变成普通的GPIO口，没有调试功能，Stlink就下载不了程序了</li>
+<li>解决方案：只能用串口下载，下载一个新的没有解除调试窗口的程序<br>（我没学重映射和解除调试端口！I passed them）</li>
+</ul>
+<h4 id="pwm驱动舵机"><a href="#pwm驱动舵机" class="headerlink" title="pwm驱动舵机"></a>pwm驱动舵机</h4><ul>
+<li>关键：输出一个符合下方图片规定的pwm波形<br><img src="/images/image-19.png" alt="alt text" loading="lazy"></li>
+</ul>
+<h4 id="pwm驱动直流电机"><a href="#pwm驱动直流电机" class="headerlink" title="pwm驱动直流电机"></a>pwm驱动直流电机</h4><h3 id="输入捕获"><a href="#输入捕获" class="headerlink" title="输入捕获"></a>输入捕获</h3><h4 id="理论部分"><a href="#理论部分" class="headerlink" title="理论部分"></a>理论部分</h4><h5 id="简介-1"><a href="#简介-1" class="headerlink" title="简介"></a>简介</h5><ul>
+<li>IC(Input Capture)输入辅获</li>
+<li>输入捕获模式下，当通道输入引脚出现指定电平跳变时（检测电平跳变，然后执行动作（控制后续电路）），当前CNT的值将被锁存到CCR中，可用于测量PWM波形的频率、占空比、脉冲间隔、电平持续时间等参数（简要版示波器、测速）</li>
+<li>每个高级定时器和通用定时器都拥有4个输入捕获通道</li>
+<li>可配置为PWMI模式，同时测量频率和占空比</li>
+<li>可配合主从触发模式，实现硬件全自动测量</li>
+<li>对于同一个引脚，只能使用一种功能（输出比较or输入捕获）</li>
+</ul>
+<h5 id="频率测量"><a href="#频率测量" class="headerlink" title="频率测量"></a>频率测量</h5><p><img src="/images/image-20.png" alt="alt text" loading="lazy"></p>
+<ul>
+<li>测频法适合测量高频信号，测周法适合测量低频信号</li>
+</ul>
+<h5 id="输入捕获结构"><a href="#输入捕获结构" class="headerlink" title="输入捕获结构"></a>输入捕获结构</h5><p><img src="/images/image-21.png" alt="alt text" loading="lazy"></p>
+<ul>
+<li>先转运CCR的值，再触发从模式给CNT清零</li>
+</ul>
+<h5 id="PWMI基本结构"><a href="#PWMI基本结构" class="headerlink" title="PWMI基本结构"></a>PWMI基本结构</h5><p><img src="/images/image-22.png" alt="alt text" loading="lazy"></p>
+<ul>
+<li>使用两个通道来捕获频率和占空比的思路：占空比 &#x3D; $\frac{CCR2}{CCR1}$</li>
+</ul>
+<h4 id="输入捕获捕获模式测频率"><a href="#输入捕获捕获模式测频率" class="headerlink" title="输入捕获捕获模式测频率"></a>输入捕获捕获模式测频率</h4><ul>
+<li>Q：首先，为了测量外部信号频率，我们先得有一个信号源，产生一个频率和占空比可调的波形，但是我们没有信号发生器，该怎么办？</li>
+<li>A：先用pwm模块，在PA0端口输出一个频率和占空比可调的波形，然后选择一个端口如（PA6）来测量波形的输入口，最后再拿一根线把他们连起来就ok</li>
+</ul>
+<h4 id="PWMI模式测频率占空比"><a href="#PWMI模式测频率占空比" class="headerlink" title="PWMI模式测频率占空比"></a>PWMI模式测频率占空比</h4><h3 id="编码器接口"><a href="#编码器接口" class="headerlink" title="编码器接口"></a>编码器接口</h3><ul>
+<li>Encoder Interface 编码器接口</li>
+<li>编码器接口可接收增量(正交)编码器的信号，根据编码器旋转产生的正交信号脉冲，自动控制CNT自增或自减，从而指示编码器的位置、旋转方向和旋转速度</li>
+<li>每个高级定时器和通用定时器都拥有1个编码器接口</li>
+<li>两个输入引脚借用了输入捕获的通道1和通道2</li>
+</ul>
+<h4 id="基本结构-2"><a href="#基本结构-2" class="headerlink" title="基本结构"></a>基本结构</h4><p><img src="/images/image-24.png" alt="alt text" loading="lazy"></p>
+<h4 id="旋转编码器测速"><a href="#旋转编码器测速" class="headerlink" title="旋转编码器测速"></a>旋转编码器测速</h4><ul>
+<li><p>通过定时器的编码器接口来自动计次、之前的代码是通过触发外部中断，然后在中断函数里进行手动计次</p>
+</li>
+<li><p><strong>一般应用于电机控制的项目上：使用pwm驱动电机，再使用编码器测量电机的速度（现实一般用无接触式的霍尔传感器或者光栅进行测速），然后再用PID算法进行闭环控制</strong></p>
+</li>
+<li><p>正交编码器 <img src="/images/image-23.png" alt="alt text" loading="lazy"></p>
+</li>
+</ul>
+<h2 id="ADC"><a href="#ADC" class="headerlink" title="ADC"></a>ADC</h2><h3 id="简介-2"><a href="#简介-2" class="headerlink" title="简介"></a>简介</h3><ul>
+<li>ADC(Analog-Digital Converter)模拟-数字转换器</li>
+<li>ADC可以将引脚上连续变化的模拟电压转换为内存中存储的数字变量，建立模拟电路到数字电路的桥</li>
+<li>12位逐次逼近型ADC，1us转换时间</li>
+<li>输入电压范围:0<del>3.3V，转换结果范围:0</del>4095</li>
+<li>18个输入通道，可测量16个外部和2个内部信号源</li>
+<li>规则组和注入组两个转换单元</li>
+<li>模拟看门狗自动监测输入电压范围</li>
+<li>STM32F103C8T6 ADC资源:ADC1、ADC2，10个外部输入通道<br><img src="/images/image-25.png" alt="alt text" loading="lazy"></li>
+<li>在看门狗的配合下，ADC可以用来做各种报警器<br>对于GPIO来说，它只能读取引脚的高低电平，要么是高电平要么是低电平，只有两个值，使用了ADC之后，就可以对高电平和低电平之间的任意电压进行量化，最终用一个变量来表示，读取这个变量，就可以知道这个引脚大的具体电压是多少了，<strong>所以ADC就像一个电压表</strong></li>
+</ul>
+<h3 id="逐次渐进型ADC"><a href="#逐次渐进型ADC" class="headerlink" title="逐次渐进型ADC"></a>逐次渐进型ADC</h3><p><img src="/images/image-26.png" alt="alt text" loading="lazy"></p>
+<h3 id="ADC基本结构"><a href="#ADC基本结构" class="headerlink" title="ADC基本结构"></a>ADC基本结构</h3><p><img src="/images/image-27.png" alt="alt text" loading="lazy"></p>
+<h3 id="输入通道"><a href="#输入通道" class="headerlink" title="输入通道"></a>输入通道</h3><p><img src="/images/image-28.png" alt="alt text" loading="lazy"></p>
+<h3 id="转换模式"><a href="#转换模式" class="headerlink" title="转换模式"></a>转换模式</h3><table>
+<thead>
+<tr>
+<th align="center">转换模式</th>
+<th align="center">区别</th>
+<th align="center">用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">单次转换</td>
+<td align="center">触发后仅进行一次转换，完成即停</td>
+<td align="center">偶尔采集数据，降低功耗</td>
+</tr>
+<tr>
+<td align="center">连续转换</td>
+<td align="center">触发后持续转换，直至软件停止</td>
+<td align="center">实时、连续采集信号</td>
+</tr>
+<tr>
+<td align="center">扫描模式</td>
+<td align="center">结合单&#x2F;连续模式，依次转换多通道</td>
+<td align="center">同时采集多个模拟信号</td>
+</tr>
+<tr>
+<td align="center">间断模式</td>
+<td align="center">将转换分若干子序列，触发一次转一个</td>
+<td align="center">分阶段采集数据，灵活可控</td>
+</tr>
+</tbody></table>
+<h3 id="数据对齐"><a href="#数据对齐" class="headerlink" title="数据对齐"></a>数据对齐</h3><ul>
+<li>数据右对齐<br>一般用右对齐</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">0</th>
+<th align="center">0</th>
+<th align="center">0</th>
+<th align="center">D11</th>
+<th align="center">D10</th>
+<th align="center">D9</th>
+<th align="center">D8</th>
+<th align="center">D7</th>
+<th align="center">D6</th>
+<th align="center">D5</th>
+<th align="center">D4</th>
+<th align="center">D3</th>
+<th align="center">D2</th>
+<th align="center">D1</th>
+<th align="center">D0</th>
+</tr>
+</thead>
+</table>
+<ul>
+<li>数据左对齐</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">D11</th>
+<th align="center">D10</th>
+<th align="center">D9</th>
+<th align="center">D8</th>
+<th align="center">D7</th>
+<th align="center">D6</th>
+<th align="center">D5</th>
+<th align="center">D4</th>
+<th align="center">D3</th>
+<th align="center">D2</th>
+<th align="center">D1</th>
+<th align="center">D0</th>
+<th align="center">0</th>
+<th align="center">0</th>
+<th align="center">0</th>
+</tr>
+</thead>
+</table>
+<h3 id="转换时间"><a href="#转换时间" class="headerlink" title="转换时间"></a>转换时间</h3><ul>
+<li>AD转换的步骤：采样保持，量化编码</li>
+<li>STM32 ADC的总转换时间为：<br>$T_{CONV}$ &#x3D; 采样时间 + 12.5个ADC周期</li>
+<li>例如：当ADCCLK&#x3D;14MHz，采样时间为1.5个ADC周期<br>$T_{CONV}$ &#x3D; 1.5 + 12.5 &#x3D; 14个ADC周期 &#x3D; 1μs</li>
+</ul>
+<h3 id="校准"><a href="#校准" class="headerlink" title="校准"></a>校准</h3><ul>
+<li>ADC有一个内置自校准模式。校准可大幅减小因内部电容器组的变化而造成的准精度误差。校准期间，在每个电容器上都会计算出-个误差修正码(数字值)，这个码用于消除在随后的转换中每个电容器上产生的误差</li>
+<li>建议在每次上电后执行一次校准</li>
+<li>启动校准前，ADC必须处于关电状态超过至少两个ADC时钟周期</li>
+</ul>
+<h2 id="DMA直接存储器读取"><a href="#DMA直接存储器读取" class="headerlink" title="DMA直接存储器读取"></a>DMA直接存储器读取</h2><ul>
+<li>for是靠cpu搬运数据，这里学的是不用cpu，用小弟dma运数据 </li>
+<li>DMA 可以不通过CPU进行数据转运，减小了CPU运行负荷</li>
+<li>这节课很重要，以后工作使用到大量数据时需要配合通信协议和DMA实现数据的大量传输</li>
+</ul>
+<h3 id="简介-3"><a href="#简介-3" class="headerlink" title="简介"></a>简介</h3><ul>
+<li>DMA直接存储器存取 (Girect Memory Access）</li>
+<li>DMA可以提供外设和存储器或者存储器和存储器之间的高速数据传输，无须CPU干预，节省了CPU的资</li>
+<li>12个独立可配置的通道:DMA1(7个通道)DMA2(5个通道)</li>
+<li>每个通道都支持软件触发和特定的硬件触发</li>
+<li>STM32F103C8T6 DMA资源:DMA1(7个通道)</li>
+</ul>
+<h3 id="存储器映像"><a href="#存储器映像" class="headerlink" title="存储器映像"></a>存储器映像</h3><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>起始地址</th>
+<th>存储器</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ROM</td>
+<td>0x0800 0000</td>
+<td>程序存储器Flash</td>
+<td>存储C语言编译后的程序代码</td>
+</tr>
+<tr>
+<td>ROM</td>
+<td>0x1FFF F000</td>
+<td>系统存储器</td>
+<td>存储BootLoader，用于串口下载</td>
+</tr>
+<tr>
+<td>ROM</td>
+<td>0x1FFF F800</td>
+<td>选项字节</td>
+<td>存储一些独立于程序代码的配置参数</td>
+</tr>
+<tr>
+<td>RAM</td>
+<td>0x2000 0000</td>
+<td>运行内存SRAM</td>
+<td>存储运行过程中的临时变量</td>
+</tr>
+<tr>
+<td>RAM</td>
+<td>0x4000 0000</td>
+<td>外设寄存器</td>
+<td>存储各个外设的配置参数</td>
+</tr>
+<tr>
+<td>RAM</td>
+<td>0xE000 0000</td>
+<td>内核外设寄存器</td>
+<td>存储内核各个外设的配置参数</td>
+</tr>
+</tbody></table>
+<ul>
+<li>计算机系统<ul>
+<li>CPU<ul>
+<li>运算器</li>
+<li>控制器</li>
+</ul>
+</li>
+<li>存储器</li>
+<li>输入设备</li>
+<li>输出设备</li>
+</ul>
+</li>
+</ul>
+<h3 id="基本结构-3"><a href="#基本结构-3" class="headerlink" title="基本结构"></a>基本结构</h3><p><img src="/images/image-29.png" alt="alt text" loading="lazy"></p>
+<h3 id="数据转运-DMA"><a href="#数据转运-DMA" class="headerlink" title="数据转运+DMA"></a>数据转运+DMA</h3><p><img src="/images/image-30.png" alt="alt text" loading="lazy"></p>
+<h3 id="ADC扫描模式-DMA"><a href="#ADC扫描模式-DMA" class="headerlink" title="ADC扫描模式+DMA"></a>ADC扫描模式+DMA</h3><p><img src="/images/image-31.png" alt="alt text" loading="lazy"></p>
+<ul>
+<li>DMA最常见的用途就是配合ADC的扫描模式，因为ADC扫描模式有个数据覆盖的特征，如果不使用DMA，其功能都会受到很大的限制</li>
+<li>对于其他外设，使用DMA可以提高效率，是锦上添花的操作</li>
+</ul>
+<h2 id="USART串口协议"><a href="#USART串口协议" class="headerlink" title="USART串口协议"></a>USART串口协议</h2><h3 id="通信接口"><a href="#通信接口" class="headerlink" title="通信接口"></a>通信接口</h3><ul>
+<li>通信的目的:将一个设备的数据传送到另一个设备，扩展硬件系统</li>
+<li>通信协议:制定通信的规则，通信双方按照协议规则进行数据收发</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">名称</th>
+<th align="center">引脚</th>
+<th align="center">双工</th>
+<th align="center">时钟</th>
+<th align="center">电平</th>
+<th align="center">设备</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">USART</td>
+<td align="center">TX、RX</td>
+<td align="center">全双工</td>
+<td align="center">异步</td>
+<td align="center">单端</td>
+<td align="center">点对点</td>
+</tr>
+<tr>
+<td align="center">I2C</td>
+<td align="center">SCL、SDA</td>
+<td align="center">半双工</td>
+<td align="center">同步</td>
+<td align="center">单端</td>
+<td align="center">多设备</td>
+</tr>
+<tr>
+<td align="center">SPI</td>
+<td align="center">SCLK、MOSI、MISO、CS</td>
+<td align="center">全双工</td>
+<td align="center">同步</td>
+<td align="center">单端</td>
+<td align="center">多设备</td>
+</tr>
+<tr>
+<td align="center">CAN</td>
+<td align="center">CAN_H、CAN_L</td>
+<td align="center">半双工</td>
+<td align="center">异步</td>
+<td align="center">差分</td>
+<td align="center">多设备</td>
+</tr>
+<tr>
+<td align="center">USB</td>
+<td align="center">DP、DM</td>
+<td align="center">半双工</td>
+<td align="center">异步</td>
+<td align="center">差分</td>
+<td align="center">点对点</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>TX : transmit exchange<br>RX : receive exchange<br>SCL : serial clock<br> SDA : serial data<br>SCLK :serial clock<br>MOSI : Master Output Slave Input<br>MOSO : Master Output Slave Output<br>CS : Chip Select<br>Can_H&#x2F;L : high&#x2F;low差分数据脚<br>DP&#x2F;M : Data positive&#x2F;Minus差分数据脚<br>全双工：通信双方能够同时进行双向通信，发送线路和接受线路互不影响，因为有两条数据线<br>单端：得共地，不接GND无法通信<br>差分：有抗干扰的特性，一般传输速度和距离都会非常高</p>
+</blockquote>
+<p>全双工：打电话。半双工：对讲机。单工：广播</p>
+<h3 id="串口通信"><a href="#串口通信" class="headerlink" title="串口通信"></a>串口通信</h3><ul>
+<li>串口是一种应用十分广泛的通讯接口，串口成本低、容易使用、通信线路简单，可实现两个设备的互相通信</li>
+<li>单片机的串口可以使单片机与单片机、单片机与电脑、单片机与各式各样的模块互相通信，极大地扩展了单片机的应用范围，增强了单片机系统的硬件实力</li>
+</ul>
+<h3 id="硬件电路"><a href="#硬件电路" class="headerlink" title="硬件电路"></a>硬件电路</h3><ul>
+<li>简单双向串口通信有两根通信线(发送端TX和接收端RX)</li>
+<li>TX与RX要交叉连接当只需单向的数据传输时，可以只接一根通信线当电平标准不一致时，需要加电平转换芯片</li>
+</ul>
+<p><img src="/images/image-32.png" alt="alt text" loading="lazy"></p>
+<h3 id="电平标准"><a href="#电平标准" class="headerlink" title="电平标准"></a>电平标准</h3><p>  电平标准是数据1和数据0的表达方式，是传输线缆中人为规定的电压与数据的对应关系</p>
+<ul>
+<li>串口常用的电平标准有如下三种：<ul>
+<li>TTL电平: <code>+3.3V</code>或<code>+5V</code>表示1，<code>0V</code>表示0</li>
+<li>RS232电平: <code>-3 ~ -15V</code>表示1，<code>+3 ~ +15V</code>表示0</li>
+<li>RS485电平: 两线压差<code>+2 ~ +6V</code>表示1，<code>-2 ~ -6V</code>表示0(差分信号)</li>
+</ul>
+</li>
+</ul>
+<h3 id="串口参数及时序"><a href="#串口参数及时序" class="headerlink" title="串口参数及时序"></a>串口参数及时序</h3><ul>
+<li>波特率:串口通信的速率</li>
+<li>起始位:标志一个数据帧的开始，固定为低电平</li>
+<li>数据位:数据帧的有效载荷，1为高电平，0为低电平，低位先行</li>
+<li>校验位:用于数据验证，根据数据位计算得来<ul>
+<li>无校验</li>
+<li>偶校验</li>
+<li>奇校验</li>
+</ul>
+</li>
+<li>停止位:用于数据帧间隔，固定为高电平</li>
+</ul>
+<p><img src="/images/image-33.png" alt="alt text" loading="lazy"><br>左边是无校验，右边是奇&#x2F;偶校验</p>
+<h3 id="USART"><a href="#USART" class="headerlink" title="USART"></a>USART</h3><ul>
+<li>USART (Universal Synchronous&#x2F;Asynchronous Receiver&#x2F;Transmitter)通用同步&#x2F;异步收发器</li>
+<li>USART是STM32内部集成的硬件外设，可根据数据寄存器的一个字节数据自动生成数据帧时序，从TX引脚发送出去，也可自动接收RX引脚的数据帧时序，拼接为一个字节数据，存放在数据寄存器里</li>
+<li>自带波特率发生器，最高达4.5Mbits&#x2F;s</li>
+<li>可配置数据位长度(8&#x2F;9)、停止位长度(0.5&#x2F;1&#x2F;1.5&#x2F;2</li>
+<li>可选校验位(无校验&#x2F;奇校验&#x2F;偶校验)</li>
+<li>支持同步模式、硬件流控制、DMA、智能卡、IrDA、LIN</li>
+</ul>
+<p>STM32F103C8T6 USART资源:USART1、USART2、USART3</p>
+<h4 id="基本结构-4"><a href="#基本结构-4" class="headerlink" title="基本结构"></a>基本结构</h4><p><img src="/images/image-34.png" alt="alt text" loading="lazy"></p>
+<h4 id="HEX数据包"><a href="#HEX数据包" class="headerlink" title="HEX数据包"></a>HEX数据包</h4><ul>
+<li>固定包长，含包头包尾</li>
+</ul>
+<p><img src="/images/image-35.png" alt="alt text" loading="lazy"></p>
+<ul>
+<li>可变包长，含包头包尾</li>
+</ul>
+<p><img src="/images/image-36.png" alt="alt text" loading="lazy"></p>
+<blockquote>
+<p>如果数据内容含包头包尾怎么办？<br>    可以对数据进行限幅</p>
+</blockquote>
+<h4 id="HEX数据包接收"><a href="#HEX数据包接收" class="headerlink" title="HEX数据包接收"></a>HEX数据包接收</h4><p><img src="/images/image-39.png" alt="alt text" loading="lazy"><br>状态机！</p>
+<h4 id="文本数据包"><a href="#文本数据包" class="headerlink" title="文本数据包"></a>文本数据包</h4><ul>
+<li>固定包长，含包头包尾</li>
+</ul>
+<p><img src="/images/image-37.png" alt="alt text" loading="lazy"></p>
+<ul>
+<li>可变包长，含包头包尾</li>
+</ul>
+<p><img src="/images/image-38.png" alt="alt text" loading="lazy"></p>
+<p>####文本数据包收发<br><img src="/images/image-40.png" alt="alt text" loading="lazy"></p>
+<p>静态变量，具有全局变量的生存期，本地变量的作用域</p>
+<h2 id="IIC通信协议"><a href="#IIC通信协议" class="headerlink" title="IIC通信协议"></a>IIC通信协议</h2><ul>
+<li>I2C总线(Inter IC BUS)是由Philips公司开发的一种通用数据总线</li>
+<li>两根通信线:SCL(SerialClock)、SDA(Serial Data)</li>
+<li>同步，半双工</li>
+<li>带数据应答</li>
+<li>支持总线挂载多设备(一主多从、多主多从)</li>
+</ul>
+<h3 id="硬件电路-1"><a href="#硬件电路-1" class="headerlink" title="硬件电路"></a>硬件电路</h3><ul>
+<li>所有I2C设备的SCL连在一起，SDA连在一起</li>
+<li>设备的SCL和SDA均要配置成开漏输出模式</li>
+<li>SCL和SDA各添加一个上拉电阻，阻值一般为4.7KΩ左右</li>
+</ul>
+<p><img src="/images/image-41.png" alt="alt text" loading="lazy"></p>
+<h3 id="I2C时序基本单元"><a href="#I2C时序基本单元" class="headerlink" title="I2C时序基本单元"></a>I2C时序基本单元</h3><ul>
+<li><strong>起始条件</strong>：SCL高电平期间，SDA从高电平切换到低电平</li>
+<li><strong>终止条件</strong>：SCL高电平期间，SDA从低电平切换到高电平</li>
+</ul>
+<p><img src="/images/image-42.png" alt="alt text" loading="lazy"></p>
+<ul>
+<li><strong>发送一个字节</strong>：SCL低电平期间，主机将数据位依次放到SDA线上(高位先行)，然后释放SCL，从机将在SCL高电平期间读取数据位，所以SCL高电平期间SDA不允许有数据变化，依次循环上述过程8次，即可发送一个字节</li>
+</ul>
+<p><img src="/images/image-43.png" alt="alt text" loading="lazy"></p>
+<ul>
+<li><strong>接收一个字节</strong>：SCL低电平期间，从机将数据位依次放到SDA线上(高位先行)，然后释放SCL，主机将在SCL高电平期间读取数据位，所以SCL高电平期间SDA不允许有数据变化，依次循环上述过程8次即可接收一个字节(主机在接收之前，需要释放SDA)</li>
+</ul>
+<p><img src="/images/image-44.png" alt="alt text" loading="lazy"></p>
+<ul>
+<li><strong>发送应答</strong>:主机在接收完一个字节之后，在下一个时钟发送一位数据，数据0表示应答，数据1表示非应答</li>
+<li><strong>接收应答</strong>:主机在发送完一个字节之后，在下一个时钟接收一位数据，判断从机是否应答，数据0表示应答，数据1表示非应答（主机在接收之前，需要释放SDA）</li>
+</ul>
+<p><img src="/images/image-45.png" alt="alt text" loading="lazy"></p>
+<h3 id="I2C时序"><a href="#I2C时序" class="headerlink" title="I2C时序"></a>I2C时序</h3><ul>
+<li><strong>指定地址写</strong><ul>
+<li>对于指定设备（Slava Address），在指定地址(Reg Address)下，写入指定数据(data)</li>
+</ul>
+</li>
+<li>当前地址读<ul>
+<li>对于指定设备(Slave Address)，在当前地址指针指示的地址下读取从机数据(Data)</li>
+</ul>
+</li>
+<li><strong>指定地址读</strong><ul>
+<li>对于指定设备在指定地址(Reg Address)下(Slave Address).读取从机数据(Data)</li>
+</ul>
+</li>
+</ul>
+<h3 id="MPU6050"><a href="#MPU6050" class="headerlink" title="MPU6050"></a>MPU6050</h3><h4 id="简介-4"><a href="#简介-4" class="headerlink" title="简介"></a>简介</h4><ul>
+<li>MPU6050是一个6轴姿态传感器，可以测量芯片自身X、Y、Z轴的加速度、角速度参数，通过数据融合，可进一步得到姿态角，常应用于平衡车、飞行器等需要检测自身姿态的场景</li>
+<li>3轴加速度计(Accelerometer)：测量X、Y、Z轴的加速度</li>
+<li>3轴陀螺仪传感器(Gyroscope)：测量X、Y、Z轴的角速度</li>
+</ul>
+<h4 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h4><ul>
+<li>16位ADC采集传感器的模拟信号，量化范围:-32768 ~ 32767</li>
+<li>加速度计满量程选择:±2、±4、±8、±16(g)</li>
+<li>陀螺仪满量程选择:±250、±500、±1000、±2000(°&#x2F;sec)</li>
+<li>可配置的数字低通滤波器</li>
+<li>可配置的时钟源</li>
+<li>可配置的采样分频</li>
+<li>I2C从机地址:<ul>
+<li>1101000(AD0&#x3D;0)</li>
+<li>1101001(AD0&#x3D;1)</li>
+</ul>
+</li>
+</ul>
+<h4 id="硬件电路-2"><a href="#硬件电路-2" class="headerlink" title="硬件电路"></a>硬件电路</h4><table>
+<thead>
+<tr>
+<th align="center">引脚</th>
+<th align="center">功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">VCC、GND</td>
+<td align="center">电源</td>
+</tr>
+<tr>
+<td align="center">SCL、SDA</td>
+<td align="center">I2C通信引脚</td>
+</tr>
+<tr>
+<td align="center">XCL、XDA</td>
+<td align="center">主机I2C通信引脚</td>
+</tr>
+<tr>
+<td align="center">AD0</td>
+<td align="center">从机地址最低位</td>
+</tr>
+<tr>
+<td align="center">INT</td>
+<td align="center">中断信号输出</td>
+</tr>
+</tbody></table>
+</div></section><div id="reward-container"><span class="hty-icon-button button-glow" id="reward-button" title="打赏" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === &quot;none&quot;) ? &quot;block&quot; : &quot;none&quot;;"><svg class="icon ri:hand-coin-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:hand-coin-line"></use></svg></span><div id="reward-comment">I'm so cute. Please give me money.</div></div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>Lisette Peng</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://1231lisette.github.io/01paw/2025/02/stm32%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="stm32学习笔记">https://1231lisette.github.io/01paw/2025/02/stm32%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><span class="icon iconify" data-icon="ri:creative-commons-line"></span><span class="icon iconify" data-icon="ri:creative-commons-by-line"></span><span class="icon iconify" data-icon="ri:creative-commons-nc-line"></span><span class="icon iconify" data-icon="ri:creative-commons-sa-line"></span></a> 许可协议。</li></ul><script>document.addEventListener('copy', function (event) {
+  const clipboardData = event.clipboardData || window.clipboardData;
+  if (!clipboardData) { return; }
+  const text = window.getSelection().toString();
+  if (text) {
+    event.preventDefault();
+    clipboardData.setData('text/plain', text + '\n\n本文作者：Lisette Peng\n本文链接：https://1231lisette.github.io/01paw/2025/02/stm32%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/\n版权声明：本博客所有文章除特别声明外，均默认采用 CC BY-NC-SA 4.0 许可协议。');
+  }
+});</script></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/01paw/2025/03/ROS2-Learning/" rel="prev" title="ROS2_Learning"><svg class="icon ri:arrow-left-s-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:arrow-left-s-line"></use></svg><span class="post-nav-text">ROS2_Learning</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/01paw/2025/02/test/" rel="next" title="test"><span class="post-nav-text">test</span><svg class="icon ri:arrow-right-s-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:arrow-right-s-line"></use></svg></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>如果您有任何关于博客内容的相关讨论，欢迎前往 <a https://github.com/1231Lisette/01paw/discussions" target="_blank">GitHub Discussions</a> 与我交流。</span><br><a class="hty-button hty-button--raised" id="github-discussions" target="_blank" rel="noopener" href="https://github.com/1231Lisette/1231lisette.github.io/discussions/new">GitHub Discussions</a></div><style>.utterances {
+  max-width: 100%;
+}</style><script src="https://giscus.app/client.js" data-repo="231Lisette/01paw" data-repo-id="R_kgDONzMlDQ" data-category="General" data-category-id="DIC_kwDONzMlDc4CuuKh" data-mapping="pathname" data-reactions-enabled="1" data-emit-metadata="0" data-theme="light" crossorigin="anonymous" async></script></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2025 </span><span class="with-love" id="animate"><svg class="icon icon-cloud-line" aria-hidden="true" style="width: 20px; height: 20px;"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> Lisette Peng</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v7.3.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.10.11</span></div><div class="live-time"><span>本博客已萌萌哒地运行</span><span id="display_live_time"></span><span class="moe-text">(●'◡'●)</span><script>function blog_live_time() {
+  setTimeout(blog_live_time, 1000);
+  const start = new Date('2025-02-04T22:15:00');
+  const now = new Date();
+  const timeDiff = (now.getTime() - start.getTime());
+  const msPerMinute = 60 * 1000;
+  const msPerHour = 60 * msPerMinute;
+  const msPerDay = 24 * msPerHour;
+  const passDay = Math.floor(timeDiff / msPerDay);
+  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
+  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
+  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
+  display_live_time.innerHTML = ` ${passDay} 天 ${passHour} 小时 ${passMinute} 分 ${passSecond} 秒`;
+}
+blog_live_time();
+</script></div></footer></div><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><svg class="icon ri:arrow-up-s-line" aria-hidden="true" style="width: 24px; height: 24px;"><use xlink:href="#ri:arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#6200ee" stroke-width="2" stroke-linecap="round"></circle></svg></a><script>function initMourn() {
+  const date = new Date();
+  const today = (date.getMonth() + 1) + "-" + date.getDate()
+  const mourn_days = ["4-4","9-18"]
+  if (mourn_days.includes(today)) {
+    document.documentElement.style.filter = "grayscale(1)";
+  }
+}
+initMourn();</script><script src="https://fastly.jsdelivr.net/npm/medium-zoom@1.0.6/dist/medium-zoom.min.js"></script><script>const images = [...document.querySelectorAll('.markdown-body img')]
+mediumZoom(images)</script><style>.medium-zoom-image {
+  z-index: 99;
+}</style></body></html>
