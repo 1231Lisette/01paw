@@ -1,7 +1,7 @@
 ---
 title: git_review
 date: 2025-07-05 20:43:19
-tags:
+tags: 我的笔记
 ---
 ### 初始化仓库
 ``` bash

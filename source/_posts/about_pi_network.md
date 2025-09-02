@@ -1,7 +1,12 @@
 ---
 title: Pi Network（树莓派4B非桌面端初始化及WIFI配置）
 date: 2025-07-26
-tags: [树莓派, WiFi配置, SSH, 静态IP, 网络调试]
+tags: 
+  - 树莓派, 
+  - WiFi配置
+  - SSH
+  - 静态IP
+  - 网络调试
 categories: 我的笔记
 ---
 

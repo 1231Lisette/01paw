@@ -3,34 +3,40 @@
 # --------------------------
 head:
   css:
-    # aplayer: https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css
-    # 使用阿里云 Iconfont
-    # iconfont: //at.alicdn.com/t/c/font_1140697_dxory92pb0h.css
+    example: //example.min.css
   js:
-    async:
-      # 阿里云 Iconfont JS 文件
-     iconfont: //at.alicdn.com/t/font_1140697_dxory92pb0h.js
-    defer:
-     # aplayer: https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js
-
-
-# 字体配置
-font:
+    base:
+      - xxx
   cdn:
-    enable: true #达到最佳访问速度
-  
-  serif:
-    family: "'Noto Serif SC','Songti SC','STZhongsong','STKaiti','KaiTi','serif'"
-    weight: 900
-  
-  sans_serif:
-    family: "'Noto Sans SC','PingFang SC','Microsoft YaHei','Roboto','Arial','sans-serif'"
-    weight: 400
-  
-  monospace:
-    family: "'Source Code Pro','Courier New','Courier','Consolas','Monaco','monospace'"
+    pre:
+      development: ''
+      production: https://cdn.jsdelivr.net/gh/1231Lisette/01paw@latest
+    js:
+      async:
+        iconfont: //at.alicdn.com/t/font_1140697_dxory92pb0h.js
+  style:
+    - /css/hexo-theme-yun.css
+  script:
+    - /js/hexo-theme-yun.js
+  prefetch:
+    script:
+      - /js/sidebar.js
+  dns_prefetch:
+    - https://cos.yunyoujun.cn
+  preconnect:
+    - https://cdn.jsdelivr.net
+  font:
+    cdn:
+      enable: false
+    serif:
+      family: "'Noto Serif SC','Songti SC','STZhongsong','STKaiti','KaiTi','serif'"
+      weight: 900
+    sans_serif:
+      family: "'Noto Sans SC','PingFang SC','Microsoft YaHei','Roboto','Arial','sans-serif'"
+      weight: 400
+    monospace:
+      family: "'Source Code Pro','Courier New','Courier','Consolas','Monaco','monospace'"
 
-# 注入自定义代码
 inject:
   head: |
     <!-- 百度统计 -->
@@ -43,14 +49,15 @@ inject:
       s.parentNode.insertBefore(hm, s);
     })();
     </script>
+
+
 # --------------------------
 # 搜索配置修正
 # --------------------------
-
-icon: icon-heart
-
 search:
   modal: false
+  bg_image: /images/background.jpg
+
 
 # --------------------------
 # 菜单整理
@@ -58,17 +65,26 @@ search:
 menu:
   home:
     path: /
-    icon: icon-home-4-line
+    icon: ri:home-4-line
   list:
     - type: archives
       path: /archives/
-      icon: icon-archive-line
+      icon: ri:archive-line
     - type: categories
       path: /categories/
-      icon: icon-folder-2-line
+      icon: ri:folder-2-line
     - type: tags
       path: /tags/
-      icon: icon-price-tag-3-line
+      icon: ri:price-tag-3-line
+  custom:
+    - title: 文档
+      path: https://yun.yunyoujun.cn
+      icon: ri:settings-line
+    - title: 留言板
+      path: /about/#comment
+      icon: ri:clipboard-line
+
+
 # --------------------------
 favicon: /favicon.svg # 这里要改
 
@@ -79,43 +95,44 @@ avatar:
   url: /images/avatar.jpg
   rounded: true
   opacity: 1
-  mickey_mouse: true
+  mickey_mouse: false
   status:                                                                                                   
     enable: true
     emoji: 😭
     message: 不想上学！！
                                             
 bg_image:
-  enable: false
+  enable: true
   url: /images/background.jpg
   # dark:                                                                   
   opacity: 0.9
 
 comment:
-  enable: true
-  tips:
-    - 如果您有任何关于博客内容的相关讨论，欢迎前往 <a https://github.com/1231Lisette/01paw/discussions" target="_blank">GitHub Discussions</a> 与我交流。
+# 启用评论系统候选
   candidates:
-    - giscus # 使用 giscus（基于 GitHub Discussions）
+    - giscus   # 使用 giscus（基于 GitHub Discussions）
 
 giscus:
-  enable: true
-  repo: 231Lisette/01paw  
-  repo-id: R_kgDONzMlDQ
-  category: General
-  category-id: DIC_kwDONzMlDc4CuuKh
-  mapping: pathname
-  reactions-enabled: 1
-  emit-metadata: 0
-  theme: light
+  repo: 1231Lisette/01paw               # 你的仓库
+  repo-id: R_kgDONzMlDQ                 # 仓库 ID（giscus.app 生成）
+  category: General                     # Discussions 分类名
+  category-id: DIC_kwDONzMlDc4CuuKh     # 分类 ID（giscus.app 生成）
+  mapping: pathname                     # 评论和页面映射方式（推荐 pathname）
+  strict: 0                             # 是否严格匹配（0=否，1=是）
+  reactions-enabled: 1                  # 启用表情回应
+  emit-metadata: 0                      # 是否注入元数据
+  input-position: bottom                # 输入框在底部（top=顶部，bottom=底部）
+  theme: preferred_color_scheme         # 主题：跟随系统（也可设 light / dark）
+  lang: zh-CN                           # 界面语言：中文
 
-github_discussions:
-  enable: true
-  username: 1231Lisette
-  repository: 1231lisette.github.io
+tips:
+  - 如果您有任何关于博客内容的相关讨论，欢迎前往 <a https://github.com/1231Lisette/01paw/discussions" target="_blank">GitHub Discussions</a> 与我交流。
+
+
+
 
 trianglify:
-  enable: true
+  enable: false
   cellSize: 75
   width: 800
   height: 600
@@ -144,27 +161,13 @@ girls:
   enable: true
   
 tags:
-  Vue: '#4fc08d'
-  Hexo: '#0E834D'
-  CSS: '#5298d1'
-  Node.js: '#026E00'
+  C: '#4fc08d'
+  C++: '#5298d1'
+  stm32: '#026E00'
   Git: '#F14E32'
-  React: '#61dafb'
   Python: '#3776ab'
-  PHP: '#8892BF'
-  JavaScript: '#F4DF4F'
-  TypeScript: '#317AC6'
-  Laravel: '#F4645F'
-  # 可以添加更多标签颜色
-  树莓派: '#C51A4A'
-  SSH: '#000000'
-  WiFi配置: '#0076D6'
-  静态IP: '#666666'
-  网络调试: '#FF9500'
-  assembly-language: '#6E4C13'
-  stm32: '#03234B'
-  try: '#5856D6'
-  growth: '#34C759'
+  VS Code: '#0066B8'
+  Hexo: '#0E834D'
 
 
 categories:
@@ -174,16 +177,11 @@ categories:
   Linux: '#2577b1'
   修bug: green
 
-
-
 social:
   - name: E-Mail
     link: mailto:2405848533@qq.com
-    icon: icon-mail-line
+    icon: ri:mail-line
     color: '#8E71C1'
-  - name: GitHub
-    link: https://github.com/1231Lisette
-    icon: icon-github-line
 
 banner:
   enable: true
@@ -194,7 +192,7 @@ banner:
     color: white
   go_down:
     enable: true
-    icon: icon-arrow-down-s-line
+    icon: ri:arrow-down-s-line
 
 notice:
   enable: true
@@ -213,31 +211,25 @@ scrollreveal:
     - .markdown-body img
 
 
+
 cursor:
   enable: true
-  default: https://cdn.jsdelivr.net/gh/YunYouJun/cdn/css/md-cursors/pointer.cur
-  pointer: https://cdn.jsdelivr.net/gh/YunYouJun/cdn/css/md-cursors/link.cur
-  text: https://cdn.jsdelivr.net/gh/YunYouJun/cdn/css/md-cursors/text.cur
-
 
 baidu_push: true
 
 
 wordcount:
   enable: true
-  count: true
-  time: true
-
+  
 
 sidebar:
   bg_image: https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/bg/stars-timing-1.jpg
   bg_position: bottom 3rem center
   tagcloud:
-    enable: true #侧边栏词云
+    enable: false
     amount: 20
 
-post_card:
-  opacity: 0.7
+
 
 post_meta:
   item_text: false
@@ -255,8 +247,17 @@ toc:
 
 post_edit:
   enable: true
-  url: https://github.com/1231Lisette/01paw/hexo/source/_posts
+  url: https://github.com/1231Lisette/01paw/tree/hexo/source/_posts
 
+# 关闭 highlight
+highlight:
+  enable: false
+# 启用 prism
+prismjs:
+  enable: true
+  preprocess: true
+  line_number: false
+  tab_replace: ''
 
 codeblock:
   copy_btn: true
@@ -273,7 +274,7 @@ lazyload:
 footer:
   since: 2025
   icon:
-    name: icon-cloud-line
+    name: ri:cloud-line
     animated: true
     color: '#93D89F'
   powered:
@@ -298,57 +299,10 @@ mourn:
     - 4-4
 
 pages:
-  - name: 我的小伙伴们
+  - name: 我的猪猪
     url: /links/
-    icon: icon-genderless-line
+    icon: ri:genderless-line
     color: dodgerblue
-  - name: 关于
-    url: /about/
-    icon: icon-user-line
-    color: green
-  - name: 分类
-    url: /categories/
-    icon: icon-folder-2-line
-    color: orange
-  - name: 标签
-    url: /tags/
-    icon: icon-price-tag-3-line
-    color: purple
 
 wordcloud:
   enable: true
-
-types:
-  link:
-    color: blue
-    icon: icon-external-link-line
-  bilibili:
-    color: '#FF8EB3'
-    icon: icon-bilibili-line
-  douban:
-    color: '#007722'
-    icon: icon-douban-line
-  github:
-    color: black
-    icon: icon-github-line
-  netease-cloud-music:
-    color: '#C10D0C'
-    icon: icon-netease-cloud-music-line
-  notion:
-    color: black
-    icon: icon-notion-line
-  twitter:
-    color: '#1da1f2'
-    icon: icon-twitter-line
-  wechat:
-    color: '#1AAD19'
-    icon: icon-wechat-2-line
-  weibo:
-    color: '#E6162D'
-    icon: icon-weibo-line
-  yuque:
-    color: '#25b864'
-    icon: icon-yuque-line
-  zhihu:
-    color: '#0084FF'
-    icon: icon-zhihu-line

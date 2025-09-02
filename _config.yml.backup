@@ -21,8 +21,7 @@ timezone: Asia/Shanghai
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
 url: https://1231Lisette.github.io/01paw
-# 在根目录的 _config.yml 中修改
-permalink: :year/:month/:title/
+permalink: :category/:title
 permalink_defaults:
   lang: en
 pretty_urls:
@@ -57,7 +56,7 @@ post_asset_folder: false
 relative_link: false
 future: true
 highlight:
-  enable: false
+  enable: true
   line_number: false
   auto_detect: false
   tab_replace: ''
