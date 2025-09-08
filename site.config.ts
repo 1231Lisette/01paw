@@ -85,7 +85,7 @@ export default defineSiteConfig({
   codeHeightLimit: 300,
   ///foo, /bar, /v1/about 这些路由会被重定向到 /about。
   redirects: {
-    useVueRouter: true,
+    useVueRouter: false,
     rules: [
       {
         from: ['/foo', '/bar'],
