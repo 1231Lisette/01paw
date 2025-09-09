@@ -14,7 +14,9 @@ const safelist = [
  */
 export default defineValaxyConfig<UserThemeConfig>({
   // site config see site.config.ts
-
+  // 🔑 新增 base 和 url
+  base: '/01paw/',
+  url: 'https://1231Lisette.github.io/01paw/',
   theme: 'yun',
 
   themeConfig: {
