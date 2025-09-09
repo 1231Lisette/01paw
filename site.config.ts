@@ -1,7 +1,7 @@
 import { defineSiteConfig } from 'valaxy'
 
 export default defineSiteConfig({
-  url: 'https://valaxy.site/',
+  url: 'https://1231Lisette.github.io/01paw/',
   lang: 'zh-CN',
   title: '01paw',
   author: {

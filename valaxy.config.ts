@@ -3,7 +3,6 @@
 //runtimeConfig: 运行时的配置（由 Valaxy 自动生成），用户无需配置
 import type { UserThemeConfig } from 'valaxy-theme-yun'
 import { defineValaxyConfig } from 'valaxy'
-
 // add icons what you will need
 const safelist = [
   'i-ri-home-line',
@@ -14,11 +13,13 @@ const safelist = [
  */
 export default defineValaxyConfig<UserThemeConfig>({
   // site config see site.config.ts
-  // 🔑 新增 base 和 url
-  base: '/01paw/',
-  url: 'https://1231Lisette.github.io/01paw/',
+  siteConfig: {
+    url: 'https://1231Lisette.github.io/01paw/',
+  },
   theme: 'yun',
-
+  vite: {
+    base: '/01paw/', // 必须加在这，注意仓库名
+  },
   themeConfig: {
     banner: {
       enable: true,
@@ -50,4 +51,5 @@ export default defineValaxyConfig<UserThemeConfig>({
   },
 
   unocss: { safelist },
+
 })
