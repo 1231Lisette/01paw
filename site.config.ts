@@ -39,11 +39,11 @@ export default defineSiteConfig({
   ],
 
   search: {
-    enable: false,
+    enable: true,
   },
 
   sponsor: {
-    enable: true,
+    enable: false,
     title: '我很可爱，请给我钱！',
     methods: [
       {
@@ -98,5 +98,4 @@ export default defineSiteConfig({
     ]
   },
   mediumZoom: { enable: true },
-  
 })

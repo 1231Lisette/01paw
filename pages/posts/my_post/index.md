@@ -9,3 +9,4 @@ tags:
 top: 1
 ---
 ![](./a.png)
+<BszComponent/>

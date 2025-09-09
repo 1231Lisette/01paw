@@ -25,6 +25,9 @@ declare module 'vue-router/auto-routes' {
     '/about/site': RouteRecordInfo<'/about/site', '/about/site', Record<never, never>, Record<never, never>>,
     '/archives/': RouteRecordInfo<'/archives/', '/archives', Record<never, never>, Record<never, never>>,
     '/categories/': RouteRecordInfo<'/categories/', '/categories', Record<never, never>, Record<never, never>>,
+    '/collections/': RouteRecordInfo<'/collections/', '/collections', Record<never, never>, Record<never, never>>,
+    '/collections/life/': RouteRecordInfo<'/collections/life/', '/collections/life', Record<never, never>, Record<never, never>>,
+    '/collections/life/1': RouteRecordInfo<'/collections/life/1', '/collections/life/1', Record<never, never>, Record<never, never>>,
     '/links/': RouteRecordInfo<'/links/', '/links', Record<never, never>, Record<never, never>>,
     '/page/[page]': RouteRecordInfo<'/page/[page]', '/page/:page', { page: ParamValue<true> }, { page: ParamValue<false> }>,
     '/posts/': RouteRecordInfo<'/posts/', '/posts', Record<never, never>, Record<never, never>>,
@@ -71,6 +74,18 @@ declare module 'vue-router/auto-routes' {
     }
     'pages/categories/index.md': {
       routes: '/categories/'
+      views: never
+    }
+    'pages/collections/index.md': {
+      routes: '/collections/'
+      views: never
+    }
+    'pages/collections/life/index.md': {
+      routes: '/collections/life/'
+      views: never
+    }
+    'pages/collections/life/1.md': {
+      routes: '/collections/life/1'
       views: never
     }
     'pages/links/index.md': {

@@ -15,9 +15,12 @@
     "@vueuse/motion": "^3.0.3",
     "katex": "^0.16.22",
     "valaxy": "0.26.6",
+    "valaxy-addon-components": "^0.1.0",
+    "valaxy-addon-waline": "^0.2.1",
     "valaxy-theme-yun": "0.26.6"
   },
   "devDependencies": {
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "valaxy-addon-algolia": "^0.2.0"
   }
 }
