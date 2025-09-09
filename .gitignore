@@ -21,3 +21,6 @@ components.d.ts
 
 # valaxy fuse
 public/valaxy-fuse-list.json
+
+# valaxy rss
+public/feed.xml
