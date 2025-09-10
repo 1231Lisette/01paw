@@ -6,12 +6,12 @@ export default defineSiteConfig({
   title: '01paw',
   author: {
     name: 'Lisette',
-    avatar: '/avatar.jpg',
+    avatar: 'https://1231Lisette.github.io/01paw/avatar.jpg',
   },
   /**
    * 站点图标
    */
-  favicon: '/favicon.svg',
+  favicon: 'https://1231Lisette.github.io/01paw/favicon.svg',
   /**
    * 副标题
    */
