@@ -6,12 +6,12 @@ export default defineSiteConfig({
   title: '01paw',
   author: {
     name: 'Lisette',
-    avatar: 'https://www.yunyoujun.cn/images/avatar.jpg',
+    avatar: './avatar.jpg',
   },
   /**
    * 站点图标
    */
-  favicon: 'https://www.yunyoujun.cn/favicon.svg',
+  favicon: './favicon.svg',
   /**
    * 副标题
    */

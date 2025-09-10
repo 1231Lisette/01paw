@@ -33,7 +33,7 @@ export default defineValaxyConfig<UserThemeConfig>({
   themeConfig: {
     banner: {
       enable: true,
-      title: '二进制代码',
+      title: '二进制爪印',
     },
   },
 
