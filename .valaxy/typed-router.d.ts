@@ -32,8 +32,8 @@ declare module 'vue-router/auto-routes' {
     '/page/[page]': RouteRecordInfo<'/page/[page]', '/page/:page', { page: ParamValue<true> }, { page: ParamValue<false> }>,
     '/posts/': RouteRecordInfo<'/posts/', '/posts', Record<never, never>, Record<never, never>>,
     '/posts/hello-valaxy': RouteRecordInfo<'/posts/hello-valaxy', '/posts/hello-valaxy', Record<never, never>, Record<never, never>>,
-    '/posts/my_post/': RouteRecordInfo<'/posts/my_post/', '/posts/my_post', Record<never, never>, Record<never, never>>,
-    '/posts/test-custom-component': RouteRecordInfo<'/posts/test-custom-component', '/posts/test-custom-component', Record<never, never>, Record<never, never>>,
+    '/posts/VLA': RouteRecordInfo<'/posts/VLA', '/posts/VLA', Record<never, never>, Record<never, never>>,
+    '/projects/': RouteRecordInfo<'/projects/', '/projects', Record<never, never>, Record<never, never>>,
     '/tags/': RouteRecordInfo<'/tags/', '/tags', Record<never, never>, Record<never, never>>,
   }
 
@@ -104,12 +104,12 @@ declare module 'vue-router/auto-routes' {
       routes: '/posts/hello-valaxy'
       views: never
     }
-    'pages/posts/my_post/index.md': {
-      routes: '/posts/my_post/'
+    'pages/posts/VLA.md': {
+      routes: '/posts/VLA'
       views: never
     }
-    'pages/posts/test-custom-component.md': {
-      routes: '/posts/test-custom-component'
+    'pages/projects/index.md': {
+      routes: '/projects/'
       views: never
     }
     'pages/tags/index.md': {
