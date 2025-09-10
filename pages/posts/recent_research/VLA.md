@@ -11,7 +11,6 @@ tags:
 meta ai research
 ## Paper structure
 ```mermaid
-mindmap
 graph LR
     A[具身AI代理] --> B[引言]
     A --> C[理论基础]
@@ -65,9 +64,6 @@ graph LR
     E1a --> E1a2[元宇宙]
     E1a --> E1a3[NPC]
     E1 --> E1b[要求]
-    
-
-
 ```
 
 ## Sonme Definitions
