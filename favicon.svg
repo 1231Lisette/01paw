@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" aria-label="Binary Paw">
+  <style>
+    :root {
+      color: #111;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        color: #fff;
+      }
+    }
+    .outline {
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 8;
+      stroke-linejoin: round;
+    }
+    .fill-bits {
+      fill: url(#bits);
+      stroke: currentColor;
+      stroke-width: 4;
+    }
+    .solid {
+      display: none;
+      fill: currentColor;
+    }
+    /* 小尺寸时改用纯色，避免 0/1 细节糊掉（例如作为 16×16 favicon） */
+    @media (max-width: 32px) {
+      .fill-bits {
+        display: none;
+      }
+      .solid {
+        display: inline;
+      }
+    }
+  </style>
+  <defs>
+    <!-- 用 0/1 组成的填充图案 - 增大字体和间距 -->
+    <pattern id="bits" patternUnits="userSpaceOnUse" width="20" height="20">
+      <rect width="20" height="20" fill="none"/>
+      <text x="2" y="14" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="16" font-weight="bold" fill="currentColor">0</text>
+      <text x="12" y="14" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="16" font-weight="bold" fill="currentColor">1</text>
+    </pattern>
+    
+    <!-- 爪印各个形状 - 放大1.2倍并居中 -->
+    <g id="paw-shape">
+      <!-- 掌心（椭圆形） -->
+      <path d="M67.2,185.6 C67.2,145.2 106.4,126.4 128,126.4 C149.6,126.4 188.8,145.2 188.8,185.6 C188.8,221.6 168.8,240.8 128,240.8 C87.2,240.8 67.2,221.6 67.2,185.6Z" />
+      
+      <!-- 四个肉垫（圆/椭圆） -->
+      <ellipse cx="68" cy="112" rx="26.4" ry="31.2"/>
+      <ellipse cx="118" cy="94.4" rx="26.4" ry="31.2"/>
+      <ellipse cx="167.2" cy="99.2" rx="26.4" ry="31.2"/>
+      <ellipse cx="214.4" cy="120.8" rx="26.4" ry="31.2"/>
+    </g>
+  </defs>
+  
+  <!-- 用 0/1 图案填充的版本 -->
+  <use href="#paw-shape" class="fill-bits"/>
+  
+  <!-- 轮廓 -->
+  <use href="#paw-shape" class="outline"/>
+  
+  <!-- 小尺寸回退：纯色爪印 -->
+  <g class="solid">
+    <use href="#paw-shape"/>
+  </g>
+</svg>

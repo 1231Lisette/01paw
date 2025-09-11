@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://1231Lisette.github.io/01paw/</id>
+    <title>01paw</title>
+    <updated>2025-09-11T14:52:31.429Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <author>
+        <name>Lisette</name>
+        <email>i@valaxy.site</email>
+        <uri>https://valaxy.site</uri>
+    </author>
+    <link rel="alternate" href="https://1231Lisette.github.io/01paw/"/>
+    <link rel="self" href="https://1231Lisette.github.io/01paw/atom.xml"/>
+    <subtitle>有很多话想说......</subtitle>
+    <logo>https://1231Lisette.github.io/01paw/avatar.jpg</logo>
+    <icon>https://1231Lisette.github.io/01paw/favicon.svg</icon>
+    <rights>CC BY-NC-SA 4.0 2025 © Lisette</rights>
+    <entry>
+        <title type="html"><![CDATA[VLA方向论文笔记]]></title>
+        <id>https://1231Lisette.github.io/01paw/posts/recent_research/VLA</id>
+        <link href="https://1231Lisette.github.io/01paw/posts/recent_research/VLA"/>
+        <updated>2025-09-10T00:00:00.000Z</updated>
+        <content type="html"><![CDATA[<h1>Embodied AI Agents: Modeling the World</h1>
+<p>meta ai research [paper_links](<a href="https://arxiv.org/pdf/2506.2">https://arxiv.org/pdf/2506.2</a></p>
+<br/><p>访问 <a href="https://1231Lisette.github.io/01paw/posts/recent_research/VLA" target="_blank">https://1231Lisette.github.io/01paw/posts/recent_research/VLA</a> 阅读全文。</p>]]></content>
+        <author>
+            <name>Lisette</name>
+            <email>i@valaxy.site</email>
+            <uri>https://valaxy.site</uri>
+        </author>
+        <published>2025-09-10T00:00:00.000Z</published>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Hello, Valaxy!]]></title>
+        <id>https://1231Lisette.github.io/01paw/posts/hello-valaxy</id>
+        <link href="https://1231Lisette.github.io/01paw/posts/hello-valaxy"/>
+        <updated>2022-04-01T00:00:00.000Z</updated>
+        <content type="html"><![CDATA[<h2>Valaxy</h2>
+<p>Next Generation Static Blog Framework.</p>
+<p>Write your first post!</p>
+<h2>Usage</h2>
+<p>Modify `valaxy</p>
+<br/><p>访问 <a href="https://1231Lisette.github.io/01paw/posts/hello-valaxy" target="_blank">https://1231Lisette.github.io/01paw/posts/hello-valaxy</a> 阅读全文。</p>]]></content>
+        <author>
+            <name>Lisette</name>
+            <email>i@valaxy.site</email>
+            <uri>https://valaxy.site</uri>
+        </author>
+        <published>2022-04-01T00:00:00.000Z</published>
+    </entry>
+</feed>

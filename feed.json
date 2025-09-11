@@ -1,0 +1,38 @@
+{
+    "version": "https://jsonfeed.org/version/1",
+    "title": "01paw",
+    "home_page_url": "https://1231Lisette.github.io/01paw/",
+    "feed_url": "https://1231Lisette.github.io/01paw/feed.json",
+    "description": "有很多话想说......",
+    "icon": "https://1231Lisette.github.io/01paw/avatar.jpg",
+    "author": {
+        "name": "Lisette",
+        "url": "https://valaxy.site"
+    },
+    "items": [
+        {
+            "id": "https://1231Lisette.github.io/01paw/posts/recent_research/VLA",
+            "content_html": "<h1>Embodied AI Agents: Modeling the World</h1>\n<p>meta ai research [paper_links](<a href=\"https://arxiv.org/pdf/2506.2\">https://arxiv.org/pdf/2506.2</a></p>\n<br/><p>访问 <a href=\"https://1231Lisette.github.io/01paw/posts/recent_research/VLA\" target=\"_blank\">https://1231Lisette.github.io/01paw/posts/recent_research/VLA</a> 阅读全文。</p>",
+            "url": "https://1231Lisette.github.io/01paw/posts/recent_research/VLA",
+            "title": "VLA方向论文笔记",
+            "date_modified": "2025-09-10T00:00:00.000Z",
+            "date_published": "2025-09-10T00:00:00.000Z",
+            "author": {
+                "name": "Lisette",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "https://1231Lisette.github.io/01paw/posts/hello-valaxy",
+            "content_html": "<h2>Valaxy</h2>\n<p>Next Generation Static Blog Framework.</p>\n<p>Write your first post!</p>\n<h2>Usage</h2>\n<p>Modify `valaxy</p>\n<br/><p>访问 <a href=\"https://1231Lisette.github.io/01paw/posts/hello-valaxy\" target=\"_blank\">https://1231Lisette.github.io/01paw/posts/hello-valaxy</a> 阅读全文。</p>",
+            "url": "https://1231Lisette.github.io/01paw/posts/hello-valaxy",
+            "title": "Hello, Valaxy!",
+            "date_modified": "2022-04-01T00:00:00.000Z",
+            "date_published": "2022-04-01T00:00:00.000Z",
+            "author": {
+                "name": "Lisette",
+                "url": "https://valaxy.site"
+            }
+        }
+    ]
+}
